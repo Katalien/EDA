@@ -1,11 +1,10 @@
 from PIL import Image
 from typing import List, Dict, Type, Any
-import FeatureExtractor
+from FeatureExtractor import FeatureExtractor
 
 class ImageProcessor:
-    def __init__(self, image_name: str, image: Image.Image, extractors: List[Type[FeatureExtractor]]):
+    def __init__(self, image: Image.Image, extractors: List[Type[FeatureExtractor]]):
         self.image = image
-        self.image_name = image_name
         self.extractors = [extractor() for extractor in extractors]
 
     def __extract_features(self) -> Dict[str, Any]:
@@ -16,5 +15,5 @@ class ImageProcessor:
         return features
 
     def get_image_features(self) -> Dict[str, Dict[str, Any]] :
-        features = self.__extract_features()
-        return {self.image_name: features}
+        return self.__extract_features()
+
