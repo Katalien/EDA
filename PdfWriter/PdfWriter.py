@@ -3,8 +3,9 @@ import matplotlib.pyplot as plt
 
 class PdfWriter:
     @staticmethod
-    def writePdf(plots, filename="report2.pdf"):
-        with PdfPages(filename) as pdf:
+    def writePdf(plots, path, filename="report.pdf"):
+        filepath = path + filename
+        with PdfPages(filepath) as pdf:
             for plot in plots:
                 pdf.savefig(plot)
                 plt.close()

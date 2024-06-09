@@ -1,3 +1,4 @@
+import os
 from DatasetProcessor import DatasetProcessor
 from Visualizer.FeatureVisualizer import FeatureVisualizer
 from ConfigReader import ConfigReader
@@ -9,6 +10,9 @@ if __name__ == "__main__":
     config_path = "config.yaml"
     config_processor = ConfigReader(config_path)
     images_path = config_processor.get_images_path()
+    output_path = config_processor.get_output_path()
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
     features_config = config_processor.get_features_config()
     print(features_config)
 
@@ -29,6 +33,6 @@ if __name__ == "__main__":
             visualizer = FeatureVisualizer(feature_data)
             plots.append(visualizer.visualize(method, str(key), "x", "y"))
 
-    PdfWriter.writePdf(plots)
+    PdfWriter.writePdf(plots, output_path)
 
 

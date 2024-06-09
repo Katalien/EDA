@@ -14,6 +14,12 @@ class ConfigReader:
     def get_images_path(self) -> str:
         return self.config.get('images_path', '')
 
+    def get_output_path(self) -> str:
+        path = self.config.get('output_path', None)
+        if path is None:
+            path = "../../reports/"
+        return path
+
     def get_features_config(self) -> Dict[str, List[str]]:
         config_features = self.config.get('features', {})
         map_features = {feature: methods["visualization_methods"] for feature, methods in config_features.items()}

@@ -1,4 +1,5 @@
 images_path: "../dataset/images/"
+output_path: "../reports/"
 features:
   Brightness:
     visualization_methods: ["bar"]
