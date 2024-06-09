@@ -49,8 +49,4 @@ class DatasetProcessor():
             dataset_features[feature_name] = []
         return dataset_features
 
-    def __count_features(self):
-        # for feature_name in self.features:
-        pass
-
 
