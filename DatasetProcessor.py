@@ -1,9 +1,8 @@
 from typing import List, Type, Dict
 import os
 from PIL import Image
-import FeatureExtractor
 from ImageProcessor import ImageProcessor
-from FeatureExtractor import FeatureExtractor
+from FeatureAnalysis import FeatureAnalysis
 
 IMG_EXTENSIONS = (
     "jpeg",
@@ -14,7 +13,7 @@ IMG_EXTENSIONS = (
 )
 
 class DatasetProcessor():
-    def __init__(self, images_path: str, extractors: List[Type[FeatureExtractor]]):
+    def __init__(self, images_path: str, extractors: List[Type[FeatureAnalysis]]):
         self.images_path = images_path
         self.extractors = extractors
         self.images_features = []
@@ -38,7 +37,8 @@ class DatasetProcessor():
     def __get_features_name(self):
         features = []
         for extractor in self.extractors:
-            feature_name = extractor().__class__.__name__.replace("Extractor", "")
+            # print(extractor().__class__.__name__)
+            feature_name = extractor().__class__.__name__.replace("Analysis", "")
             if feature_name != 'ABCMeta':
                 features.append(feature_name)
         return features

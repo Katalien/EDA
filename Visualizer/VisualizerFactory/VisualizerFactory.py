@@ -4,10 +4,10 @@ from ..VisualizationMethods import BarPlotVisualizer
 
 class VisualizerFactory:
     @staticmethod
-    def create_visualization_strategy(strategy_name):
-        if strategy_name == 'line':
+    def create_visualization_strategy(method):
+        if method == 'line':
             return LinePlotVisualizer.LinePlotVisualize()
-        elif strategy_name == 'bar':
+        elif method == 'bar':
             return BarPlotVisualizer.BarPlotVisualize()
         else:
             raise ValueError("Unknown visualization strategy")

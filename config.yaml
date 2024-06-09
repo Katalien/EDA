@@ -1,0 +1,6 @@
+images_path: "../dataset/images/"
+features:
+  Brightness:
+    visualization_methods: ["bar"]
+  Contrast:
+        visualization_methods: ["line"]
