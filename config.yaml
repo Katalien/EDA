@@ -2,6 +2,6 @@ images_path: "../dataset/images/"
 output_path: "../reports/"
 features:
   Brightness:
-    visualization_methods: ["bar"]
+    visualization_methods: ["boxplot", "histogram"]
   Contrast:
-        visualization_methods: ["line"]
+        visualization_methods: ["histogram"]
