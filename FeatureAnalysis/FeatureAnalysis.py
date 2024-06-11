@@ -5,5 +5,5 @@ import numpy as np
 
 class FeatureAnalysis(ABC):
     @abstractmethod
-    def extract(self, image: Image.Image) -> Any:
+    def extract(self, image: np.ndarray) -> float:
         pass
