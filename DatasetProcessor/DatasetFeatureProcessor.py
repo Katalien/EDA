@@ -1,13 +1,16 @@
 # обрабатывает одну метрику для всего датасета
 # возвращает экземпляр Фича с описанием одной метрики для всего датасета
 import os
+import cv2
+import pandas as pd
 from typing import List
 from ..utils import ClassNamesDict
 import ImageFeatureProcessor
-import cv2
+from ..Visualizer import VisualizationParams
+from ..FeatureAnalysis import Feature
 
 class DatasetFeatureProcessor:
-    def __init__(self, dataset_path:str, feature_name:str, visual_methods_name:List[str]):
+    def __init__(self, dataset_path: str, feature_name: str):
         self.dataset_path = dataset_path
         self.feature_name = feature_name
         self.feature_analyzer = ClassNamesDict.ClassNamesDict[feature_name]
@@ -19,5 +22,9 @@ class DatasetFeatureProcessor:
             image = cv2.imread(filename)
             self.data.append(ImageFeatureProcessor.ImageFeatureProcessor.analyze(self.feature_analyzer, image))
 
-    def get_feature(self):
+    def get_feature(self) -> Feature:
         self.__process_dataset()
+        df = pd.DataFrame(self.data)
+        feature = Feature.FeatureData(self.feature_name, df, self.feature_name)
+        return feature
+
