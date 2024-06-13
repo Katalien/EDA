@@ -12,7 +12,7 @@ class AspectRatioAnalysis(FeatureAnalysis):
     def __init__(self, path: str):
         super().__init__(path)
         self.path = path
-        self.feature_name = "Brightness"
+        self.feature_name = "Aspect Ratio"
         self.data = []
         self.mean = None
         self.min = None
@@ -34,6 +34,7 @@ class AspectRatioAnalysis(FeatureAnalysis):
 
     def get_feature(self):
         self._process_dataset()
-        df = pd.DataFrame({self.feature_name: list(self.data)})
+        data_dict = {"x": len(self.data), "y": self.data}
+        df = pd.DataFrame(data_dict)
         feature = FeatureData(self.feature_name, df, self.min, self.max, self.mean, self.std)
         return feature

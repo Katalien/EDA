@@ -4,7 +4,7 @@ import os
 from typing import Dict, List
 from utils import buildFeatures, ClassNamesDict
 from DatasetFeatureProcessor import DatasetFeatureProcessor
-from FeatureAnalysis import Feature
+
 
 class DatasetManager:
     def __init__(self, dataset_path: str, output_path: str, features_config: Dict[str, List[str]]):

@@ -1,16 +1,18 @@
 import matplotlib.pyplot as plt
+from typing import List
 from .Visualizer import Visualizer
 from FeatureAnalysis import FeatureData
 
-class ScatterPlotVisualize(Visualizer):
-    def visualize(self, feature_data: FeatureData, grid=True):
+class ScatterPlotVisualizer(Visualizer):
+    def visualize(self, feature_data_list: List[FeatureData], grid=True):
         plt.figure(figsize=(12, 12))
-        for key in feature_data.data:
-            x = feature_data.data[key]["x"]
-            y = feature_data.data[key]["y"]
-            plt.scatter(x, y, label=key)
-        plt.title(feature_data.feature_name)
+        for feature_data in feature_data_list:
+            x = feature_data.data["x"]
+            y = feature_data.data["y"]
+            plt.scatter(x, y, label=feature_data.feature_name)
+        plt.title("Scatter Plot of Feature Data")
         if grid:
             plt.grid(True)
+        plt.legend()
         plt.show()
         return plt.gcf()

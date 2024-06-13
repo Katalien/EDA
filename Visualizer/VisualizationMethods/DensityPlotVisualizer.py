@@ -1,15 +1,18 @@
 import matplotlib.pyplot as plt
 from .Visualizer import Visualizer
+from typing import List
 from FeatureAnalysis import FeatureData
 import seaborn as sns
 
-class DensityPlotVisualize(Visualizer):
-    def visualize(self, feature_data, grid=True):
+class DensityPlotVisualizer(Visualizer):
+    def visualize(self, feature_data_list: List[FeatureData], grid=True):
         plt.figure(figsize=(12, 12))
-        for key in feature_data.data:
-            y = feature_data.data[key]["y"]
-            sns.kdeplot(y, label=key, fill=True)
-        plt.title(feature_data.feature_name)
+
+        for feature_data in feature_data_list:
+            y = feature_data.data["y"]
+            sns.kdeplot(y, label=feature_data.feature_name, fill=True)
+
+        plt.title("KDE Plot")
         if grid:
             plt.grid(True)
         plt.legend()

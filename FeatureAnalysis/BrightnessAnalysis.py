@@ -33,6 +33,7 @@ class BrightnessAnalysis(FeatureAnalysis):
 
     def get_feature(self):
         self._process_dataset()
-        df = pd.DataFrame({self.feature_name: list(self.data)})
+        data_dict = {"x": len(self.data), "y": self.data}
+        df = pd.DataFrame(data_dict)
         feature = FeatureData(self.feature_name, df, self.min, self.max, self.mean, self.std)
         return feature

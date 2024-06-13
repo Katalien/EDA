@@ -1,12 +1,12 @@
-from .LinePlotVisualizer import LinePlotVisualize
-from .BarPlotVisualizer import BarPlotVisualize
-from .BoxPlotVisualizer import BoxPlotVisualize
-from .HistogramVisualizer import HistogramVisualize
-from .ScatterPlotVisualizer import ScatterPlotVisualize
-from .DensityPlotVisualizer import DensityPlotVisualize
-from .PiePlotVisualizer import PiePlotVisualize
+from .LinePlotVisualizer import LinePlotVisualizer
+from .BarPlotVisualizer import BarPlotVisualizer
+from .BoxPlotVisualizer import BoxPlotVisualizer
+from .HistogramVisualizer import HistogramVisualizer
+from .ScatterPlotVisualizer import ScatterPlotVisualizer
+from .DensityPlotVisualizer import DensityPlotVisualizer
+from .PiePlotVisualizer import PiePlotVisualizer
 from .Visualizer import Visualizer
 
-__all__ = ["Visualizer", "LinePlotVisualize", "BarPlotVisualize",
-           "BoxPlotVisualize", "HistogramVisualize", "ScatterPlotVisualize",
+__all__ = ["Visualizer", "LinePlotVisualizer", "BarPlotVisualizer",
+           "BoxPlotVisualizer", "HistogramVisualizer", "ScatterPlotVisualizer",
            "DensityPlotVisualizer", "PiePlotVisualizer"]

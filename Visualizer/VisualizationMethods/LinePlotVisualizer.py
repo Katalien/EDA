@@ -1,15 +1,16 @@
 import matplotlib.pyplot as plt
+from typing import List
 from .Visualizer import Visualizer
 from FeatureAnalysis import FeatureData
 
-class LinePlotVisualize(Visualizer):
-    def visualize(self, feature_data, grid=True):
+class LinePlotVisualizer(Visualizer):
+    def visualize(self, feature_data_list: List[FeatureData], grid=True):
         plt.figure(figsize=(12, 12))
-        for key in feature_data.data:
-            x = feature_data.data[key]["x"]
-            y = feature_data.data[key]["y"]
-            plt.plot(x, y, label=key)
-        plt.title(feature_data.feature_name)
+        for feature_data in feature_data_list:
+            x = feature_data.data["x"]
+            y = feature_data.data["y"]
+            plt.plot(x, y, label=feature_data.feature_name)
+        plt.title("Line Plot of Feature Data")
         if grid:
             plt.grid(True)
         plt.legend()
