@@ -1,3 +1,3 @@
 class Visualizer:
-    def visualize(self, feature_data, title, x_axis, y_axis):
+    def visualize(self, feature_data):
         raise NotImplementedError("Subclasses must implement visualize method")
