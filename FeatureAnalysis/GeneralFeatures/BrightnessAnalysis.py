@@ -1,18 +1,18 @@
-from .FeatureAnalysis import FeatureAnalysis
+from FeatureAnalysis.FeatureAnalysis import FeatureAnalysis
 from PIL import Image
-import numpy as np
-from .FeatureAnalysis import FeatureAnalysis
-from .FeatureData import FeatureData
+from FeatureAnalysis.FeatureAnalysis import FeatureAnalysis
+from FeatureAnalysis.FeatureData import FeatureData
 import numpy as np
 import cv2
 import os
 import pandas as pd
 
-class AspectRatioAnalysis(FeatureAnalysis):
+
+class BrightnessAnalysis(FeatureAnalysis):
     def __init__(self, path: str):
         super().__init__(path)
         self.path = path
-        self.feature_name = "Aspect Ratio"
+        self.feature_name = "Brightness"
         self.data = []
         self.mean = None
         self.min = None
@@ -29,8 +29,7 @@ class AspectRatioAnalysis(FeatureAnalysis):
         self.std = (sum((x - self.mean) ** 2 for x in self.data) / len(self.data)) ** 0.5
 
     def _process_one_sample(self, sample: np.ndarray):
-        height, width = sample.shape[:2]
-        return width / height
+        return np.mean(sample)
 
     def get_feature(self):
         self._process_dataset()

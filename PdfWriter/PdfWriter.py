@@ -5,6 +5,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
 from reportlab.lib import colors
 import io
+from typing import List
 from reportlab.pdfgen.canvas import Canvas
 
 
@@ -26,16 +27,17 @@ class PdfWriter:
         elements.append(Spacer(1, 12))
 
         # Создание таблицы характеристик
-        data = [['Feature name', 'Value']]
+        self.data = [['Feature name', 'Value']]
         for feature_data in feature_data_list:
-            data.append(['Feature Name', feature_data.feature_name])
-            data.append(['Min', feature_data.min])
-            data.append(['Max', feature_data.max])
-            data.append(['Mean', feature_data.mean])
-            data.append(['Std', feature_data.std])
-            data.append(['-' * 20, '-' * 20])  # Разделитель для разных FeatureData
+            self.data.append(['Feature Name', feature_data.feature_name])
+            self.data.append(['Min', feature_data.min])
+            self.data.append(['Max', feature_data.max])
+            self.data.append(['Mean', feature_data.mean])
+            self.data.append(['Std', feature_data.std])
+            self.data.append(['-' * 20, '-' * 20])  # Разделитель для разных FeatureData
 
-        table = Table(data)
+
+        table = Table(self.data)
         table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
@@ -50,8 +52,8 @@ class PdfWriter:
 
         # Добавление описаний и графиков
         for i, (feature_data, plot) in enumerate(zip(feature_data_list, plots)):
-            description = Paragraph(f"Graphic {i + 1}: {feature_data.feature_name}", styles['Normal'])
-            elements.append(description)
+            # description = Paragraph(f"Graphic {i + 1}: {feature_data.feature_name}", styles['Normal'])
+            # elements.append(description)
             elements.append(Spacer(1, 12))
 
             # Save plot to memory
@@ -68,3 +70,7 @@ class PdfWriter:
 
         # Save PDF
         doc.build(elements)
+
+
+    def _fill_data_table(self, feature_data):
+        pass

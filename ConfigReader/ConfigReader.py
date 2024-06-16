@@ -1,6 +1,6 @@
 import yaml
 import os
-from typing import Dict, Any, List, Type
+from typing import Dict, Any, List, Union
 
 class ConfigReader:
     def __init__(self, config_path: str):
@@ -12,16 +12,29 @@ class ConfigReader:
             return yaml.safe_load(file)
 
     def get_images_path(self) -> str:
-        return self.config.get('images_path', '')
+        return self.config.get('images_path', None)
+
+    def get_labels_path(self) -> str:
+        return self.config.get('labels_path', None)
 
     def get_output_path(self) -> str:
-        path = self.config.get('output_path', None)
-        if path is None:
-            path = "../../reports/"
-        return path
+        return self.config.get('output_path', "./")
 
-    def get_features_config(self) -> Dict[str, List[str]]:
-        config_features = self.config.get('features', {})
-        map_features = {feature: methods["visualization_methods"] for feature, methods in config_features.items()}
-        print(map_features)
-        return map_features
+    def get_general_features(self) -> Union[Dict[str, List[str]], None]:
+        general_features = self.config.get("General_features", None)
+        if general_features is None:
+            return None
+        return {feature: methods["visualization_methods"] for feature, methods in general_features.items()}
+
+    def get_labeled_features(self) -> Union[Dict[str, List[str]], None]:
+        labeled_features = self.config.get("Labeled_features", None)
+        if labeled_features is None:
+            return None
+        return {feature: methods["visualization_methods"] for feature, methods in labeled_features.items()}
+
+    def get_predicted_features(self) -> Union[Dict[str, List[str]], None]:
+        predicted_features = self.config.get("Predicted_features", None)
+        if predicted_features is None:
+            return None
+        return {feature: methods["visualization_methods"] for feature, methods in predicted_features.items()}
+

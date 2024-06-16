@@ -1,13 +1,15 @@
-from FeatureAnalysis import BrightnessAnalysis, ContrastAnalysis, AspectRatioAnalysis, ColorAnalysis
+from FeatureAnalysis import BrightnessAnalysis, ContrastAnalysis, AspectRatioAnalysis, ColorAnalysis, \
+                            ClassesFrequencyAnalysis
 from Visualizer.VisualizationMethods import BarPlotVisualizer, BoxPlotVisualizer, DensityPlotVisualizer, \
                                             HistogramVisualizer, LinePlotVisualizer, ScatterPlotVisualizer
 
 
 AnalysersClassNamesDict = {
-    "BrightnessAnalysis": BrightnessAnalysis,
-    "ContrastAnalysis": ContrastAnalysis,
-    "AspectRatioAnalysis": AspectRatioAnalysis,
-    "RGBAnalysis": ColorAnalysis
+    "Brightness": BrightnessAnalysis,
+    "Contrast": ContrastAnalysis,
+    "AspectRatio": AspectRatioAnalysis,
+    "RGB": ColorAnalysis,
+    "ClassesFrequency": ClassesFrequencyAnalysis.ClassesFrequencyAnalysis
 }
 
 VisualizersClassNamesDict = {

@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
-from PIL import Image
-from typing import Any, Dict
+from typing import Union
 import numpy as np
 
 
@@ -14,7 +13,7 @@ class FeatureAnalysis(ABC):
         pass
 
     @abstractmethod
-    def _process_one_sample(self, sample: np.ndarray):
+    def _process_one_sample(self, sample: Union[np.ndarray, str]):
         pass
 
     @abstractmethod

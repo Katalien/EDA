@@ -1,6 +1,6 @@
 import os
-from .FeatureAnalysis import FeatureAnalysis
-from .FeatureData import FeatureData
+from FeatureAnalysis.FeatureAnalysis import FeatureAnalysis
+from FeatureAnalysis.FeatureData import FeatureData
 import numpy as np
 import pandas as pd
 import cv2
