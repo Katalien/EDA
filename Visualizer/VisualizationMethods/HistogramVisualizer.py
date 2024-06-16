@@ -25,5 +25,5 @@ class HistogramVisualizer(Visualizer):
 
         fig.suptitle("Histogram")
         plt.tight_layout()
-        plt.show()
+        # plt.show()
         return plt.gcf()

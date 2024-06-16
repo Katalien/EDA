@@ -16,5 +16,5 @@ class DensityPlotVisualizer(Visualizer):
         if grid:
             plt.grid(True)
         plt.legend()
-        plt.show()
+        # plt.show()
         return plt.gcf()

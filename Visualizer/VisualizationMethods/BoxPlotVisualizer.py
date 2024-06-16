@@ -20,5 +20,5 @@ class BoxPlotVisualizer(Visualizer):
             plt.grid(True)
 
         plt.tight_layout()
-        plt.show()
+        # plt.show()
         return plt.gcf()

@@ -17,7 +17,6 @@ class BarPlotVisualizer(Visualizer):
             if grid:
                 axes[i].grid(True)
 
-        # plt.tight_layout()
         plt.suptitle("Bar plot of")
-        plt.show()
+        # plt.show()
         return plt.gcf()
