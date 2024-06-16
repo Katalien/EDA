@@ -3,6 +3,7 @@ from DatasetProcessor import DatasetManager
 from FeatureAnalysis.LabeledFeatures import ClassesFrequencyAnalysis
 from Visualizer.VisualizationMethods import BarPlotVisualizer
 from FeatureAnalysis import FeatureData
+import os
 
 
 def test_func():
@@ -17,9 +18,25 @@ def test_func():
     visualizer = BarPlotVisualizer()
     visualizer.visualize(feature_list)
 
+def create_file_package_map(root_dir):
+    file_package_map = {}
+    for root, dirs, files in os.walk(root_dir):
+        package_name = os.path.basename(root)
+        if package_name == "":
+            continue
+        for file in files:
+            if file.endswith(".py"):
+                file_name = os.path.splitext(file)[0].replace("Analysis", "")
+                file_package_map[file_name] = package_name
+    return file_package_map
+
+
 if __name__ == "__main__":
-    manager = DatasetManager.Manager()
-    manager.run()
+    manager = DatasetManager.Manager("config2.yaml")
+    manager.process()
+
+
+
 
 
 

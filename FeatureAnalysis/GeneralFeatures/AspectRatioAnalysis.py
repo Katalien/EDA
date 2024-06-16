@@ -33,6 +33,9 @@ class AspectRatioAnalysis(FeatureAnalysis):
         return width / height
 
     def get_feature(self):
+        if os.listdir(self.path) == []:
+            print("empty")
+            return
         self._process_dataset()
         data_dict = {"x": len(self.data), "y": self.data}
         df = pd.DataFrame(data_dict)

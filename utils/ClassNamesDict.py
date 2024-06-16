@@ -8,7 +8,7 @@ AnalysersClassNamesDict = {
     "Brightness": BrightnessAnalysis,
     "Contrast": ContrastAnalysis,
     "AspectRatio": AspectRatioAnalysis,
-    "RGB": ColorAnalysis,
+    "Color": ColorAnalysis,
     "ClassesFrequency": ClassesFrequencyAnalysis.ClassesFrequencyAnalysis
 }
 

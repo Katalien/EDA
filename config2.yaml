@@ -1,0 +1,18 @@
+dataset_path: "../dataset/train_val_test/"
+output_path: "../reports/"
+Features:
+  Color:
+    visualization_methods: [ "bar" ]
+  AspectRatio:
+    visualization_methods: ["line"]
+  Brightness:
+    visualization_methods: [ "boxplot", "histogram" ]
+  Contrast:
+    visualization_methods: [ "histogram" ]
+  ClassesFrequency:
+    visualization_methods: ["bar"]
+  Precision:
+      visualization_methods: ["boxplot"]
+  Recall:
+      visualization_methods: ["boxplot"]
+

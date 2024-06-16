@@ -14,6 +14,9 @@ class ConfigReader:
     def get_images_path(self) -> str:
         return self.config.get('images_path', None)
 
+    def get_dataset_path(self) -> str:
+        return self.config.get('dataset_path', None)
+
     def get_labels_path(self) -> str:
         return self.config.get('labels_path', None)
 
@@ -37,4 +40,8 @@ class ConfigReader:
         if predicted_features is None:
             return None
         return {feature: methods["visualization_methods"] for feature, methods in predicted_features.items()}
+
+    def get_features(self):
+        features = self.config.get("Features", None)
+        return {feature: methods["visualization_methods"] for feature, methods in features.items()}
 
