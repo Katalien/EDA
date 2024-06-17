@@ -4,8 +4,13 @@ from FeatureAnalysis.GeneralFeatures.ContrastAnalysis import ContrastAnalysis
 from FeatureAnalysis.GeneralFeatures.AspectRatioAnalysis import AspectRatioAnalysis
 from FeatureAnalysis.GeneralFeatures.ColorAnalysis import ColorAnalysis
 from FeatureAnalysis.LabeledFeatures import ClassesFrequencyAnalysis
+from FeatureAnalysis.LabeledFeatures import InstancePerImageAnalysis
+from FeatureAnalysis.PredictedFeatures import PrecisionAnalysis
+from FeatureAnalysis.PredictedFeatures import RecallAnalysis
+from FeatureAnalysis.LabeledFeatures import LocationsMap
 from .FeatureData import FeatureData
 
 __all__ = ["FeatureAnalysis", "BrightnessAnalysis", "ContrastAnalysis",
            "AspectRatioAnalysis", "FeatureData", "ColorAnalysis",
-           "ClassesFrequencyAnalysis"]
+           "ClassesFrequencyAnalysis", "PrecisionAnalysis", "RecallAnalysis",
+           "LocationsMap", "InstancePerImageAnalysis"]

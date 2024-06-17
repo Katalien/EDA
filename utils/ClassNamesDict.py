@@ -1,7 +1,10 @@
 from FeatureAnalysis import BrightnessAnalysis, ContrastAnalysis, AspectRatioAnalysis, ColorAnalysis, \
-                            ClassesFrequencyAnalysis
+                            ClassesFrequencyAnalysis, PrecisionAnalysis, RecallAnalysis, LocationsMap, \
+                            InstancePerImageAnalysis
 from Visualizer.VisualizationMethods import BarPlotVisualizer, BoxPlotVisualizer, DensityPlotVisualizer, \
-                                            HistogramVisualizer, LinePlotVisualizer, ScatterPlotVisualizer
+                                            HistogramVisualizer, LinePlotVisualizer, ScatterPlotVisualizer,\
+                                            ViolinPlotVisualizer
+
 
 
 AnalysersClassNamesDict = {
@@ -9,7 +12,11 @@ AnalysersClassNamesDict = {
     "Contrast": ContrastAnalysis,
     "AspectRatio": AspectRatioAnalysis,
     "Color": ColorAnalysis,
-    "ClassesFrequency": ClassesFrequencyAnalysis.ClassesFrequencyAnalysis
+    "ClassesFrequency": ClassesFrequencyAnalysis.ClassesFrequencyAnalysis,
+    "Precision": PrecisionAnalysis.PrecisionAnalysis,
+    "Recall": RecallAnalysis,
+    "LocationsMap": LocationsMap.LocationsMap,
+    "InstancesPerImage": InstancePerImageAnalysis.InstancePerImageAnalysis
 }
 
 VisualizersClassNamesDict = {
@@ -18,5 +25,18 @@ VisualizersClassNamesDict = {
     "density": DensityPlotVisualizer,
     "histogram": HistogramVisualizer,
     "line": LinePlotVisualizer,
-    "scatter": ScatterPlotVisualizer
+    "scatter": ScatterPlotVisualizer,
+    "violin": ViolinPlotVisualizer
+}
+
+FeatureFolderDict = {
+    "Color": ["images"],
+    "AspectRatio": ["images"],
+    "Brightness": ["images"],
+    "Contrast": ["images"],
+    "ClassesFrequency": ["labels"],
+    "Precision": ["masks", "predictions"],
+    "Recall": ["masks", "predictions"],
+    "LocationsMap": ["masks"],
+    "InstancesPerImage": ["labels"]
 }

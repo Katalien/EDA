@@ -1,4 +1,4 @@
-from DatasetProcessor import DatasetManager
+from DatasetProcessor import Manager
 
 from FeatureAnalysis.LabeledFeatures import ClassesFrequencyAnalysis
 from Visualizer.VisualizationMethods import BarPlotVisualizer
@@ -32,8 +32,8 @@ def create_file_package_map(root_dir):
 
 
 if __name__ == "__main__":
-    manager = DatasetManager.Manager("config2.yaml")
-    manager.process()
+    manager = Manager.Manager("config2.yaml")
+    manager.run()
 
 
 

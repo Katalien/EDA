@@ -5,36 +5,50 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
 from reportlab.lib import colors
 import io
-from typing import List
-from reportlab.pdfgen.canvas import Canvas
+import numpy as np
+from PIL import Image as PILImage
+
 
 
 class PdfWriter:
-    def create_pdf_report(self, feature_data_list, plots, output_filename):
+    def create_pdf_report(self, feature_data_list, plots, dataset_count_dict, output_filename):
         doc = SimpleDocTemplate(output_filename, pagesize=letter)
         elements = []
 
-        # Заголовка
         styles = getSampleStyleSheet()
         title = Paragraph("Images report", styles['Title'])
         elements.append(title)
         elements.append(Spacer(1, 12))
 
-        # Добавление строки с количеством изображений
+        # Adding dataset count information
+        for folder, count in dataset_count_dict.items():
+            count_paragraph = Paragraph(f"Folder '{folder}': {count} images", styles['Normal'])
+            elements.append(count_paragraph)
+            elements.append(Spacer(1, 12))
+
         num_features = len(feature_data_list)
         num_images_text = Paragraph(f"Amount of features: {num_features}", styles['Normal'])
         elements.append(num_images_text)
         elements.append(Spacer(1, 12))
 
-        # Создание таблицы характеристик
-        self.data = [['Feature name', 'Value']]
+        self.data = [['Feature name', 'Min', 'Max', 'Mean', 'Std']]
+
         for feature_data in feature_data_list:
-            self.data.append(['Feature Name', feature_data.feature_name])
-            self.data.append(['Min', feature_data.min])
-            self.data.append(['Max', feature_data.max])
-            self.data.append(['Mean', feature_data.mean])
-            self.data.append(['Std', feature_data.std])
-            self.data.append(['-' * 20, '-' * 20])  # Разделитель для разных FeatureData
+            if feature_data.min is None and feature_data.max is None and feature_data.std is None and feature_data.mean is None:
+                continue
+            if feature_data.feature_name in ["R", "G", "B"]:
+                continue
+
+            row = [
+                feature_data.feature_name,
+                self.format_value(feature_data.min),
+                self.format_value(feature_data.max),
+                self.format_value(feature_data.mean),
+                self.format_value(feature_data.std)
+            ]
+
+            # Добавляем строку в таблицу
+            self.data.append(row)
 
 
         table = Table(self.data)
@@ -56,21 +70,30 @@ class PdfWriter:
             # elements.append(description)
             elements.append(Spacer(1, 12))
 
-            # Save plot to memory
-            img_buffer = io.BytesIO()
-            plot.savefig(img_buffer, format='PNG')
-            img_buffer.seek(0)
+            if not feature_data.is_img:
+                # Save plot to memory
+                img_buffer = io.BytesIO()
+                plot.savefig(img_buffer, format='PNG')
+                img_buffer.seek(0)
+            else:
+                img_array = np.uint8(feature_data.data)
+                pil_img = PILImage.fromarray(img_array)
+
+                # Save PIL Image to memory
+                img_buffer = io.BytesIO()
+                pil_img.save(img_buffer, format='PNG')
+                img_buffer.seek(0)
 
             # Insert plot image into PDF
             img = Image(img_buffer)
-            img.drawHeight = 4 * 72  # 6 inches height
-            img.drawWidth = 4 * 72  # 6 inches width
+            img.drawHeight = 6 * 72  # 6 inches height
+            img.drawWidth = 6 * 72  # 6 inches width
             elements.append(img)
             elements.append(Spacer(1, 12))
+
 
         # Save PDF
         doc.build(elements)
 
-
-    def _fill_data_table(self, feature_data):
-        pass
+    def format_value(self, value):
+        return f"{value:.1f}" if value is not None else ''

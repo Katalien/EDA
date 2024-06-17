@@ -13,7 +13,7 @@ class FeatureAnalysis(ABC):
         pass
 
     @abstractmethod
-    def _process_one_sample(self, sample: Union[np.ndarray, str]):
+    def _process_one_sample(self, sample: Union[np.ndarray, str], pred: Union[None, np.ndarray, str] = None):
         pass
 
     @abstractmethod

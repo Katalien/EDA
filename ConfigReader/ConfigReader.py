@@ -20,6 +20,12 @@ class ConfigReader:
     def get_labels_path(self) -> str:
         return self.config.get('labels_path', None)
 
+    def get_prediction_path(self) -> str:
+        return self.config.get('predictions_path', None)
+
+    def get_masks_path(self) -> str:
+        return self.config.get('masks_path', None)
+
     def get_output_path(self) -> str:
         return self.config.get('output_path', "./")
 
