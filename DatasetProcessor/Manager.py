@@ -5,13 +5,15 @@ from typing import List
 from ConfigReader import ConfigReader
 from utils import buildFeatures, ClassNamesDict
 from PdfWriter import PdfWriter
-from .SampleSummary import SampleSummary
+from .FeatureSummary import FeatureSummary
 from FeatureAnalysis import FeatureData
 
 
 class Manager:
     def __init__(self, config_path: str = "./config.yaml"):
         self.config_path = config_path
+        self.featureSummaries = []
+        self.classes = None
 
 
     def _read_config(self):
@@ -90,24 +92,32 @@ class Manager:
             else:
                 feature_analyzer = ClassNamesDict.AnalysersClassNamesDict[feature_name](target_folder)
             features = feature_analyzer.get_feature()
-
-            if features is None:
-                continue
-
-            if isinstance(features, List):
-                for feature in features:
-                    feature_list.append(feature)
-            else:
-                if features.is_img:
-                    plots.append(features.data)
-                    feature_list.append(features)
-                    continue
-                feature_list.append(features)
-                features = [features]
-
+            featureSummary = FeatureSummary(feature_name, features, visual_methods)
             for visual_method in visual_methods:
                 visualizer = ClassNamesDict.VisualizersClassNamesDict[visual_method]()
                 plots.append(visualizer.visualize(features))
+            featureSummary.set_plots(plots)
+            self.featureSummaries.append(featureSummary)
+        for feature_sum in self.featureSummaries:
+            for plot in feature_sum.plots:
+                plot.show()
+
+
+            # if features is None:
+            #     continue
+            #
+            # if isinstance(features, List):
+            #     for feature in features:
+            #         feature_list.append(feature)
+            # else:
+            #     if features.is_img:
+            #         plots.append(features.data)
+            #         feature_list.append(features)
+            #         continue
+            #     feature_list.append(features)
+            #     features = [features]
+            #
+
 
         pdfWriter = PdfWriter()
         pdfWriter.create_pdf_report(feature_list, plots, dataset_count_dict, self.output_path + "report.pdf")

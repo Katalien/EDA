@@ -4,8 +4,12 @@ masks_path: "../dataset/train/masks/"
 predictions_path: "../dataset/train/predictions/"
 output_path: "../reports/"
 Features:
-  InstancesPerImage:
+  ClassesFrequency:
+    visualization_methods: ["bar"]
+  Precision:
     visualization_methods: ["boxplot"]
+  LocationsMap:
+    visualization_methods: []
 
 
 

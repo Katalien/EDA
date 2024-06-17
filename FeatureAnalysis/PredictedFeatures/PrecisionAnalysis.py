@@ -56,7 +56,7 @@ class PrecisionAnalysis(FeatureAnalysis):
         data_dict = {"x": len(self.data), "y": self.data}
         print(data_dict)
         df = pd.DataFrame(data_dict)
-        feature = FeatureData(self.feature_name, df, self.min, self.max, self.mean, self.std, is_img=True)
+        feature = FeatureData(self.feature_name, df, self.min, self.max, self.mean, self.std)
         return feature
 
 
