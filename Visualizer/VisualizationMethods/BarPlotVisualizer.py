@@ -3,27 +3,12 @@ from typing import List
 import numpy as np
 from .Visualizer import Visualizer
 from FeatureAnalysis import FeatureData
+from DatasetProcessor import FeatureSummary
 
 
 class BarPlotVisualizer(Visualizer):
-    # def visualize(self, feature_data_list: List[FeatureData], grid=True):
-    #     fig, axes = plt.subplots(1, len(feature_data_list), figsize=(10, 6))
-    #
-    #     for i, feature_data in enumerate(feature_data_list):
-    #         x = list(feature_data.data["x"])
-    #         y = list(feature_data.data["y"])
-    #         axes[i].bar(x, y, label=feature_data.feature_name)
-    #         axes[i].set_title(feature_data.feature_name)
-    #         axes[i].set_xlabel('X')
-    #         axes[i].set_ylabel('Y')
-    #         if grid:
-    #             axes[i].grid(True)
-    #
-    #     plt.suptitle("Bar plot of")
-    #     plt.show()
-    #     return plt.gcf()
-
-    def visualize(self, feature_data_list: List[FeatureData], grid=True):
+    def visualize(self, feature_summary: FeatureSummary, grid=True):
+        feature_data_list = feature_summary.features_list
         fig, ax = plt.subplots(figsize=(10, 6))
 
         num_features = len(feature_data_list)
@@ -35,7 +20,7 @@ class BarPlotVisualizer(Visualizer):
             y = np.array(feature_data.data["y"])
             ax.bar(index + i * bar_width, y, bar_width, label=feature_data.feature_name)
 
-        ax.set_title("Bar plot of Class Frequency")
+        ax.set_title(f"Bar Plot of {feature_summary.feature_name}")
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_xticks(index + bar_width * (num_features - 1) / 2)  # Центрирование меток по оси x
