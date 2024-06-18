@@ -6,7 +6,7 @@ output_path: "../reports/"
 
 Features:
   Contrast:
-    visualization_methods: ["density"]
+    visualization_methods: ["default"]
   Brightness:
     visualization_methods: ["density"]
   AspectRatio:

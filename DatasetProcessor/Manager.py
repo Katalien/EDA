@@ -95,6 +95,9 @@ class Manager:
             features = feature_analyzer.get_feature()
             featureSummary = FeatureSummary(feature_name, features, visual_methods)
             for visual_method in visual_methods:
+                if visual_method == "default":
+                    visual_method = ClassNamesDict.DefaultVisualizationMethods[feature_name][0]
+                    print(visual_method)
                 visualizer = ClassNamesDict.VisualizersClassNamesDict[visual_method]()
                 plots.append(visualizer.visualize(featureSummary))
             featureSummary.set_plots(plots)

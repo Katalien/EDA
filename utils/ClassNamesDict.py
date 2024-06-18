@@ -40,3 +40,15 @@ FeatureFolderDict = {
     "LocationsMap": ["masks"],
     "InstancesPerImage": ["labels"]
 }
+
+DefaultVisualizationMethods = {
+    "Color": ["density"],
+    "AspectRatio": ["scatter"],
+    "Brightness": ["density"],
+    "Contrast": ["density"],
+    "ClassesFrequency": ["bar"],
+    "Precision": ["boxplot"],
+    "Recall": ["boxplot"],
+    "LocationsMap": [],
+    "InstancesPerImage": ["boxplot"]
+}
