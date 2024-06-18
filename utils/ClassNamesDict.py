@@ -14,7 +14,7 @@ AnalysersClassNamesDict = {
     "Color": ColorAnalysis,
     "ClassesFrequency": ClassesFrequencyAnalysis.ClassesFrequencyAnalysis,
     "Precision": PrecisionAnalysis.PrecisionAnalysis,
-    "Recall": RecallAnalysis,
+    "Recall": RecallAnalysis.RecallAnalysis,
     "LocationsMap": LocationsMap.LocationsMap,
     "InstancesPerImage": InstancePerImageAnalysis.InstancePerImageAnalysis
 }

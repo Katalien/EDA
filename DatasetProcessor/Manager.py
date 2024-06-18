@@ -79,8 +79,8 @@ class Manager:
     def run(self):
         self._read_config()
         dataset_count_dict = self._get_dataset_sample_count()
-        plots, feature_list = [], []
         for feature_name, visual_methods in self.features.items():
+            plots = []
             if not self._check_dir4feature(feature_name):
                 print(f"No folder for this feature: {feature_name}. Necessary to have {ClassNamesDict.FeatureFolderDict[feature_name]} dir")
                 continue
@@ -88,6 +88,7 @@ class Manager:
             if isinstance(target_folder, List):
                 label_folder = target_folder[0]
                 pred_folder = target_folder[1]
+                print(feature_name)
                 feature_analyzer = ClassNamesDict.AnalysersClassNamesDict[feature_name](label_folder, pred_folder)
             else:
                 feature_analyzer = ClassNamesDict.AnalysersClassNamesDict[feature_name](target_folder)
@@ -95,29 +96,10 @@ class Manager:
             featureSummary = FeatureSummary(feature_name, features, visual_methods)
             for visual_method in visual_methods:
                 visualizer = ClassNamesDict.VisualizersClassNamesDict[visual_method]()
-                plots.append(visualizer.visualize(features))
+                plots.append(visualizer.visualize(featureSummary))
             featureSummary.set_plots(plots)
             self.featureSummaries.append(featureSummary)
-        for feature_sum in self.featureSummaries:
-            for plot in feature_sum.plots:
-                plot.show()
 
-
-            # if features is None:
-            #     continue
-            #
-            # if isinstance(features, List):
-            #     for feature in features:
-            #         feature_list.append(feature)
-            # else:
-            #     if features.is_img:
-            #         plots.append(features.data)
-            #         feature_list.append(features)
-            #         continue
-            #     feature_list.append(features)
-            #     features = [features]
-            #
-
-
-        pdfWriter = PdfWriter()
-        pdfWriter.create_pdf_report(feature_list, plots, dataset_count_dict, self.output_path + "report.pdf")
+        print(type(self.featureSummaries))
+        pdfWriter = PdfWriter(self.featureSummaries, dataset_count_dict, self.output_path + "report.pdf")
+        pdfWriter.write()

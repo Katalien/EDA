@@ -2,9 +2,11 @@ import matplotlib.pyplot as plt
 from typing import List
 from .Visualizer import Visualizer
 from FeatureAnalysis import FeatureData
+from DatasetProcessor import FeatureSummary
 
 class ScatterPlotVisualizer(Visualizer):
-    def visualize(self, feature_data_list: List[FeatureData], grid=True):
+    def visualize(self, feature_summary: FeatureSummary, grid=True):
+        feature_data_list = feature_summary.features_list
         plt.figure(figsize=(12, 12))
         for feature_data in feature_data_list:
             x = feature_data.data["x"]
