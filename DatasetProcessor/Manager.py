@@ -6,14 +6,18 @@ from ConfigReader import ConfigReader
 from utils import buildFeatures, ClassNamesDict
 from PdfWriter import PdfWriter
 from .FeatureSummary import FeatureSummary
+from DatasetInfo import DatasetInfo, DatasetClasses
 from FeatureAnalysis import FeatureData
 
 
 class Manager:
-    def __init__(self, config_path: str = "./config.yaml"):
+    def __init__(self, dataset_info:DatasetInfo = None, dataset_classes: DatasetClasses = None, config_path: str = "./config.yaml"):
         self.config_path = config_path
         self.featureSummaries = []
         self.classes = None
+        self.dataset_info = dataset_info
+        self.dataset_classes = dataset_classes
+
 
 
     def _read_config(self):
@@ -104,3 +108,4 @@ class Manager:
         print(type(self.featureSummaries))
         pdfWriter = PdfWriter(self.featureSummaries, dataset_count_dict, self.output_path + "report.pdf")
         pdfWriter.write()
+

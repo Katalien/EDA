@@ -1,5 +1,6 @@
 import os
 import cv2
+from typing import List, Dict
 
 DatasetClasses = {
     "sko": "border chip",
@@ -9,12 +10,14 @@ DatasetClasses = {
 class DatasetInfo:
     def __init__(self, dataset_path):
         self.dataset_path = dataset_path
-        self.images_path = []
-        self.masks_path = {}
+        self.images_path: List = None
+        self.masks_path: Dict = None
         self.images_count = None
-        self.masks_count = {}
+        self.masks_count = None
         self.image_size = None
         self.mask_size = None
+        self.prediction_path = None
+        self.fill_info()
 
     def _get_image_size(self, filepath):
         image = cv2.imread(filepath)
