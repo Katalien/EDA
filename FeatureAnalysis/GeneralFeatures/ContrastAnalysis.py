@@ -2,15 +2,17 @@ import os
 from FeatureAnalysis.FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.FeatureData import FeatureData
 from DatasetProcessor import FileIterator
+from DatasetProcessor import DatasetInfo
 import numpy as np
 import pandas as pd
 import cv2
 
 
 class ContrastAnalysis(FeatureAnalysis):
-    def __init__(self, path: str):
-        super().__init__(path)
-        self.path = path
+    def __init__(self, dataset_info: DatasetInfo):
+        super().__init__(dataset_info)
+        self.dataset_info = dataset_info
+        self.path = self.dataset_info.images_path
         self.feature_name = "Contrast"
         self.data = []
         self.mean = None
@@ -19,14 +21,10 @@ class ContrastAnalysis(FeatureAnalysis):
         self.std = None
 
     def _process_dataset(self):
-        image_files, file_dirs = FileIterator.get_images_from_lowest_level_folders(self.path)
-        for i, dir_path in enumerate(file_dirs):
-            for image_name in os.listdir(dir_path):
-                if len(image_name.split("_")) == 1:  # get original image
-                    filepath = os.path.join(os.path.normpath(dir_path), image_name)
-                    filepath = filepath.replace("\\", "/")
-                    image = cv2.imread(filepath)
-                    self.data.append(self._process_one_sample(image))
+        file_dirs = self.dataset_info.images_path
+        for i, filepath in enumerate(file_dirs):
+            image = cv2.imread(filepath)
+            self.data.append(self._process_one_sample(image))
         self.min = min(self.data)
         self.max = max(self.data)
         self.mean = sum(self.data) / len(self.data)

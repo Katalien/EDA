@@ -6,7 +6,7 @@ from ConfigReader import ConfigReader
 from utils import buildFeatures, ClassNamesDict
 from PdfWriter import PdfWriter
 from .FeatureSummary import FeatureSummary
-from DatasetInfo import DatasetInfo, DatasetClasses
+from DatasetProcessor import DatasetInfo
 from FeatureAnalysis import FeatureData
 
 GeneralFeatures = ["AspectRatio", "Brightness", "Color", "Contrast"]
@@ -27,7 +27,7 @@ class DatasetManager:
         config_processor = ConfigReader(self.config_path)
         self.dataset_path = config_processor.get_dataset_path()
         self.output_path = config_processor.get_output_path()
-        self.dataset_info = DatasetInfo(self.dataset_path)
+        self.dataset_info = DatasetInfo.DatasetInfo(self.dataset_path)
         self.features = config_processor.get_features()
 
     def _check_info_4_feature(self, feature_name):
@@ -37,6 +37,7 @@ class DatasetManager:
             return False
         if feature_name in PredictedFeatures and self.dataset_info.prediction_path is None:
             return False
+        return True
 
     def _get_target_info(self, feature_name):
         if feature_name in GeneralFeatures:
@@ -48,14 +49,13 @@ class DatasetManager:
             return [self.dataset_info.masks_path, self.dataset_info.prediction_path]
 
     def run(self):
+        self._read_config()
         for feature_name, visual_methods in self.features.items():
             plots = []
             if not self._check_info_4_feature(feature_name):
-                print(
-                    f"No info for this feature: {feature_name}
+                print(f"No info for this feature: {feature_name}")
                 continue
 
-            # TODO fix Analizer
             feature_analyzer = ClassNamesDict.AnalysersClassNamesDict[feature_name](self.dataset_info)
             features = feature_analyzer.get_feature()
             featureSummary = FeatureSummary(feature_name, features, visual_methods)
@@ -66,5 +66,5 @@ class DatasetManager:
             self.featureSummaries.append(featureSummary)
 
         print(type(self.featureSummaries))
-        pdfWriter = PdfWriter(self.featureSummaries, dataset_count_dict, self.output_path + "report.pdf")
+        pdfWriter = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path + "report.pdf")
         pdfWriter.write()

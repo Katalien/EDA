@@ -7,18 +7,20 @@ from reportlab.lib import colors
 import io
 import numpy as np
 from PIL import Image as PILImage
+from DatasetProcessor import DatasetInfo
+from reportlab.lib.units import inch
 from DatasetProcessor import FeatureSummary
 from typing import List
 
 
 
 class PdfWriter:
-    def __init__(self,  features_summaries, dataset_count_dict, output_filename):
+    def __init__(self,  features_summaries, dataset_info: DatasetInfo, output_filename):
         self.styles = getSampleStyleSheet()
         self.elements = []
         self.features_summaries = features_summaries
         self.feature_data_list = self._set_feature_data_list()
-        self.dataset_count_dict = dataset_count_dict
+        self.dataset_info = dataset_info
         self.output_filename = output_filename
 
     def _set_feature_data_list(self):
@@ -36,6 +38,7 @@ class PdfWriter:
         self._create_table()
         self.elements.append(PageBreak())
         self._create_plots_block()
+        print(self.output_filename)
         doc.build(self.elements)
 
 
@@ -46,24 +49,44 @@ class PdfWriter:
         self.elements.append(Spacer(1, 12))
 
     def _create_dataset_info_block(self):
-        description = Paragraph(f"Dataset folders info", self.styles['Heading1'])
+        description = Paragraph(f"Dataset info", self.styles['Title'])
+        self.elements.append(description)
+        # self.elements.append(Spacer(1, 12))
+
+        description = Paragraph(f"Dataset path : {self.dataset_info.dataset_path}", self.styles['Heading3'])
+        self.elements.append(description)
+        # self.elements.append(Spacer(1, 12))
+
+        description = Paragraph(f"Amount of images : {self.dataset_info.images_count}", self.styles['Heading3'])
+        self.elements.append(description)
+        # self.elements.append(Spacer(1, 12))
+
+        description = Paragraph(f"Amount of masks : {self.dataset_info.masks_count}", self.styles['Heading3'])
+        self.elements.append(description)
+        # self.elements.append(Spacer(1, 12))
+
+        description = Paragraph(f"Image size : {self.dataset_info.image_size}", self.styles['Heading3'])
+        self.elements.append(description)
+        # self.elements.append(Spacer(1, 12))
+
+        description = Paragraph(f"Mask size : {self.dataset_info.image_size}", self.styles['Heading3'])
+        self.elements.append(description)
+        self.elements.append(Spacer(1, 12))
+        self.elements.append(Spacer(1, 12))
+        self.elements.append(Spacer(1, 12))
+
+
+    def _create_table(self):
+        description = Paragraph(f"Dataset feature table", self.styles['Title'])
         self.elements.append(description)
         self.elements.append(Spacer(1, 12))
 
-        for folder, count in self.dataset_count_dict.items():
-            count_paragraph = Paragraph(f"Folder '{folder}': {count} images", self.styles['Normal'])
-            self.elements.append(count_paragraph)
-            self.elements.append(Spacer(1, 12))
-
         num_features = len(self.features_summaries)
-        num_images_text = Paragraph(f"Amount of features: {num_features}", self.styles['Normal'])
+        num_images_text = Paragraph(f"Amount of analyzed features: {num_features}", self.styles['Heading3'])
         self.elements.append(num_images_text)
         self.elements.append(Spacer(1, 12))
 
-    def _create_table(self):
-        description = Paragraph(f"Dataset feature table", self.styles['Heading1'])
-        self.elements.append(description)
-        self.elements.append(Spacer(1, 12))
+        # Create table
         head = ['Feature name', 'Min', 'Max', 'Mean', 'Std']
         self.data = []
 
@@ -85,13 +108,27 @@ class PdfWriter:
         if len(self.data) == 0:
             return
 
+        # Format table
+
         self.data.insert(0, head)
-        table = Table(self.data)
+        # Ширина колонок
+        # Определение ширины страницы и отступов
+        page_width = letter[0]
+        left_margin = inch  # левый отступ
+        right_margin = inch  # правый отступ
+        usable_width = page_width - (left_margin + right_margin)
+
+        # Ширина колонок
+        col_widths = [usable_width / len(head) for _ in head]
+
+        # Создание таблицы
+        table = Table(self.data, colWidths=col_widths)
         table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 12),  # Установите размер шрифта
             ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
             ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
             ('GRID', (0, 0), (-1, -1), 1, colors.black),

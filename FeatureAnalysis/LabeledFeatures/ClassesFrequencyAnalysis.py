@@ -6,6 +6,7 @@ import pandas as pd
 from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.FeatureData import FeatureData
 from DatasetProcessor import FileIterator
+from DatasetProcessor import DatasetInfo
 from utils import Classes
 
 # общее количество всех классов в датасете
@@ -17,26 +18,19 @@ class ClassesFrequencyAnalysis(FeatureAnalysis):
         self.classes_frequency = {}
 
     def _process_dataset(self):
-        image_files, file_dirs = FileIterator.get_images_from_lowest_level_folders(self.path)
-        for i, dir_path in enumerate(file_dirs):
-            for image_name in os.listdir(dir_path):
-                if len(image_name.split("_")) != 1:  # skip original image
-                    class_name = image_name.split("_")[1].split(".")[0]
-                    if class_name not in list(Classes.DatasetClasses.keys()):
-                        print(f"Unkwown class in {dir_path}, no class {class_name}")
-                        continue
-                    filepath = os.path.join(os.path.normpath(dir_path), image_name)
-                    filepath = filepath.replace("\\", "/")
-                    image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
-                    self._process_one_sample(image, class_name)
+        file_dirs_dict = self.dataset_info.masks_path
+        for i, (class_name, paths) in enumerate(file_dirs_dict.items()):
+            for filepath in paths:
+                image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+                self._process_one_sample(image, class_name)
     def _process_one_sample(self, sample: np.ndarray,  class_name:str):
         contours, _ = cv2.findContours(sample, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         num_segments = len(contours)
-        dict_class_name = Classes.DatasetClasses[class_name]
-        if str(dict_class_name) in list(self.classes_frequency.keys()):
-            self.classes_frequency[dict_class_name] += num_segments
+
+        if str(class_name) in list(self.classes_frequency.keys()):
+            self.classes_frequency[class_name] += num_segments
         else:
-            self.classes_frequency[dict_class_name] = num_segments
+            self.classes_frequency[class_name] = num_segments
 
     def _process_dataset_json(self):
         for json_file in os.listdir(self.labels_path):

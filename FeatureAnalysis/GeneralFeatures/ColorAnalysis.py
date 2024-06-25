@@ -2,14 +2,15 @@ import os
 from FeatureAnalysis.FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.FeatureData import FeatureData
 from DatasetProcessor import FileIterator
+from DatasetProcessor import DatasetInfo
 import numpy as np
 import pandas as pd
 import cv2
 
 
 class ChanelAnalysis(FeatureAnalysis):
-    def __init__(self, path: str, color: str):
-        super().__init__(path)
+    def __init__(self, dataset_info: DatasetInfo, color: str):
+        super().__init__(dataset_info)
         self.color = color
         self.feature_name = color.capitalize()
         self.pixel_frequency_per_channel = np.zeros(256, dtype=np.int64)
@@ -18,15 +19,10 @@ class ChanelAnalysis(FeatureAnalysis):
             raise ValueError("Color must be 'r', 'g', or 'b'.")
 
     def _process_dataset(self):
-        image_files, file_dirs = FileIterator.get_images_from_lowest_level_folders(self.path)
-        for i, dir_path in enumerate(file_dirs):
-            for image_name in os.listdir(dir_path):
-                if len(image_name.split("_")) == 1:  # get original image
-                    filepath = os.path.join(os.path.normpath(dir_path), image_name)
-                    filepath = filepath.replace("\\", "/")
-                    image = cv2.imread(filepath)
-                    if image is not None:
-                        self._process_one_sample(image)
+        file_dirs = self.dataset_info.images_path
+        for i, filepath in enumerate(file_dirs):
+            image = cv2.imread(filepath)
+            self._process_one_sample(image)
 
     def _process_one_sample(self, sample: np.ndarray):
         color_idx = {"r": 2, "g": 1, "b": 0}
@@ -58,8 +54,9 @@ class ChanelAnalysis(FeatureAnalysis):
 
 class ColorAnalysis(FeatureAnalysis):
 
-    def __init__(self, path: str):
-        super().__init__(path)
+    def __init__(self, dataset_info: DatasetInfo):
+        super().__init__(dataset_info)
+        self.dataset_info = dataset_info
         self.feature_name = "Colors"
         self.pixel_frequency_per_channel = np.zeros(256, dtype=np.int64)
         self.colors_feature_list = []
@@ -68,7 +65,7 @@ class ColorAnalysis(FeatureAnalysis):
     def _process_dataset(self):
         colors = ["r", "g", "b"]
         for color in colors:
-            chanel_analyzer = ChanelAnalysis(self.path, color)
+            chanel_analyzer = ChanelAnalysis(self.dataset_info, color)
             self.colors_feature_list.append(chanel_analyzer.get_feature())
 
     def _process_one_sample(self, sample: np.ndarray):

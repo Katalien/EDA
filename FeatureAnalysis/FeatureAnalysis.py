@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
 from typing import Union
 import numpy as np
+from DatasetProcessor import DatasetInfo
 
 
 class FeatureAnalysis(ABC):
 
-    def __init__(self, path: str):
-        self.path = path
+    def __init__(self, dataset_info: DatasetInfo):
+        self.dataset_info = dataset_info
 
     @abstractmethod
     def _process_dataset(self) :
