@@ -9,8 +9,8 @@ from .FeatureSummary import FeatureSummary
 from FeatureAnalysis import FeatureData
 
 
-class Manager:
-    def __init__(self, config_path: str = "./config.yaml"):
+class EDAManager:
+    def __init__(self, config_path: str = "./config.yaml", guiInfo=None):
         self.config_path = config_path
         self.featureSummaries = []
         self.classes = None
@@ -76,9 +76,8 @@ class Manager:
 
 
 
-    def run(self, isConfig=True, gui_info={}):
-        if isConfig:
-            self._read_config()
+    def run(self):
+        self._read_config()
 
         dataset_count_dict = self._get_dataset_sample_count()
         for feature_name, visual_methods in self.features.items():
