@@ -1,6 +1,7 @@
 import os
 from FeatureAnalysis.FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.FeatureData import FeatureData
+from DatasetProcessor import FileIterator
 import numpy as np
 import pandas as pd
 import cv2
@@ -17,11 +18,15 @@ class ChanelAnalysis(FeatureAnalysis):
             raise ValueError("Color must be 'r', 'g', or 'b'.")
 
     def _process_dataset(self):
-        for file in os.listdir(self.path):
-            image_path = os.path.join(self.path, file)
-            image = cv2.imread(image_path)
-            if image is not None:
-                self._process_one_sample(image)
+        image_files, file_dirs = FileIterator.get_images_from_lowest_level_folders(self.path)
+        for i, dir_path in enumerate(file_dirs):
+            for image_name in os.listdir(dir_path):
+                if len(image_name.split("_")) == 1:  # get original image
+                    filepath = os.path.join(os.path.normpath(dir_path), image_name)
+                    filepath = filepath.replace("\\", "/")
+                    image = cv2.imread(filepath)
+                    if image is not None:
+                        self._process_one_sample(image)
 
     def _process_one_sample(self, sample: np.ndarray):
         color_idx = {"r": 2, "g": 1, "b": 0}

@@ -5,22 +5,18 @@ predictions_path: "../dataset/train/predictions/"
 output_path: "../reports/"
 
 Features:
-  Contrast:
-    visualization_methods: ["density"]
-  Brightness:
-    visualization_methods: ["density"]
   AspectRatio:
     visualization_methods: ["scatter"]
   Color:
+    visualization_methods: ["density"]
+  Contrast:
+    visualization_methods: ["density"]
+  Brightness:
     visualization_methods: ["density"]
 
   ClassesFrequency:
     visualization_methods: ["bar"]
   InstancesPerImage:
-    visualization_methods: ["boxplot"]
-  Precision:
-    visualization_methods: ["boxplot"]
-  Recall:
     visualization_methods: ["boxplot"]
 
   LocationsMap:

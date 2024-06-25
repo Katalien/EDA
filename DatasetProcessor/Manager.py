@@ -85,6 +85,7 @@ class Manager:
                 print(f"No folder for this feature: {feature_name}. Necessary to have {ClassNamesDict.FeatureFolderDict[feature_name]} dir")
                 continue
             target_folder = self._get_target_path(feature_name)
+            target_folder = "../dataset/real_dataset/"
             if isinstance(target_folder, List):
                 label_folder = target_folder[0]
                 pred_folder = target_folder[1]

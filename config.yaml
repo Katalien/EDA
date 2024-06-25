@@ -2,19 +2,15 @@ images_path: "../dataset/tiny_coco_images/"
 labels_path: "../dataset/test/"
 prediction_class: "../dataset/test/"
 output_path: "../reports/"
-General_features:
-  RGB:
-    visualization_methods: [ "bar" ]
+Features:
   AspectRatio:
     visualization_methods: ["line"]
-  Brightness:
-    visualization_methods: [ "boxplot", "histogram" ]
-  Contrast:
-    visualization_methods: [ "histogram" ]
-Labeled_features:
   ClassesFrequency:
-    visualization_methods: ["bar"]
-Prediction_features:
-  Precision: ["boxplot"]
-  Recall: ["boxplot"]
+    visualization_methods: [ "bar" ]
+  InstancesPerImage:
+    visualization_methods: ["boxplot"]
+  LocationsMap:
+    visualization_methods: [ ]
+
+
 
