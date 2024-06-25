@@ -32,6 +32,7 @@ class FeatureSelectionWindow(QWidget):
         self.setLayout(layout)
 
     def generate(self):
+        print("generate button on features")
         self.selected_features = [item.text() for item in self.feature_list.selectedItems()]
         if not self.selected_features:
             QMessageBox.warning(self, 'Ошибка', 'Выберите хотя бы одну фичу')
@@ -101,6 +102,7 @@ class MainWindow(QWidget):
 
     def browse_images(self):
         path = QFileDialog.getExistingDirectory(self, 'Select Images Directory')
+        print("images: ", path)
         if path:
             self.images_path_edit.setText(path)
 

@@ -76,8 +76,10 @@ class Manager:
 
 
 
-    def run(self):
-        self._read_config()
+    def run(self, isConfig=True, gui_info={}):
+        if isConfig:
+            self._read_config()
+
         dataset_count_dict = self._get_dataset_sample_count()
         for feature_name, visual_methods in self.features.items():
             plots = []
