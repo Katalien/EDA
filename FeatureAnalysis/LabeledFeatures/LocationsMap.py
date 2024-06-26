@@ -1,19 +1,17 @@
-import os
-import json
 import cv2
 import numpy as np
-import pandas as pd
 from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.FeatureData import FeatureData
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from DatasetProcessor import DatasetInfo
-from DatasetProcessor import FileIterator
-from utils import Classes
+from PIL import Image
 
 
 class LocationsMap(FeatureAnalysis):
-    def __init__(self, labels_path: str):
-        super().__init__(labels_path)
-        self.path = labels_path
+    def __init__(self, dataset_info: DatasetInfo):
+        super().__init__(dataset_info)
+        self.dataset_info = dataset_info
         self.feature_name = "Object location map"
         self.dict_res_maps = {}
         self.weight = 1
@@ -28,21 +26,10 @@ class LocationsMap(FeatureAnalysis):
                 image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
                 self._process_one_sample(image, class_name)
 
-    # def _process_dataset(self):
-    #     image_files, file_dirs = FileIterator.get_images_from_lowest_level_folders(self.path)
-    #     self.image_shape = self._get_image_size(image_files[0])
-    #
-    #     for i, dir_path in enumerate(file_dirs):
-    #         for image_name in os.listdir(dir_path):
-    #             if len(image_name.split("_")) != 1:  # skip original image
-    #                 class_name = image_name.split("_")[1].split(".")[0]
-    #                 if class_name not in list(Classes.DatasetClasses.keys()):
-    #                     print(f"Unkwown class in {dir_path}, no class {class_name}")
-    #                     continue
-    #                 filepath = os.path.join(os.path.normpath(dir_path), image_name)
-    #                 filepath = filepath.replace("\\", "/")
-    #                 image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
-    #                 self._process_one_sample(image, class_name)
+        fig_dict = {}
+        for key, val in self.dict_res_maps.items():
+            fig_dict[key] = self.get_plt(val, title=key)
+        self.dict_res_maps = fig_dict
 
     def _process_one_sample(self, sample: str, class_name: str):
         if class_name not in self.dict_res_maps:
@@ -58,6 +45,41 @@ class LocationsMap(FeatureAnalysis):
         filepath = list(self.dataset_info.masks_path.values())[0][0]
         im = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
         return im.shape
+
+    def get_plt(self, image, title="", bgr2rgb=False, bgr2gray=False):
+        image_height, image_width = image.shape
+        aspect_ratio = image_width / image_height
+
+        fig_height = 12
+        fig_width = fig_height * aspect_ratio
+
+        fig = plt.figure(figsize=(fig_width, fig_height))
+        if bgr2rgb:
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        if bgr2gray:
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        plt.imshow(image)
+        plt.axis('off')
+        plt.title(title)
+        # plt.show()
+
+        return self.figure_to_array(fig)
+
+    def figure_to_array(self, fig):
+        # Draw the figure on the canvas
+        canvas = FigureCanvas(fig)
+        canvas.draw()
+
+        # Get the RGBA buffer from the figure
+        buf = canvas.buffer_rgba()
+
+        # Convert to a NumPy array
+        image = np.asarray(Image.frombuffer('RGBA', canvas.get_width_height(), buf, 'raw', 'RGBA', 0, 1))
+
+        # Convert RGBA to RGB (remove alpha channel)
+        image = cv2.cvtColor(image, cv2.COLOR_RGBA2RGB)
+
+        return image
 
     def get_feature(self):
         self._process_dataset()

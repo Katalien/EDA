@@ -8,9 +8,10 @@ from FeatureAnalysis.LabeledFeatures import InstancePerImageAnalysis
 from FeatureAnalysis.PredictedFeatures import PrecisionAnalysis
 from FeatureAnalysis.PredictedFeatures import RecallAnalysis
 from FeatureAnalysis.LabeledFeatures import LocationsMap
+from FeatureAnalysis.GeneralFeatures import ChanelSplitAnalysis
 from .FeatureData import FeatureData
 
 __all__ = ["FeatureAnalysis", "BrightnessAnalysis", "ContrastAnalysis",
            "AspectRatioAnalysis", "FeatureData", "ColorAnalysis",
            "ClassesFrequencyAnalysis", "PrecisionAnalysis", "RecallAnalysis",
-           "LocationsMap", "InstancePerImageAnalysis"]
+           "LocationsMap", "InstancePerImageAnalysis", "ChanelSplitAnalysis"]

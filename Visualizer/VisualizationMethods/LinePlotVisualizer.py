@@ -12,7 +12,7 @@ class LinePlotVisualizer(Visualizer):
             x = feature_data.data["x"]
             y = feature_data.data["y"]
             plt.plot(x, y, label=feature_data.feature_name)
-        plt.title("Line Plot of Feature Data")
+        plt.title("Line Plot of Feature Data", fontsize=16, fontweight='bold')
         if grid:
             plt.grid(True)
         plt.legend()

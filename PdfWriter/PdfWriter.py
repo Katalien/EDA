@@ -166,6 +166,28 @@ class PdfWriter:
                     del (img_buffer)
         return feature_plots_dict
 
+    def _change_im_size(self, img):
+        current_height = img.drawHeight
+        current_width = img.drawWidth
+
+        # Вычисляем текущее соотношение сторон
+        aspect_ratio = current_width / current_height
+
+        # Задаем новые размеры, уменьшая текущие на 20%
+        new_height = current_height * 0.4
+        new_width = current_width * 0.4
+
+        # Проверяем, какой из размеров больше, чтобы сохранить соотношение сторон
+        if new_width / aspect_ratio <= new_height:
+            new_height = new_width / aspect_ratio
+        else:
+            new_width = new_height * aspect_ratio
+
+        # Применяем новые размеры
+        img.drawHeight = new_height
+        img.drawWidth = new_width
+        return img.drawHeight, img.drawWidth
+
     def _create_plots_block(self):
         feature_plots_dict = self._fill_plots_section_info()
 
@@ -176,9 +198,8 @@ class PdfWriter:
         for desc, images_names in feature_plots_dict.items():
             self.elements.append(desc)
             for img, name in images_names:
-                img.drawHeight = 7 * 72  # 6 inches height
-                img.drawWidth = 7 * 72  # 6 inches width
-                name = Paragraph(name, self.styles['Heading4'])
+                img.drawHeight, img.drawWidth = self._change_im_size(img)
+                name = Paragraph(name, self.styles['Heading3'])
                 self.elements.append(name)
                 self.elements.append(Spacer(1, 12))
                 self.elements.append(img)

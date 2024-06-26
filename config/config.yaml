@@ -3,6 +3,8 @@ output_path: "../reports/"
 Features:
   LocationsMap:
     visualization_methods: [ ]
+  ChanelSplitAnalysis:
+    visualization_methods: [ ]
   AspectRatio:
     visualization_methods: ["bar"]
   Brightness:

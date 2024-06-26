@@ -25,7 +25,7 @@ class HistogramVisualizer(Visualizer):
                 axes[i].grid(True)
             axes[i].legend()
 
-        fig.suptitle("Histogram")
+        fig.suptitle("Histogram", fontsize=16, fontweight='bold')
         plt.tight_layout()
         # plt.show()
         return plt.gcf()

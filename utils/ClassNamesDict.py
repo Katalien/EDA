@@ -1,6 +1,6 @@
 from FeatureAnalysis import BrightnessAnalysis, ContrastAnalysis, AspectRatioAnalysis, ColorAnalysis, \
                             ClassesFrequencyAnalysis, PrecisionAnalysis, RecallAnalysis, LocationsMap, \
-                            InstancePerImageAnalysis
+                            InstancePerImageAnalysis, ChanelSplitAnalysis
 from Visualizer.VisualizationMethods import BarPlotVisualizer, BoxPlotVisualizer, DensityPlotVisualizer, \
                                             HistogramVisualizer, LinePlotVisualizer, ScatterPlotVisualizer,\
                                             ViolinPlotVisualizer
@@ -16,7 +16,8 @@ AnalysersClassNamesDict = {
     "Precision": PrecisionAnalysis.PrecisionAnalysis,
     "Recall": RecallAnalysis.RecallAnalysis,
     "LocationsMap": LocationsMap.LocationsMap,
-    "InstancesPerImage": InstancePerImageAnalysis.InstancePerImageAnalysis
+    "InstancesPerImage": InstancePerImageAnalysis.InstancePerImageAnalysis,
+    "ChanelSplitAnalysis": ChanelSplitAnalysis.ChanelSplitAnalysis
 }
 
 VisualizersClassNamesDict = {
