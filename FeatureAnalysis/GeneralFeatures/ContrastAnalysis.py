@@ -1,7 +1,5 @@
-import os
 from FeatureAnalysis.FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.FeatureData import FeatureData
-from DatasetProcessor import FileIterator
 from DatasetProcessor import DatasetInfo
 import numpy as np
 import pandas as pd

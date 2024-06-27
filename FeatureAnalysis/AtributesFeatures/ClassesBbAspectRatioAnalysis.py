@@ -1,23 +1,16 @@
-import os
-import json
 import cv2
 import numpy as np
-import pandas as pd
 from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.FeatureData import FeatureData
-from DatasetProcessor import FileIterator, DatasetInfo
 from DatasetProcessor import DatasetInfo
 from typing import Dict, List
-from utils import Classes
 
-
-
-class ClassesSquareAnalysis(FeatureAnalysis):
+class ClassesBbAspectRatioAnalysis(FeatureAnalysis):
     def __init__(self, dataset_info: DatasetInfo):
         super().__init__(dataset_info)
         self.dataset_info = dataset_info
-        self.feature_name = "Classes square"
-        self.classes_square_dict: Dict[str, List] = {}
+        self.feature_name = "Classes bb ratio"
+        self.classes_bb_ratio_dict: Dict[str, List] = {}
         self.featuresData = []
 
     def _process_dataset(self):
@@ -26,7 +19,7 @@ class ClassesSquareAnalysis(FeatureAnalysis):
             for filepath in paths:
                 image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
                 self._process_one_sample(image, class_name)
-        for class_name, data in self.classes_square_dict.items():
+        for class_name, data in self.classes_bb_ratio_dict.items():
             _min = min(data)
             _max = max(data)
             _mean = sum(data) / len(data)
@@ -41,11 +34,12 @@ class ClassesSquareAnalysis(FeatureAnalysis):
     def _process_one_sample(self, sample: np.ndarray,  class_name:str):
         contours, _ = cv2.findContours(sample, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         for contour in contours:
-            area = cv2.contourArea(contour)
-            if str(class_name) not in list(self.classes_square_dict.keys()):
-                self.classes_square_dict[class_name] = [area]
+            x, y, w, h = cv2.boundingRect(contour)
+            aspect_ratio = float(w) / h
+            if str(class_name) not in list(self.classes_bb_ratio_dict.keys()):
+                self.classes_bb_ratio_dict[class_name] = [aspect_ratio]
             else:
-                self.classes_square_dict[class_name].append(area)
+                self.classes_bb_ratio_dict[class_name].append(aspect_ratio)
 
     def get_feature(self):
         self._process_dataset()

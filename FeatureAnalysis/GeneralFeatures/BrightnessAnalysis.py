@@ -1,10 +1,8 @@
 from FeatureAnalysis.FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.FeatureData import FeatureData
-from DatasetProcessor import FileIterator
 from DatasetProcessor import DatasetInfo
 import numpy as np
 import cv2
-import os
 import pandas as pd
 
 

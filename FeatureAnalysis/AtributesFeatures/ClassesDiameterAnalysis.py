@@ -1,23 +1,18 @@
-import os
-import json
 import cv2
 import numpy as np
-import pandas as pd
 from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.FeatureData import FeatureData
-from DatasetProcessor import FileIterator, DatasetInfo
 from DatasetProcessor import DatasetInfo
 from typing import Dict, List
-from utils import Classes
 
 
 
-class ClassesBbAspectRatioAnalysis(FeatureAnalysis):
+class ClassesDiameterAnalysis(FeatureAnalysis):
     def __init__(self, dataset_info: DatasetInfo):
         super().__init__(dataset_info)
         self.dataset_info = dataset_info
-        self.feature_name = "Classes bb ratio"
-        self.classes_bb_ratio_dict: Dict[str, List] = {}
+        self.feature_name = "Classes diameter"
+        self.classes_diam_dict: Dict[str, List] = {}
         self.featuresData = []
 
     def _process_dataset(self):
@@ -26,7 +21,7 @@ class ClassesBbAspectRatioAnalysis(FeatureAnalysis):
             for filepath in paths:
                 image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
                 self._process_one_sample(image, class_name)
-        for class_name, data in self.classes_bb_ratio_dict.items():
+        for class_name, data in self.classes_diam_dict.items():
             _min = min(data)
             _max = max(data)
             _mean = sum(data) / len(data)
@@ -42,11 +37,11 @@ class ClassesBbAspectRatioAnalysis(FeatureAnalysis):
         contours, _ = cv2.findContours(sample, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         for contour in contours:
             x, y, w, h = cv2.boundingRect(contour)
-            aspect_ratio = float(w) / h
-            if str(class_name) not in list(self.classes_bb_ratio_dict.keys()):
-                self.classes_bb_ratio_dict[class_name] = [aspect_ratio]
+            diameter = w if w > h else h
+            if str(class_name) not in list(self.classes_diam_dict.keys()):
+                self.classes_diam_dict[class_name] = [diameter]
             else:
-                self.classes_bb_ratio_dict[class_name].append(aspect_ratio)
+                self.classes_diam_dict[class_name].append(diameter)
 
     def get_feature(self):
         self._process_dataset()

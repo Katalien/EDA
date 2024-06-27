@@ -2,9 +2,7 @@ from FeatureAnalysis.FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.FeatureData import FeatureData
 import numpy as np
 import cv2
-import os
 import pandas as pd
-from DatasetProcessor import FileIterator
 from DatasetProcessor import DatasetInfo
 
 class AspectRatioAnalysis(FeatureAnalysis):

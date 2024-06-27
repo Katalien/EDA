@@ -10,9 +10,9 @@ from FeatureAnalysis.PredictedFeatures import RecallAnalysis
 from FeatureAnalysis.LabeledFeatures import LocationsMap
 from FeatureAnalysis.GeneralFeatures import ChanelSplitAnalysis
 from .FeatureData import FeatureData
-from .AtributesAnalysis import ClassesSquareAnalysis
-from .AtributesAnalysis import ClassesBbAspectRatioAnalysis
-from .AtributesAnalysis import  ClassesDiameterAnalysis
+from .AtributesFeatures import ClassesSquareAnalysis
+from .AtributesFeatures import ClassesBbAspectRatioAnalysis
+from .AtributesFeatures import ClassesDiameterAnalysis
 
 __all__ = ["FeatureAnalysis", "BrightnessAnalysis", "ContrastAnalysis",
            "AspectRatioAnalysis", "FeatureData", "ColorAnalysis",

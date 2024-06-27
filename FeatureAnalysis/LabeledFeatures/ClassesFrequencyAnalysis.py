@@ -2,12 +2,9 @@ import os
 import json
 import cv2
 import numpy as np
-import pandas as pd
 from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.FeatureData import FeatureData
-from DatasetProcessor import FileIterator
-from DatasetProcessor import DatasetInfo
-from utils import Classes
+
 
 # общее количество всех классов в датасете
 class ClassesFrequencyAnalysis(FeatureAnalysis):
