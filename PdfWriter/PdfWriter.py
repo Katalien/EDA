@@ -3,12 +3,15 @@ import matplotlib.pyplot as plt
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, PageBreak
+from reportlab.lib.styles import (ParagraphStyle, getSampleStyleSheet)
+from reportlab.pdfbase import pdfmetrics
 from reportlab.lib import colors
 import io
 import numpy as np
 from PIL import Image as PILImage
 from DatasetProcessor import DatasetInfo
 from reportlab.lib.units import inch
+from reportlab.pdfbase.ttfonts import TTFont
 from DatasetProcessor import FeatureSummary
 from typing import List
 
@@ -22,6 +25,13 @@ class PdfWriter:
         self.feature_data_list = self._set_feature_data_list()
         self.dataset_info = dataset_info
         self.output_filename = output_filename
+        self._init_styles()
+
+    def _init_styles(self):
+        style = getSampleStyleSheet()
+        self.enum_styles = ParagraphStyle("name1", fontName='Times-Roman', fontSize=16, leftIndent=inch)
+        self.dataset_info_style = ParagraphStyle("name2", fontName='Times-Roman', fontSize=16)
+
 
     def _set_feature_data_list(self):
         data_list = []
@@ -51,26 +61,31 @@ class PdfWriter:
     def _create_dataset_info_block(self):
         description = Paragraph(f"Dataset info", self.styles['Title'])
         self.elements.append(description)
-        # self.elements.append(Spacer(1, 12))
+        self.elements.append(Spacer(1, 12))
 
-        description = Paragraph(f"Dataset path : {self.dataset_info.dataset_path}", self.styles['Heading3'])
+        description = Paragraph(f"Dataset path : {self.dataset_info.dataset_path}", self.dataset_info_style)
         self.elements.append(description)
-        # self.elements.append(Spacer(1, 12))
+        self.elements.append(Spacer(1, 12))
 
-        description = Paragraph(f"Amount of images : {self.dataset_info.images_count}", self.styles['Heading3'])
+        description = Paragraph(f"Amount of images : {self.dataset_info.images_count}", self.dataset_info_style)
         self.elements.append(description)
-        # self.elements.append(Spacer(1, 12))
+        self.elements.append(Spacer(1, 12))
 
-        description = Paragraph(f"Amount of masks : {self.dataset_info.masks_count}", self.styles['Heading3'])
+        description = Paragraph(f"Amount of masks : ", self.dataset_info_style)
         self.elements.append(description)
-        # self.elements.append(Spacer(1, 12))
+        self.elements.append(Spacer(1, 12))
+        for key, val in self.dataset_info.masks_count.items():
+            desc = Paragraph(f"{key} : {val}", self.enum_styles)
+            self.elements.append(desc)
+            self.elements.append(Spacer(1, 12))
+        self.elements.append(Spacer(1, 12))
 
-        description = Paragraph(f"Image size : {self.dataset_info.image_size}", self.styles['Heading3'])
+        description = Paragraph(f"Image size : {self.dataset_info.image_size}", self.dataset_info_style)
         self.elements.append(description)
-        # self.elements.append(Spacer(1, 12))
+        self.elements.append(Spacer(1, 12))
 
-        description = Paragraph(f"Mask size : {self.dataset_info.image_size}", self.styles['Heading3'])
-        self.elements.append(description)
+        description = Paragraph(f"Mask size : {self.dataset_info.image_size}", self.dataset_info_style)
+        # self.elements.append(description)
         self.elements.append(Spacer(1, 12))
         self.elements.append(Spacer(1, 12))
         self.elements.append(Spacer(1, 12))
@@ -82,14 +97,19 @@ class PdfWriter:
         self.elements.append(Spacer(1, 12))
 
         num_features = len(self.features_summaries)
-        num_images_text = Paragraph(f"Amount of analyzed features: {num_features}:", self.styles['Heading3'])
+        num_images_text = Paragraph(f"Amount of analyzed features: {num_features}", self.dataset_info_style)
+        self.elements.append(num_images_text)
+        self.elements.append(Spacer(1, 12))
+
+        num_images_text = Paragraph(f"Features", self.dataset_info_style)
         self.elements.append(num_images_text)
         self.elements.append(Spacer(1, 12))
 
         for feature_summary in self.features_summaries:
             feature_name = feature_summary.feature_name
-            feature_paragraph = Paragraph(f"- {feature_name}", self.styles['Heading4'])
+            feature_paragraph = Paragraph(f"- {feature_name}", self.enum_styles)
             self.elements.append(feature_paragraph)
+            self.elements.append(Spacer(1, 12))
 
         self.elements.append(PageBreak())
 
@@ -99,8 +119,6 @@ class PdfWriter:
 
         for feature_data in self.feature_data_list:
             if feature_data.min is None and feature_data.max is None and feature_data.std is None and feature_data.mean is None:
-                continue
-            if feature_data.feature_name in ["R", "G", "B"]:
                 continue
 
             row = [
@@ -116,17 +134,20 @@ class PdfWriter:
             return
 
         # Format table
-
         self.data.insert(0, head)
-        # Ширина колонок
-        # Определение ширины страницы и отступов
+
+        # Calculate page and margin widths
         page_width = letter[0]
         left_margin = inch  # левый отступ
         right_margin = inch  # правый отступ
         usable_width = page_width - (left_margin + right_margin)
 
         # Ширина колонок
-        col_widths = [usable_width / len(head) for _ in head]
+        num_columns = len(head)
+        first_col_width = usable_width * 0.4  # 30% of usable width for the first column
+        other_col_width = (usable_width - first_col_width) / (num_columns - 1)
+
+        col_widths = [first_col_width] + [other_col_width for _ in range(num_columns - 1)]
 
         # Создание таблицы
         table = Table(self.data, colWidths=col_widths)
@@ -134,12 +155,13 @@ class PdfWriter:
             ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Times-Roman'),
             ('FONTSIZE', (0, 0), (-1, -1), 12),  # Установите размер шрифта
             ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
             ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
             ('GRID', (0, 0), (-1, -1), 1, colors.black),
         ]))
+
         self.elements.append(table)
         self.elements.append(Spacer(1, 12))
 

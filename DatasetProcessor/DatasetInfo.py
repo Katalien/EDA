@@ -65,7 +65,8 @@ class DatasetInfo:
 
         self.images_count = len(self.images_path)
         self.image_size = self._get_image_size(self.images_path[0])
-        self.mask_size = self._get_image_size(list(self.masks_path.values())[0][0])
+        mask_size = self._get_image_size(list(self.masks_path.values())[0][0])
+        self.mask_size = (mask_size[0], mask_size[1])
         for key, val in self.masks_path.items():
             self.masks_count[key] = len(list(val))
 
