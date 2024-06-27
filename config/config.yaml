@@ -1,19 +1,5 @@
 dataset_path: "../dataset/real_dataset/"
 output_path: "../reports/"
 Features:
-  LocationsMap:
-    visualization_methods: [ ]
-  ChanelSplitAnalysis:
-    visualization_methods: [ ]
-  AspectRatio:
-    visualization_methods: ["bar"]
-  Brightness:
-    visualization_methods: ["density"]
-  Color:
-    visualization_methods: ["density"]
-  Contrast:
-    visualization_methods: [ "density" ]
-  ClassesFrequency:
-    visualization_methods: [ "density" ]
-  InstancesPerImage:
-    visualization_methods: [ "density" ]
+  ClassesSquareAnalysis:
+    visualization_methods: ["boxplot"]

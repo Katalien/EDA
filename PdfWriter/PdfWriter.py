@@ -82,9 +82,16 @@ class PdfWriter:
         self.elements.append(Spacer(1, 12))
 
         num_features = len(self.features_summaries)
-        num_images_text = Paragraph(f"Amount of analyzed features: {num_features}", self.styles['Heading3'])
+        num_images_text = Paragraph(f"Amount of analyzed features: {num_features}:", self.styles['Heading3'])
         self.elements.append(num_images_text)
         self.elements.append(Spacer(1, 12))
+
+        for feature_summary in self.features_summaries:
+            feature_name = feature_summary.feature_name
+            feature_paragraph = Paragraph(f"- {feature_name}", self.styles['Heading4'])
+            self.elements.append(feature_paragraph)
+
+        self.elements.append(PageBreak())
 
         # Create table
         head = ['Feature name', 'Min', 'Max', 'Mean', 'Std']

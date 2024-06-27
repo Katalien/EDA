@@ -10,6 +10,7 @@ DatasetClasses = {
 class DatasetInfo:
     def __init__(self, dataset_path):
         self.dataset_path = dataset_path
+        self.dataset_classes = DatasetClasses
         self.images_path: List = []
         self.masks_path: Dict[str, List] = {}
         self.prediction_path = None
