@@ -1,4 +1,4 @@
 DatasetClasses = {
-    "sco": "border chip",
-    "top": "pcb face"
+    "sco": "chip",
+    "top": "top"
 }

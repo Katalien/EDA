@@ -5,9 +5,10 @@ import numpy as np
 import pandas as pd
 from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.FeatureData import FeatureData
+from .PredictedFeatures import PredictedFeatures
 
 
-class RecallAnalysis(FeatureAnalysis):
+class RecallAnalysis(PredictedFeatures):
     def __init__(self, gt_masks_path: str, predictions_path: str):
         super().__init__(gt_masks_path)
         self.gt_masks_path = gt_masks_path

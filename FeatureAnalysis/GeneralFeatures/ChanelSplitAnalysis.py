@@ -6,12 +6,12 @@ from FeatureAnalysis.FeatureData import FeatureData
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from PIL import Image
+from DatasetProcessor import DatasetInfo
+from .GeneralFeatures import GeneralFeatures
 
-
-class ChanelSplitAnalysis(FeatureAnalysis):
-    def __init__(self, labels_path: str):
-        super().__init__(labels_path)
-        self.path = labels_path
+class ChanelSplitAnalysis(GeneralFeatures):
+    def __init__(self, dataset_info: DatasetInfo):
+        super().__init__(dataset_info)
         self.feature_name = "Chanel split"
         self.dict_res_figs = {"rgb": [], "hls": [], "YCbCr": []}
 

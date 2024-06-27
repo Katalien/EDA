@@ -2,23 +2,17 @@ import os
 import json
 from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.FeatureData import FeatureData
+from .LabeledFeatures import LabeledFeatures
+from DatasetProcessor import DatasetInfo
 import cv2
 import numpy as np
 
 
-class InstancePerImageAnalysis(FeatureAnalysis):
-    def __init__(self, labels_path: str):
-        super().__init__(labels_path)
-        self.labels_path = labels_path
+class InstancePerImageAnalysis(LabeledFeatures):
+    def __init__(self, dataset_info: DatasetInfo):
+        super().__init__(dataset_info)
         self.feature_name = "Instance pre image"
-        self.classes_frequency = {}
 
-    def _process_dataset(self):
-        file_dirs_dict = self.dataset_info.masks_path
-        for i, (class_name, paths) in enumerate(file_dirs_dict.items()):
-            for filepath in paths:
-                image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
-                self._process_one_sample(image, class_name)
 
 #TODO находит лишние контуры как исправить
     def _process_one_sample(self, sample: np.ndarray, class_name: str):
@@ -71,7 +65,6 @@ class InstancePerImageAnalysis(FeatureAnalysis):
         self._process_dataset()
         self._fill_zeroes()
         features = []
-        print(self.classes_frequency)
         for key, val in self.classes_frequency.items():
             data_dict = {"x": len(list(val)), "y": list(val)}
             feature = FeatureData(f"Instance of {key} per Image.", data_dict)

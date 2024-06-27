@@ -1,9 +1,23 @@
 dataset_path: "../dataset/real_dataset/"
 output_path: "../reports/"
 Features:
-  ClassesSquareAnalysis:
-    visualization_methods: ["boxplot"]
-  ClassesBbAspectRatioAnalysis:
-    visualization_methods: ["boxplot"]
   ClassesDiameterAnalysis:
     visualization_methods: [ "boxplot" ]
+  ClassesSquareAnalysis:
+    visualization_methods: [ "boxplot" ]
+  AspectRatio:
+    visualization_methods: [ "scatter" ]
+  Brightness:
+    visualization_methods: [ "density" ]
+  Color:
+    visualization_methods: [ "density" ]
+  Contrast:
+    visualization_methods: [ "density" ]
+  ClassesFrequency:
+    visualization_methods: [ "density" ]
+  InstancesPerImage:
+    visualization_methods: [ "density" ]
+  LocationsMap:
+    visualization_methods: [ ]
+  ChanelSplitAnalysis:
+    visualization_methods: [ ]
