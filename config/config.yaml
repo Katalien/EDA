@@ -3,3 +3,7 @@ output_path: "../reports/"
 Features:
   ClassesSquareAnalysis:
     visualization_methods: ["boxplot"]
+  ClassesBbAspectRatioAnalysis:
+    visualization_methods: ["boxplot"]
+  ClassesDiameterAnalysis:
+    visualization_methods: [ "boxplot" ]

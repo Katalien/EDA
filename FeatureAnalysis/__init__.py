@@ -11,9 +11,12 @@ from FeatureAnalysis.LabeledFeatures import LocationsMap
 from FeatureAnalysis.GeneralFeatures import ChanelSplitAnalysis
 from .FeatureData import FeatureData
 from .AtributesAnalysis import ClassesSquareAnalysis
+from .AtributesAnalysis import ClassesBbAspectRatioAnalysis
+from .AtributesAnalysis import  ClassesDiameterAnalysis
 
 __all__ = ["FeatureAnalysis", "BrightnessAnalysis", "ContrastAnalysis",
            "AspectRatioAnalysis", "FeatureData", "ColorAnalysis",
            "ClassesFrequencyAnalysis", "PrecisionAnalysis", "RecallAnalysis",
            "LocationsMap", "InstancePerImageAnalysis", "ChanelSplitAnalysis",
-           "ClassesSquareAnalysis"]
+           "ClassesSquareAnalysis", "ClassesBbAspectRatioAnalysis",
+           "ClassesDiameterAnalysis"]
