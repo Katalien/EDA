@@ -5,24 +5,29 @@ from FeatureAnalysis.FeatureData import FeatureData
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from DatasetProcessor import DatasetInfo
-from .LabeledFeatures import LabeledFeatures
 from PIL import Image
 
 
-class LocationsMap(LabeledFeatures):
+class LocationsMap(FeatureAnalysis):
     def __init__(self, dataset_info: DatasetInfo):
         super().__init__(dataset_info)
+        self.dataset_info = dataset_info
         self.feature_name = "Object location map"
+        self.dict_res_maps = {}
         self.weight = 1
         self.image_shape = self._get_image_size()
-        self.dict_res_maps = {}
-        self.weight = 0.5
 
     def _process_dataset(self):
-        super()._process_dataset()
+        file_dirs_dict = self.dataset_info.masks_path
+        sample_count = len(file_dirs_dict)
+        self.weight = 1
+        for i, (class_name, paths) in enumerate(file_dirs_dict.items()):
+            for filepath in paths:
+                image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+                self._process_one_sample(image, class_name)
 
         fig_dict = {}
-        for key, val in self.classes_frequency.items():
+        for key, val in self.dict_res_maps.items():
             fig_dict[key] = self.get_plt(val, title=key)
         self.dict_res_maps = fig_dict
 
@@ -85,4 +90,3 @@ class LocationsMap(LabeledFeatures):
         im = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
         cv2.imshow(name, im)
         cv2.waitKey()
-

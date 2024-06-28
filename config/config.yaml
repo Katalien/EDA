@@ -3,10 +3,6 @@ output_path: "../reports/"
 Features:
   Color:
     visualization_methods: [ "density" ]
-  ClassesDiameterAnalysis:
-    visualization_methods: [ "boxplot" ]
-  ClassesSquareAnalysis:
-    visualization_methods: [ "boxplot" ]
   AspectRatio:
     visualization_methods: [ "scatter" ]
   Brightness:
@@ -21,3 +17,7 @@ Features:
     visualization_methods: [ ]
   ChanelSplitAnalysis:
     visualization_methods: [ ]
+  ClassesDiameterAnalysis:
+    visualization_methods: [ "boxplot" ]
+  ClassesSquareAnalysis:
+    visualization_methods: [ "boxplot" ]

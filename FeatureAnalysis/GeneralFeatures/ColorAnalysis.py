@@ -1,14 +1,11 @@
-import os
 from FeatureAnalysis.FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.FeatureData import FeatureData
 from DatasetProcessor import DatasetInfo
-from .GeneralFeatures import GeneralFeatures
 import numpy as np
-import pandas as pd
 import cv2
 
 
-class ChanelAnalysis(GeneralFeatures):
+class ChanelAnalysis(FeatureAnalysis):
     def __init__(self, dataset_info: DatasetInfo, color: str):
         super().__init__(dataset_info)
         self.color = color
@@ -52,10 +49,11 @@ class ChanelAnalysis(GeneralFeatures):
         return feature_data
 
 
-class ColorAnalysis(GeneralFeatures):
+class ColorAnalysis(FeatureAnalysis):
 
     def __init__(self, dataset_info: DatasetInfo):
         super().__init__(dataset_info)
+        self.dataset_info = dataset_info
         self.feature_name = "Colors"
         self.pixel_frequency_per_channel = np.zeros(256, dtype=np.int64)
         self.colors_feature_list = []
@@ -70,4 +68,6 @@ class ColorAnalysis(GeneralFeatures):
     def _process_one_sample(self, sample: np.ndarray):
         pass
 
-
+    def get_feature(self):
+        self._process_dataset()
+        return self.colors_feature_list
