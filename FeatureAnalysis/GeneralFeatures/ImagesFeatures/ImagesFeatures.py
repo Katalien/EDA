@@ -1,13 +1,12 @@
 import cv2
 from abc import abstractmethod
 import numpy as np
-from FeatureAnalysis import FeatureAnalysis
-from FeatureAnalysis.FeatureData import FeatureData
+from FeatureAnalysis import FeatureAnalysis, FeatureSummary
+from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 from DatasetProcessor import DatasetInfo
-import pandas as pd
 
 
-class GeneralFeatures(FeatureAnalysis):
+class ImagesFeatures(FeatureAnalysis):
     def __init__(self, dataset_info: DatasetInfo):
         super().__init__(dataset_info)
         self.path = self.dataset_info.images_path
@@ -17,6 +16,7 @@ class GeneralFeatures(FeatureAnalysis):
         self.min = None
         self.max = None
         self.std = None
+        self.summary = None
 
     def _process_dataset(self):
         file_dirs = self.dataset_info.images_path
@@ -32,9 +32,16 @@ class GeneralFeatures(FeatureAnalysis):
     def _process_one_sample(self, sample: np.ndarray):
         pass
 
-    def get_feature(self):
+    @abstractmethod
+    def get_feature(self) -> FeatureSummary:
         self._process_dataset()
         data_dict = {"x": len(self.data), "y": self.data}
-        df = pd.DataFrame(data_dict)
-        feature = FeatureData(self.feature_name, df, self.min, self.max, self.mean, self.std)
-        return feature
+        feature = ClassFeatureData(self.feature_name,
+                                   data_dict,
+                                   class_name="General",
+                                   _min=self.min,
+                                   _max=self.max,
+                                   _mean=self.mean,
+                                   _std=self.std)
+        self.summary = FeatureSummary.FeatureSummary(self.feature_name, [feature])
+        return self.summary

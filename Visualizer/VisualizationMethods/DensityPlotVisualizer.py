@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
 from .Visualizer import Visualizer
-from typing import List
-from FeatureAnalysis import FeatureData
-from DatasetProcessor import FeatureSummary
+from FeatureAnalysis import FeatureSummary
 import seaborn as sns
 
 class DensityPlotVisualizer(Visualizer):
@@ -13,6 +11,7 @@ class DensityPlotVisualizer(Visualizer):
         fig, axes = plt.subplots(nrows=num_features, ncols=1, figsize=(12, 12))
 
         for i, feature_data in enumerate(feature_data_list):
+
             ax = axes[i] if num_features > 1 else axes  # Если только один subplot, используем его напрямую
             y = feature_data.data["y"]
             sns.kdeplot(y, label=feature_data.feature_name, fill=True, ax=ax)

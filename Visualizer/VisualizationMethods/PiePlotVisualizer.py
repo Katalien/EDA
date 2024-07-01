@@ -1,8 +1,5 @@
-import matplotlib.pyplot as plt
-from typing import List
 from .Visualizer import Visualizer
-from FeatureAnalysis import FeatureData
-from DatasetProcessor import FeatureSummary
+from FeatureAnalysis import FeatureSummary
 
 
 class PiePlotVisualizer(Visualizer):

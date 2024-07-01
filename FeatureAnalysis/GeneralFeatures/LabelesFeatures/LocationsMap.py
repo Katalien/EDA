@@ -1,17 +1,17 @@
 import cv2
 import numpy as np
-from FeatureAnalysis import FeatureAnalysis
-from FeatureAnalysis.FeatureData import FeatureData
+from ... import FeatureSummary
+from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from DatasetProcessor import DatasetInfo
+from .LabelesFeatures import LabelesFeatures
 from PIL import Image
 
 
-class LocationsMap(FeatureAnalysis):
+class LocationsMap(LabelesFeatures):
     def __init__(self, dataset_info: DatasetInfo):
         super().__init__(dataset_info)
-        self.dataset_info = dataset_info
         self.feature_name = "Object location map"
         self.dict_res_maps = {}
         self.weight = 1
@@ -61,30 +61,31 @@ class LocationsMap(FeatureAnalysis):
         plt.imshow(image)
         plt.axis('off')
         plt.title(title)
-        # plt.show()
 
         return self.figure_to_array(fig)
 
     def figure_to_array(self, fig):
-        # Draw the figure on the canvas
         canvas = FigureCanvas(fig)
         canvas.draw()
-
-        # Get the RGBA buffer from the figure
         buf = canvas.buffer_rgba()
-
-        # Convert to a NumPy array
         image = np.asarray(Image.frombuffer('RGBA', canvas.get_width_height(), buf, 'raw', 'RGBA', 0, 1))
-
-        # Convert RGBA to RGB (remove alpha channel)
         image = cv2.cvtColor(image, cv2.COLOR_RGBA2RGB)
-
         return image
 
-    def get_feature(self):
+    def get_feature(self) -> FeatureSummary:
         self._process_dataset()
-        feature = FeatureData(self.feature_name, self.dict_res_maps, is_img=True)
-        return feature
+        features = []
+        for key, plt in self.dict_res_maps.items():
+            feature = ClassFeatureData(self.feature_name,
+                                       plt,
+                                       class_name=key,
+                                        is_img=True)
+            features.append(feature)
+        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features)
+        self.summary.set_is_img_feature(True)
+        self.summary.set_description("Locations map for different classes")
+
+        return self.summary
 
     def show_image(self, image, name):
         im = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)

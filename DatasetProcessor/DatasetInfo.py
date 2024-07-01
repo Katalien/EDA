@@ -21,7 +21,6 @@ class DatasetInfo:
         self.fill_info()
 
     def _get_image_size(self, filepath):
-        print("haha", filepath)
         image = cv2.imread(filepath)
         return image.shape
 

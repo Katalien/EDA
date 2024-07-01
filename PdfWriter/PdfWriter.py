@@ -1,20 +1,12 @@
-from matplotlib.backends.backend_pdf import PdfPages
-import matplotlib.pyplot as plt
 from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, PageBreak
 from reportlab.lib.styles import (ParagraphStyle, getSampleStyleSheet)
-from reportlab.pdfbase import pdfmetrics
 from reportlab.lib import colors
 import io
 import numpy as np
 from PIL import Image as PILImage
 from DatasetProcessor import DatasetInfo
 from reportlab.lib.units import inch
-from reportlab.pdfbase.ttfonts import TTFont
-from DatasetProcessor import FeatureSummary
-from typing import List
-
 
 
 class PdfWriter:

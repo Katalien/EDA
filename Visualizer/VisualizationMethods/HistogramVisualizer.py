@@ -1,12 +1,10 @@
 import matplotlib.pyplot as plt
 from .Visualizer import Visualizer
-from FeatureAnalysis import FeatureData
-from DatasetProcessor import FeatureSummary
-from typing import List
+from FeatureAnalysis import FeatureSummary
 
 
 class HistogramVisualizer(Visualizer):
-    def visualize(self, feature_summary:FeatureSummary, bins=10, grid=True):
+    def visualize(self, feature_summary: FeatureSummary, bins=10, grid=True):
         feature_data_list = feature_summary.features_list
         num_features = len(feature_data_list)
 

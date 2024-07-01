@@ -1,7 +1,10 @@
 from FeatureAnalysis import BrightnessAnalysis, ContrastAnalysis, AspectRatioAnalysis, ColorAnalysis, \
-                            ClassesFrequencyAnalysis, PrecisionAnalysis, RecallAnalysis, LocationsMap, \
-                            InstancePerImageAnalysis, ChanelSplitAnalysis, ClassesSquareAnalysis, \
-                            ClassesBbAspectRatioAnalysis, ClassesDiameterAnalysis
+    PrecisionAnalysis, RecallAnalysis
+from FeatureAnalysis.CustomFeatures.AtributesFeatures import ClassesBbAspectRatioAnalysis, ClassesSquareAnalysis, \
+    ClassesDiameterAnalysis
+from FeatureAnalysis.GeneralFeatures.LabelesFeatures import LocationsMap, InstancePerImageAnalysis, \
+    ClassesFrequencyAnalysis
+from FeatureAnalysis.GeneralFeatures.ImagesFeatures import ChanelSplitAnalysis
 from Visualizer.VisualizationMethods import BarPlotVisualizer, BoxPlotVisualizer, DensityPlotVisualizer, \
                                             HistogramVisualizer, LinePlotVisualizer, ScatterPlotVisualizer,\
                                             ViolinPlotVisualizer

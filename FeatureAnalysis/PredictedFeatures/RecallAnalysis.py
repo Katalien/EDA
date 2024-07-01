@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import pandas as pd
 from FeatureAnalysis import FeatureAnalysis
-from FeatureAnalysis.FeatureData import FeatureData
+from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 from .PredictedFeatures import PredictedFeatures
 
 

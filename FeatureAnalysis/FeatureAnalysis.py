@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Union
-import numpy as np
+from typing import Any
 from DatasetProcessor import DatasetInfo
 
 
@@ -14,7 +13,7 @@ class FeatureAnalysis(ABC):
         pass
 
     @abstractmethod
-    def _process_one_sample(self, sample: Union[np.ndarray, str], pred: Union[None, np.ndarray, str] = None):
+    def _process_one_sample(self,  *args: Any, **kwargs: Any):
         pass
 
     @abstractmethod

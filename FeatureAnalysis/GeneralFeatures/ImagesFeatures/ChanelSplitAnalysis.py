@@ -1,31 +1,29 @@
 import random
 import cv2
 import numpy as np
-from FeatureAnalysis import FeatureAnalysis
-from FeatureAnalysis.FeatureData import FeatureData
+from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from PIL import Image
 from DatasetProcessor import DatasetInfo
-from .GeneralFeatures import GeneralFeatures
+from .ImagesFeatures import ImagesFeatures
+from FeatureAnalysis import FeatureSummary
 
-class ChanelSplitAnalysis(GeneralFeatures):
+
+class ChanelSplitAnalysis(ImagesFeatures):
     def __init__(self, dataset_info: DatasetInfo):
         super().__init__(dataset_info)
         self.feature_name = "Chanel split"
         self.dict_res_figs = {"rgb": [], "hls": [], "YCbCr": []}
 
-
     def _process_dataset(self):
         file_dirs = self.dataset_info.images_path
         random_image_path = random.choice(file_dirs)
         image = cv2.imread(random_image_path)
-        # image = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
         fig_rgb, fig_hls, fig_ycbcr = self._process_one_sample(image)
         self.dict_res_figs["rgb"] = fig_rgb
         self.dict_res_figs["hls"] = fig_hls
         self.dict_res_figs["YCbCr"] = fig_ycbcr
-
 
     def _process_one_sample(self, sample: np.ndarray):
         image_rgb = cv2.cvtColor(sample, cv2.COLOR_BGR2RGB)
@@ -53,11 +51,18 @@ class ChanelSplitAnalysis(GeneralFeatures):
         im = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
         return im.shape
 
-    def get_feature(self):
+    def get_feature(self) -> FeatureSummary:
         self._process_dataset()
-        feature = FeatureData(self.feature_name, self.dict_res_figs, is_img=True)
-        return feature
-
+        features = []
+        for im_format, figs in self.dict_res_figs.items():
+            feature = ClassFeatureData(self.feature_name,
+                                       figs,
+                                       class_name=im_format,
+                                       is_img=True)
+            features.append(feature)
+        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features)
+        self.summary.set_description("Examples of splitting channels of random image for 3 formats: RGB, HLS, YCbCr")
+        return self.summary
 
     def get_plots(self, images, titles=None, suptitle="", bgr2rgb=True):
         cols = len(images)
