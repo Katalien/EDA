@@ -1,7 +1,7 @@
 from FeatureAnalysis import BrightnessAnalysis, ContrastAnalysis, AspectRatioAnalysis, ColorAnalysis, \
     PrecisionAnalysis, RecallAnalysis
 from FeatureAnalysis.CustomFeatures.AtributesFeatures import ClassesBbAspectRatioAnalysis, ClassesSquareAnalysis, \
-    ClassesDiameterAnalysis
+    ClassesDiameterAnalysis, Class2ImageRatioAnalysis
 from FeatureAnalysis.GeneralFeatures.LabelesFeatures import LocationsMap, InstancePerImageAnalysis, \
     ClassesFrequencyAnalysis
 from FeatureAnalysis.GeneralFeatures.ImagesFeatures import ChanelSplitAnalysis
@@ -24,7 +24,8 @@ AnalysersClassNamesDict = {
     "ChanelSplitAnalysis": ChanelSplitAnalysis.ChanelSplitAnalysis,
     "ClassesSquareAnalysis": ClassesSquareAnalysis.ClassesSquareAnalysis,
     "ClassesBbAspectRatioAnalysis": ClassesBbAspectRatioAnalysis.ClassesBbAspectRatioAnalysis,
-    "ClassesDiameterAnalysis": ClassesDiameterAnalysis.ClassesDiameterAnalysis
+    "ClassesDiameterAnalysis": ClassesDiameterAnalysis.ClassesDiameterAnalysis,
+    "Class2ImageRatioAnalysis": Class2ImageRatioAnalysis.Class2ImageRatioAnalysis
 }
 
 VisualizersClassNamesDict = {

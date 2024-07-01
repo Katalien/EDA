@@ -3,6 +3,7 @@ import numpy as np
 from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 from DatasetProcessor import DatasetInfo
+from ... import FeatureSummary
 from typing import Dict, List
 from .AtributesFeatures import AtributesFeatures
 
@@ -21,7 +22,8 @@ class ClassesSquareAnalysis(AtributesFeatures):
             else:
                 self.classes_attr_dict[class_name].append(area)
 
-    def get_feature(self):
+    def get_feature(self) -> FeatureSummary:
         super().get_feature()
-        return self.featuresData
+        self.summary.set_description("Square of classes segments")
+        return self.summary
 

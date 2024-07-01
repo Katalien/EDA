@@ -3,8 +3,10 @@ from abc import abstractmethod
 import numpy as np
 from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.ClassFeatureData import ClassFeatureData
+from ... import FeatureSummary
 from DatasetProcessor import DatasetInfo
 from typing import Dict, List
+
 
 class AtributesFeatures(FeatureAnalysis):
     def __init__(self, dataset_info: DatasetInfo):
@@ -13,6 +15,7 @@ class AtributesFeatures(FeatureAnalysis):
         self.classes_attr_dict: Dict[str, List] = {}
         self.featuresData = []
         self.feature_name = None
+        self.summary = None
 
     def _process_dataset(self):
         file_dirs_dict = self.dataset_info.masks_path
@@ -26,16 +29,23 @@ class AtributesFeatures(FeatureAnalysis):
             _mean = sum(data) / len(data)
             _std = (sum((x - _mean) ** 2 for x in data) / len(data)) ** 0.5
             _data_dict = {"x": len(data), "y": data}
-            _feature_name = f"{self.feature_name} {class_name}"
-            feature = FeatureData(_feature_name, _data_dict, _min, _max, _mean, _std)
+            feature = ClassFeatureData(self.feature_name,
+                                       _data_dict,
+                                       class_name=class_name,
+                                       _min=_min,
+                                       _max=_max,
+                                       _mean=_mean,
+                                       _std=_std)
             self.featuresData.append(feature)
 
     @abstractmethod
     def _process_one_sample(self, sample: np.ndarray, class_name: str):
         pass
 
+    @abstractmethod
     def get_feature(self):
         self._process_dataset()
+        self.summary = FeatureSummary.FeatureSummary(self.feature_name, self.featuresData)
         return self.featuresData
 
 

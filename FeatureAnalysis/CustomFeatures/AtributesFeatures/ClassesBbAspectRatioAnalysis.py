@@ -4,6 +4,7 @@ from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 from DatasetProcessor import DatasetInfo
 from .AtributesFeatures import AtributesFeatures
+from ... import FeatureSummary
 from typing import Dict, List
 
 class ClassesBbAspectRatioAnalysis(AtributesFeatures):
@@ -22,7 +23,8 @@ class ClassesBbAspectRatioAnalysis(AtributesFeatures):
             else:
                 self.classes_attr_dict[class_name].append(aspect_ratio)
 
-    def get_feature(self):
+    def get_feature(self) -> FeatureSummary:
         super().get_feature()
-        return self.featuresData
+        self.summary.set_description("Aspect ratio of classes bounging boxes")
+        return self.summary
 

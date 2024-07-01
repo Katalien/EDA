@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
+from matplotlib import colors
+
 from .Visualizer import Visualizer
 import seaborn as sns
+import numpy as np
 import pandas as pd
 
 class BoxPlotVisualizer(Visualizer):
@@ -8,94 +11,39 @@ class BoxPlotVisualizer(Visualizer):
         feature_data_list = feature_summary.features_list
         plt.figure(figsize=(12, 12))
 
-        lengths = [len(feature_data.data["y"]) for feature_data in feature_data_list]
-        all_same_length = all(length == lengths[0] for length in lengths)
+        # Calculate mean values for each class
+        mean_values = [np.mean(feature_data.data["y"]) for feature_data in feature_data_list]
 
-        if all_same_length:
-            data_dict = {feature_data.feature_name: feature_data.data["y"] for feature_data in feature_data_list}
-            df = pd.DataFrame(data_dict)
+        # Determine if the difference between mean values is greater than 2 orders of magnitude
+        if max(mean_values) / min(mean_values) > 100:
+            # Plot each boxplot on separate subplots
+            num_plots = len(feature_data_list)
+            fig, axes = plt.subplots(num_plots, 1, figsize=(12, 6 * num_plots), sharex=True)
+            for i, feature_data in enumerate(feature_data_list):
+                ax = axes[i]
+                sns.boxplot(x=feature_data.data["y"], ax=ax, orient="Vertical",
+                            color=sns.color_palette("husl", num_plots)[i])  # Use a color from the palette
+                ax.set_title(f"Box Plot of {feature_data.class_name}")
+                ax.set_xlabel('Feature')
+                ax.set_ylabel('Value')
+                ax.grid(True)
         else:
+            # Plot all boxplots on the same subplot
             data = []
             for feature_data in feature_data_list:
-                feature_name = feature_data.feature_name
+                class_name = feature_data.class_name
                 y_values = feature_data.data["y"]
                 for y in y_values:
-                    data.append({'class': feature_name, 'area': y})
+                    data.append({'class': class_name, 'value': y})
             df = pd.DataFrame(data)
+            colors = sns.color_palette("husl", len(feature_data_list))  # Get a palette of colors
+            ax = sns.boxplot(x='class', y='value', orient="v", data=df, hue='class', palette=colors)
+            ax.set_title(f"Box Plot of {feature_summary.feature_name}")
+            ax.set_xlabel('Feature')
+            ax.set_ylabel('Value')
+            ax.grid(True)
+            plt.legend(title='Classes', loc='upper left',
+                       labels=[feature_data.class_name for feature_data in feature_data_list])
 
-        # Calculate means for each class
-        means = df.groupby('class')['area'].mean() if 'class' in df else df.mean()
-        max_mean = max(means)
-        min_mean = min(means)
-        significant_difference = (max_mean / min_mean) > 10
-
-        if significant_difference:
-            # Create two subplots with separate y-axes
-            fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 12))
-
-            if 'class' in df:
-                sns.boxplot(x='class', y='area', data=df[df['class'] == means.idxmax()], ax=ax1)
-                sns.boxplot(x='class', y='area', data=df[df['class'] == means.idxmin()], ax=ax2)
-            else:
-                sns.boxplot(data=df[[means.idxmax()]], ax=ax1, orient="v")
-                sns.boxplot(data=df[[means.idxmin()]], ax=ax2, orient="v")
-
-            ax1.set_title(f"Boxplot of {means.idxmax()}", fontsize=14)
-            ax2.set_title(f"Boxplot of {means.idxmin()}", fontsize=14)
-            fig.suptitle(f"Boxplots of {feature_summary.feature_name}", fontsize=16, fontweight='bold')
-
-            if grid:
-                ax1.grid(True)
-                ax2.grid(True)
-
-            plt.tight_layout()
-        else:
-            if 'class' in df:
-                sns.boxplot(x='class', y='area', data=df, orient="v")
-            else:
-                sns.boxplot(data=df, orient="v")
-
-            plt.title(f"Box Plot of {feature_summary.feature_name}", fontsize=16, fontweight='bold')
-            plt.xlabel('Feature')
-            plt.ylabel('Value')
-
-            if grid:
-                plt.grid(True)
-
-            plt.tight_layout()
-
-        # plt.show()
+        plt.tight_layout()
         return plt.gcf()
-
-
-
-    # def visualize(self, feature_summary: FeatureSummary, grid=True):
-    #     feature_data_list = feature_summary.features_list
-    #     plt.figure(figsize=(12, 12))
-    #
-    #     lengths = [len(feature_data.data["y"]) for feature_data in feature_data_list]
-    #     all_same_length = all(length == lengths[0] for length in lengths)
-    #     if all_same_length:
-    #         data_dict = {feature_data.feature_name: feature_data.data["y"] for feature_data in feature_data_list}
-    #         df = pd.DataFrame(data_dict)
-    #         sns.boxplot(data=df, orient="v")
-    #     else:
-    #         data = []
-    #         for feature_data in feature_data_list:
-    #             feature_name = feature_data.feature_name
-    #             y_values = feature_data.data["y"]
-    #             for y in y_values:
-    #                 data.append({'class': feature_name, 'area': y})
-    #         df = pd.DataFrame(data)
-    #         sns.boxplot(x='class', y='area', data=df)
-    #
-    #     plt.title(f"Box Plot of {feature_summary.feature_name}")
-    #     plt.xlabel('Feature')
-    #     plt.ylabel('Value')
-    #
-    #     if grid:
-    #         plt.grid(True)
-    #
-    #     plt.tight_layout()
-    #     # plt.show()
-    #     return plt.gcf()
