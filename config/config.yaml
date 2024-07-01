@@ -12,7 +12,7 @@ Features:
   ChanelSplitAnalysis:
     visualization_methods: [ ]
   ClassesFrequency:
-    visualization_methods: [ "density" ]
+    visualization_methods: [ "bar" ]
   InstancesPerImage:
     visualization_methods: [ "density" ]
   LocationsMap:
