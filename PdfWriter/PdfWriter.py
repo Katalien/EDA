@@ -165,17 +165,19 @@ class PdfWriter:
             feature_plots_dict[description] = []
             if feature_sum.is_img_feature:
                 for feature_data in feature_sum.features_list:
-                    for name, feature_img in feature_data.data.items():
-                        img_array = np.uint8(feature_img)  #
-                        pil_img = PILImage.fromarray(img_array)
+                    # for name, feature_img in feature_data.data.items():
+                    name = feature_data.class_name
+                    feature_img = feature_data.data
+                    img_array = np.uint8(feature_img)  #
+                    pil_img = PILImage.fromarray(img_array)
 
-                        img_buffer = io.BytesIO()
-                        pil_img.save(img_buffer, format='PNG')
-                        img_buffer.seek(0)
+                    img_buffer = io.BytesIO()
+                    pil_img.save(img_buffer, format='PNG')
+                    img_buffer.seek(0)
 
-                        img = Image(img_buffer)
-                        feature_plots_dict[description].append((img, name))
-                        del (img_buffer)
+                    img = Image(img_buffer)
+                    feature_plots_dict[description].append((img, name))
+                    del (img_buffer)
 
             else:
                 for plot in feature_sum.plots:

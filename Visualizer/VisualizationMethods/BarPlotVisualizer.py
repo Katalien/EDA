@@ -7,25 +7,28 @@ from FeatureAnalysis import FeatureSummary
 class BarPlotVisualizer(Visualizer):
     def visualize(self, feature_summary: FeatureSummary, grid=True):
         feature_data_list = feature_summary.features_list
+        num_classes = len(feature_data_list)
+
         fig, ax = plt.subplots(figsize=(12, 12))
 
-        num_features = len(feature_data_list)
-        bar_width = 0.3  # Ширина каждого столбца
-        index = np.arange(len(feature_data_list[0].data["x"]))  # Индексы для каждой группы столбцов
+        bar_width = 0.8 / num_classes  # Ширина каждого столбца, нормализована по количеству классов
+        index = np.arange(num_classes)  # Индексы для каждого класса
 
-        for i, feature_data in enumerate(feature_data_list):
-            x = np.array(feature_data.data["x"])
-            y = np.array(feature_data.data["y"])
-            ax.bar(index + i * bar_width, y, bar_width, label=feature_data.feature_name)
+        y_values = [feature_data.data["y"] for feature_data in feature_data_list]
+        class_names = [feature_data.class_name for feature_data in feature_data_list]
+
+        colors = plt.get_cmap('tab10', num_classes)  # Получаем цветовую карту с 10 цветами
+
+        for i in range(num_classes):
+            ax.bar(index[i], y_values[i], bar_width, color=colors(i), label=class_names[i])
 
         ax.set_title(f"Bar Plot of {feature_summary.feature_name}", fontsize=16, fontweight='bold')
-        ax.set_xlabel('X')
+        ax.set_xlabel('Class')
         ax.set_ylabel('Y')
-        ax.set_xticks(index + bar_width * (num_features - 1) / 2)  # Центрирование меток по оси x
-        ax.set_xticklabels(feature_data_list[0].data["x"])  # Метки оси x
+
         if grid:
             ax.grid(True)
 
-        plt.legend()
+        ax.legend()
         plt.tight_layout()
         return fig
