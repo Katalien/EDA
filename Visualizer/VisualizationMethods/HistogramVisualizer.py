@@ -17,9 +17,16 @@ class HistogramVisualizer(Visualizer):
             fig, axes = plt.subplots(1, num_features, figsize=(12, 12))
 
         for i, feature in enumerate(feature_data_list):
-            x = feature.data["x"]
-            y = feature.data["y"]
-            axes[i].hist(y, bins=len(x), label=feature.feature_name)
+            if 'class' in feature.data.columns:
+                # Если есть столбец 'class'
+                classes = feature.data['class'].unique()
+                for cls in classes:
+                    data_cls = feature.data[feature.data['class'] == cls]
+                    axes[i].hist(data_cls['y'], bins=bins, alpha=0.5, label=cls)
+            else:
+                # Если нет столбца 'class'
+                axes[i].hist(feature.data['y'], bins=bins, label=feature.feature_name)
+
             axes[i].set_title(feature.feature_name)
             if grid:
                 axes[i].grid(True)

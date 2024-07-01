@@ -15,4 +15,10 @@ class BrightnessAnalysis(GeneralFeatures):
     def _process_one_sample(self, sample: np.ndarray):
         return np.mean(sample)
 
+    def get_feature(self):
+        self._process_dataset()
+        data_dict = {"x": range(len(self.data)), "y": self.data}
+        df = pd.DataFrame(data_dict)
+        feature = FeatureData(self.feature_name, df, self.min, self.max, self.mean, self.std)
+        return feature
 

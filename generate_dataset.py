@@ -1,37 +1,35 @@
+import cv2
+import numpy as np
 import os
-from PIL import Image, ImageDraw
 
-# Создание папки для хранения изображений, если она не существует
-filepath = '../dataset/train/predictions/'
-os.makedirs(filepath, exist_ok=True)
 
-# Размеры изображений
-image_size = (200, 200)
-square_size = (50, 50)
-offset = 10
+def generate_test_data(filepath, n, image_size=(640, 480), mask_white_areas=5):
+    os.makedirs(filepath, exist_ok=True)
+    gray_value=128
 
-# Позиции для белых квадратов с отступами
-positions = [
-    (offset, offset),  # Левый верхний угол
-    (image_size[0] - square_size[0] - offset, offset),  # Правый верхний угол
-    (offset, image_size[1] - square_size[1] - offset),  # Левый нижний угол
-    (image_size[0] - square_size[0] - offset, image_size[1] - square_size[1] - offset)  # Правый нижний угол
-]
-filenames = ['top_left.png', 'top_right.png', 'bottom_left.png', 'bottom_right.png']
+    for i in range(n):
+        folder_name = f"{i + 1:02d}"
+        folder_path = os.path.join(filepath, folder_name)
+        os.makedirs(folder_path, exist_ok=True)
 
-for position, filename in zip(positions, filenames):
-    # Создание черного изображения
-    image = Image.new("RGB", image_size, "black")
-    draw = ImageDraw.Draw(image)
+        # Generate a random grayscale image
+        image = np.full(image_size, gray_value, dtype=np.uint8)
 
-    # Определение координат белого квадрата
-    x0, y0 = position
-    x1, y1 = (x0 + square_size[0], y0 + square_size[1])
+        # Generate a random binary mask
+        mask = np.zeros(image_size, dtype=np.uint8)
 
-    # Рисование белого квадрата
-    draw.rectangle([x0, y0, x1, y1], fill="white")
+        for _ in range(mask_white_areas):
+            x, y = np.random.randint(0, image_size[1]), np.random.randint(0, image_size[0])
+            width, height = np.random.randint(10, 100), np.random.randint(10, 100)
+            cv2.rectangle(mask, (x, y), (x + width, y + height), 255, -1)
 
-    # Сохранение изображения
-    image.save(os.path.join(filepath, filename))
+        # Save the image and the mask
+        image_path = os.path.join(folder_path, f"{folder_name}.png")
+        mask_path = os.path.join(folder_path, f"{folder_name}_mask.png")
 
-print("Изображения успешно созданы и сохранены.")
+        cv2.imwrite(image_path, image)
+        cv2.imwrite(mask_path, mask)
+
+
+# Example usage
+generate_test_data("../dataset/test_data/", 10)

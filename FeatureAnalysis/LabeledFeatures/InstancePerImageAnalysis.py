@@ -29,27 +29,6 @@ class InstancePerImageAnalysis(LabeledFeatures):
 
 
 
-    def _process_dataset_json(self):
-        for json_file in os.listdir(self.labels_path):
-            self._process_one_sample(json_file)
-
-
-    def _process_one_sample_json(self, sample: str ):
-        filepath = os.path.join(self.labels_path, sample)
-        classes_per_image = {}
-        with open(filepath, "r") as file:
-            json_data = json.load(file)
-            for data_line in json_data:
-                defect_type = data_line["type"]
-                if str(defect_type) in classes_per_image:
-                    classes_per_image[defect_type] += 1
-                else:
-                    classes_per_image[defect_type] = 1
-        for key, vals in classes_per_image.items():
-            if key not in self.classes_frequency:
-                self.classes_frequency[key] = [vals]
-            else:
-                self.classes_frequency[key].append(vals)
 
     def _fill_zeroes(self):
         max_len = -1

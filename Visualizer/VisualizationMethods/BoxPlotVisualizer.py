@@ -30,7 +30,10 @@ class BoxPlotVisualizer(Visualizer):
         means = df.groupby('class')['area'].mean() if 'class' in df else df.mean()
         max_mean = max(means)
         min_mean = min(means)
-        significant_difference = (max_mean / min_mean) > 10
+        if min_mean < 0.0001:
+            significant_difference = False
+        else:
+            significant_difference = (max_mean / min_mean) > 10
 
         if significant_difference:
             # Create two subplots with separate y-axes

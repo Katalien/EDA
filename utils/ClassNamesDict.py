@@ -1,7 +1,8 @@
 from FeatureAnalysis import BrightnessAnalysis, ContrastAnalysis, AspectRatioAnalysis, ColorAnalysis, \
                             ClassesFrequencyAnalysis, PrecisionAnalysis, RecallAnalysis, LocationsMap, \
                             InstancePerImageAnalysis, ChanelSplitAnalysis, ClassesSquareAnalysis, \
-                            ClassesBbAspectRatioAnalysis, ClassesDiameterAnalysis
+                            ClassesBbAspectRatioAnalysis, ClassesDiameterAnalysis,\
+                            MaskedBrightnessAnalysis, MaskedContrastAnalysis, MaskedGradientAnalysis
 from Visualizer.VisualizationMethods import BarPlotVisualizer, BoxPlotVisualizer, DensityPlotVisualizer, \
                                             HistogramVisualizer, LinePlotVisualizer, ScatterPlotVisualizer,\
                                             ViolinPlotVisualizer
@@ -21,7 +22,10 @@ AnalysersClassNamesDict = {
     "ChanelSplitAnalysis": ChanelSplitAnalysis.ChanelSplitAnalysis,
     "ClassesSquareAnalysis": ClassesSquareAnalysis.ClassesSquareAnalysis,
     "ClassesBbAspectRatioAnalysis": ClassesBbAspectRatioAnalysis.ClassesBbAspectRatioAnalysis,
-    "ClassesDiameterAnalysis": ClassesDiameterAnalysis.ClassesDiameterAnalysis
+    "ClassesDiameterAnalysis": ClassesDiameterAnalysis.ClassesDiameterAnalysis,
+    "MaskedBrightness": MaskedBrightnessAnalysis.MaskedBrightnessAnalysis,
+    "MaskedContrast": MaskedContrastAnalysis.MaskedContrastAnalysis,
+    "MaskedGradient": MaskedGradientAnalysis.MaskedGradientAnalysis
 }
 
 VisualizersClassNamesDict = {

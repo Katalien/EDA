@@ -1,53 +1,53 @@
 import cv2
-import os
-import matplotlib.pyplot as plt
+from abc import abstractmethod
 import numpy as np
+from FeatureAnalysis import FeatureAnalysis
+from FeatureAnalysis.FeatureData import FeatureData
+from DatasetProcessor import DatasetInfo
+import pandas as pd
+from utils.utils import mask_path2image_path
 
-# # Путь к папке с изображениями
-# folder_path = "../dataset/tiny_coco_images/"
-#
-# image_files = [f for f in os.listdir(folder_path) if f.endswith(('.jpg', '.png', '.jpeg'))]
-#
-# # Цвета для графиков
-# colors = ('b', 'g', 'r')
-# channel_hist = {color: np.zeros(256) for color in colors}
-#
-# # Проходим по каждому файлу
-# for file in image_files:
-#     # Полный путь к текущему изображению
-#     file_path = os.path.join(folder_path, file)
-#
-#     # Считываем изображение
-#     img = cv2.imread(file_path)
-#
-#     # Считаем гистограммы для каждого цветового канала
-#     for i, col in enumerate(colors):
-#         histr = cv2.calcHist([img], [i], None, [256], [0, 256])
-#         channel_hist[col] += histr.flatten()
-#
-# # Нормализуем гистограммы
-# for color in colors:
-#     channel_hist[color] /= channel_hist[color].sum()
-#
-# # Строим график
-# plt.figure(figsize=(10, 6))
-#
-# for col in colors:
-#     plt.plot(range(256), channel_hist[col], color=col)
-#     plt.xlim([0, 256])
-#
-# plt.title('Color Distribution for All Images')
-# plt.xlabel('Color Intensity')
-# plt.ylabel('Density')
-# plt.legend(['Blue', 'Green', 'Red'])
-# plt.show()
 
-gt = cv2.imread("../dataset/train/masks/bottom_left.png")
-pred = cv2.imread("../dataset/train/predictions/bottom_left.png")
+class MaskedFeatures():
+    def __init__(self):
+        self.feature_name = None
+        self.data = []
+        self.mean = None
+        self.min = None
+        self.max = None
+        self.std = None
 
-and_mask = cv2.bitwise_and(gt, pred) #tp
+    def process_dataset(self, grayscale=True):
+        mask_path = "../dataset/real_dataset/56_skoli/face/01/01_top.tif"
+        image_path = mask_path2image_path(mask_path)
+        if grayscale:
+            image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+        else:
+            image = cv2.imread(image_path)
+        mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
+        self._get_masked_image(image, mask, grayscale)
 
-neg_and = cv2.bitwise_and(cv2.bitwise_not(gt), pred) #fp
-neg_or = cv2.bitwise_not(cv2.bitwise_or(cv2.bitwise_not(gt), pred)) #fn
-cv2.imshow("and", neg_or)
-cv2.waitKey()
+    @abstractmethod
+    def _process_one_sample(self, sample: np.ndarray, mask: np.ndarray):
+        pass
+
+    def _get_masked_image(self, image, mask, grayscale=True):
+        if grayscale:
+            mask2merge = mask.copy()
+        else:
+            mask2merge = cv2.merge([mask, mask, mask])
+        masked_image = cv2.bitwise_and(image, mask2merge, mask=mask)
+        image = cv2.resize(masked_image, (0, 0), fx=0.3, fy=0.3)
+        cv2.imshow("", image)
+        cv2.waitKey()
+
+    def get_feature(self):
+        self._process_dataset()
+        data_dict = {"x": len(self.data), "y": self.data}
+        df = pd.DataFrame(data_dict)
+        feature = FeatureData(self.feature_name, df, self.min, self.max, self.mean, self.std)
+        return feature
+
+
+analyzer = MaskedFeatures()
+analyzer.process_dataset()

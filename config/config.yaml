@@ -1,23 +1,9 @@
-dataset_path: "../dataset/real_dataset/"
+dataset_path: "../dataset/test_data/"
 output_path: "../reports/"
 Features:
-  Color:
-    visualization_methods: [ "density" ]
-  AspectRatio:
-    visualization_methods: [ "scatter" ]
-  Brightness:
-    visualization_methods: [ "density" ]
-  Contrast:
-    visualization_methods: [ "density" ]
-  ClassesFrequency:
-    visualization_methods: [ "density" ]
-  InstancesPerImage:
-    visualization_methods: [ "density" ]
-  LocationsMap:
-    visualization_methods: [ ]
-  ChanelSplitAnalysis:
-    visualization_methods: [ ]
-  ClassesDiameterAnalysis:
+  MaskedGradient:
     visualization_methods: [ "boxplot" ]
-  ClassesSquareAnalysis:
-    visualization_methods: [ "boxplot" ]
+  MaskedContrast:
+    visualization_methods: [ "boxplot", "histogram" ]
+  MaskedBrightness:
+    visualization_methods: [ "boxplot", "histogram" ]

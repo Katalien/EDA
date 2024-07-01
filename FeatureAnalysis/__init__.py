@@ -13,10 +13,14 @@ from .FeatureData import FeatureData
 from .AtributesFeatures import ClassesSquareAnalysis
 from .AtributesFeatures import ClassesBbAspectRatioAnalysis
 from .AtributesFeatures import ClassesDiameterAnalysis
+from .MaskedSegmentsAnalysis import MaskedBrightnessAnalysis
+from .MaskedSegmentsAnalysis import MaskedContrastAnalysis
+from .MaskedSegmentsAnalysis import MaskedGradientAnalysis
 
 __all__ = ["FeatureAnalysis", "BrightnessAnalysis", "ContrastAnalysis",
            "AspectRatioAnalysis", "FeatureData", "ColorAnalysis",
            "ClassesFrequencyAnalysis", "PrecisionAnalysis", "RecallAnalysis",
            "LocationsMap", "InstancePerImageAnalysis", "ChanelSplitAnalysis",
            "ClassesSquareAnalysis", "ClassesBbAspectRatioAnalysis",
-           "ClassesDiameterAnalysis"]
+           "ClassesDiameterAnalysis",
+           "MaskedBrightnessAnalysis", "MaskedContrastAnalysis", "MaskedGradientAnalysis"]

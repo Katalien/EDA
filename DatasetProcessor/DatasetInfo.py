@@ -1,10 +1,15 @@
 import os
 import cv2
+import re
 from typing import List, Dict, Set
 
+# DatasetClasses = {
+#     "sco": "border chip",
+#     "top": "border face"
+# }
+
 DatasetClasses = {
-    "sco": "border chip",
-    "top": "border face"
+    "mask": "mask"
 }
 
 class DatasetInfo:
@@ -18,10 +23,10 @@ class DatasetInfo:
         self.masks_count: Dict[str, int] = {}
         self.image_size = None
         self.mask_size = None
+        self.deepest_dirs = []
         self.fill_info()
 
     def _get_image_size(self, filepath):
-        print("haha", filepath)
         image = cv2.imread(filepath)
         return image.shape
 
@@ -47,7 +52,7 @@ class DatasetInfo:
         all_paths, files_dirs = self._get_all_files()
         for i, dir_path in enumerate(files_dirs):
             for image_name in os.listdir(dir_path):
-
+                self.deepest_dirs.append(dir_path)
                 filepath = os.path.join(dir_path, image_name)
                 filepath = filepath.replace("\\", "/")
                 # исходное изображение
