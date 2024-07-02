@@ -12,7 +12,8 @@ class ClassFeatureData:
                  _max: float | int = None,
                  _mean: float | int = None,
                  _std: float | int = None,
-                 is_img: bool = False):
+                 is_img: bool = False,
+                 add_info = None ):
         self.feature_name: str = feature_name
         self.is_img: bool = is_img
         self.data: List = data
@@ -21,3 +22,4 @@ class ClassFeatureData:
         self.max: float | int = _max
         self.mean: float | int = _mean
         self.std: float | int = _std
+        self.additional_info = add_info

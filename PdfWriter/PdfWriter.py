@@ -7,6 +7,7 @@ import numpy as np
 from PIL import Image as PILImage
 from DatasetProcessor import DatasetInfo
 from reportlab.lib.units import inch
+from utils.utils import sort_general_custom_features
 
 
 class PdfWriter:
@@ -18,6 +19,8 @@ class PdfWriter:
         self.dataset_info = dataset_info
         self.output_filename = output_filename
         self._init_styles()
+        self.general_features, self.custom_features = sort_general_custom_features(features_summaries)
+
 
     def _init_styles(self):
         style = getSampleStyleSheet()
@@ -25,9 +28,11 @@ class PdfWriter:
         self.dataset_info_style = ParagraphStyle("name2", fontName='Times-Roman', fontSize=16)
 
 
-    def _set_feature_data_list(self):
+    def _set_feature_data_list(self, cur_feature_summaries=None):
+        if cur_feature_summaries is None:
+            cur_feature_summaries = self.features_summaries
         data_list = []
-        for feature_sum in self.features_summaries:
+        for feature_sum in cur_feature_summaries:
             if not feature_sum.is_img_feature:
                 data_list.extend(feature_sum.features_list)
         return data_list
@@ -37,9 +42,12 @@ class PdfWriter:
         doc = SimpleDocTemplate(self.output_filename, pagesize=letter)
         self._create_title_block()
         self._create_dataset_info_block()
-        self._create_table()
-        self.elements.append(PageBreak())
-        self._create_plots_block()
+        self._create_features_list()
+        self._create_table("General")
+        self._create_plots_block("General")
+        self._create_table("Custom")
+        self._create_plots_block("Custom")
+
         print(self.output_filename)
         doc.build(self.elements)
 
@@ -82,22 +90,43 @@ class PdfWriter:
         self.elements.append(Spacer(1, 12))
         self.elements.append(Spacer(1, 12))
 
-
-    def _create_table(self):
+    def _create_features_list(self):
         description = Paragraph(f"Dataset feature table", self.styles['Title'])
         self.elements.append(description)
         self.elements.append(Spacer(1, 12))
 
         num_features = len(self.features_summaries)
+        num_general_features = len(self.general_features)
+        num_custom_features = len(self.custom_features)
+
         num_images_text = Paragraph(f"Amount of analyzed features: {num_features}", self.dataset_info_style)
         self.elements.append(num_images_text)
         self.elements.append(Spacer(1, 12))
 
-        num_images_text = Paragraph(f"Features", self.dataset_info_style)
+        num_images_text = Paragraph(f"Amount of general features: {num_general_features}", self.dataset_info_style)
         self.elements.append(num_images_text)
         self.elements.append(Spacer(1, 12))
 
-        for feature_summary in self.features_summaries:
+        num_images_text = Paragraph(f"Amount of custom features: {num_custom_features}", self.dataset_info_style)
+        self.elements.append(num_images_text)
+        self.elements.append(Spacer(1, 12))
+        self.elements.append(Spacer(1, 12))
+
+        num_images_text = Paragraph(f"General Features:", self.dataset_info_style)
+        self.elements.append(num_images_text)
+        self.elements.append(Spacer(1, 12))
+
+        for feature_summary in self.general_features:
+            feature_name = feature_summary.feature_name
+            feature_paragraph = Paragraph(f"- {feature_name}", self.enum_styles)
+            self.elements.append(feature_paragraph)
+            self.elements.append(Spacer(1, 12))
+
+        num_images_text = Paragraph(f"Custom Features:", self.dataset_info_style)
+        self.elements.append(num_images_text)
+        self.elements.append(Spacer(1, 12))
+
+        for feature_summary in self.custom_features:
             feature_name = feature_summary.feature_name
             feature_paragraph = Paragraph(f"- {feature_name}", self.enum_styles)
             self.elements.append(feature_paragraph)
@@ -105,16 +134,26 @@ class PdfWriter:
 
         self.elements.append(PageBreak())
 
+
+    def _create_table(self, type):
+        class_name = "general" if type == "General" else "custom"
+        cur_features = self.general_features if type == "General" else self.custom_features
+
+        table_title = Paragraph(f"Table of {class_name} features", self.styles['Title'])
+        self.elements.append(table_title)
+        self.elements.append(Spacer(1, 12))
+
         # Create table
         head = ['Feature name', 'Min', 'Max', 'Mean', 'Std']
         self.data = []
 
-        for feature_data in self.feature_data_list:
+        for feature_data in self._set_feature_data_list(cur_features):
             if feature_data.min is None and feature_data.max is None and feature_data.std is None and feature_data.mean is None:
                 continue
 
+
             row = [
-                feature_data.feature_name,
+                feature_data.feature_name if type == "General" else f"{feature_data.feature_name} {feature_data.class_name}",
                 self.format_value(feature_data.min),
                 self.format_value(feature_data.max),
                 self.format_value(feature_data.mean),
@@ -156,11 +195,12 @@ class PdfWriter:
 
         self.elements.append(table)
         self.elements.append(Spacer(1, 12))
+        self.elements.append(PageBreak())
 
-    def _fill_plots_section_info(self):
+    def _fill_plots_section_info(self, cur_feature_summaries):
         feature_plots_dict = {}
         self.elements.append(Spacer(1, 12))
-        for i, feature_sum in enumerate(self.features_summaries):
+        for i, feature_sum in enumerate(cur_feature_summaries):
             description = Paragraph(f"Graphic {i + 1}: {feature_sum.feature_name}", self.styles['Heading2'])
             feature_plots_dict[description] = []
             if feature_sum.is_img_feature:
@@ -211,8 +251,10 @@ class PdfWriter:
         img.drawWidth = new_width
         return img.drawHeight, img.drawWidth
 
-    def _create_plots_block(self):
-        feature_plots_dict = self._fill_plots_section_info()
+    def _create_plots_block(self, type="General"):
+        cur_feature_summaries = self.general_features if type == "General" else self.custom_features
+
+        feature_plots_dict = self._fill_plots_section_info(cur_feature_summaries)
 
         # description = Paragraph(f"Feature graphics", self.styles['Heading1'])
         # self.elements.append(description)

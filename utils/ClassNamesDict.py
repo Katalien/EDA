@@ -4,6 +4,8 @@ from FeatureAnalysis.CustomFeatures.AtributesFeatures import ClassesBbAspectRati
     ClassesDiameterAnalysis, Class2ImageRatioAnalysis
 from FeatureAnalysis.GeneralFeatures.LabelesFeatures import LocationsMap, InstancePerImageAnalysis, \
     ClassesFrequencyAnalysis
+from FeatureAnalysis.CustomFeatures.MaskedSegmentsAnalysis import MaskedBrightnessAnalysis, MaskedContrastAnalysis,\
+                                                            MaskedGradientAnalysis
 from FeatureAnalysis.GeneralFeatures.ImagesFeatures import ChanelSplitAnalysis
 from Visualizer.VisualizationMethods import BarPlotVisualizer, BoxPlotVisualizer, DensityPlotVisualizer, \
                                             HistogramVisualizer, LinePlotVisualizer, ScatterPlotVisualizer,\
@@ -25,7 +27,10 @@ AnalysersClassNamesDict = {
     "ClassesSquareAnalysis": ClassesSquareAnalysis.ClassesSquareAnalysis,
     "ClassesBbAspectRatioAnalysis": ClassesBbAspectRatioAnalysis.ClassesBbAspectRatioAnalysis,
     "ClassesDiameterAnalysis": ClassesDiameterAnalysis.ClassesDiameterAnalysis,
-    "Class2ImageRatioAnalysis": Class2ImageRatioAnalysis.Class2ImageRatioAnalysis
+    "Class2ImageRatioAnalysis": Class2ImageRatioAnalysis.Class2ImageRatioAnalysis,
+    "MaskedBrightnessAnalysis": MaskedBrightnessAnalysis.MaskedBrightnessAnalysis,
+    "MaskedContrastAnalysis": MaskedContrastAnalysis.MaskedContrastAnalysis,
+    "MaskedGradientAnalysis": MaskedGradientAnalysis.MaskedGradientAnalysis
 }
 
 VisualizersClassNamesDict = {
