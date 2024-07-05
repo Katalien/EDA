@@ -2,6 +2,8 @@ import os
 import cv2
 from typing import List, Dict, Set
 
+import numpy as np
+
 DatasetClasses = {
     "sco": "border chip",
     "top": "border face"
@@ -16,13 +18,22 @@ class DatasetInfo:
         self.prediction_path = None
         self.images_count = None
         self.masks_count: Dict[str, int] = {}
-        self.image_size = None
-        self.mask_size = None
+        self.image_sizes: Set = set()
+        self.mask_sizes: Set = set()
+        self.equal_image_sizes = False
+        self.equal_mask_sizes = False
         self.fill_info()
 
-    def _get_image_size(self, filepath):
+    def _fill_image_size(self, filepath):
         image = cv2.imread(filepath)
-        return image.shape
+        self.image_sizes.add(image.shape)
+
+
+    def _fill_mask_size(self, filepath):
+        mask = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+        self.mask_sizes.add(mask.shape)
+
+
 
     def _get_all_files(self):
         image_files = []
@@ -42,6 +53,7 @@ class DatasetInfo:
                     deepest_directories.append(root)
         return image_files, deepest_directories
 
+
     def fill_info(self):
         all_paths, files_dirs = self._get_all_files()
         for i, dir_path in enumerate(files_dirs):
@@ -49,11 +61,15 @@ class DatasetInfo:
 
                 filepath = os.path.join(dir_path, image_name)
                 filepath = filepath.replace("\\", "/")
+
                 # исходное изображение
                 if len(image_name.split("_")) == 1:
                     self.images_path.append(filepath)
+                    self._fill_image_size(filepath)
+
                 # маска
                 else:
+                    self._fill_mask_size(filepath)
                     image_class = image_name.split("_")[1].split(".")[0]
                     class_name = DatasetClasses[image_class]
                     if class_name not in self.masks_path:
@@ -63,9 +79,11 @@ class DatasetInfo:
                         self.masks_path[class_name].append(filepath)
 
         self.images_count = len(self.images_path)
-        self.image_size = self._get_image_size(self.images_path[0])
-        mask_size = self._get_image_size(list(self.masks_path.values())[0][0])
-        self.mask_size = (mask_size[0], mask_size[1])
+        self.equal_image_sizes = True if len(self.image_sizes) == 1 else False
+        self.equal_mask_sizes = True if len(self.mask_sizes) == 1 else False
+        print("images", self.equal_image_sizes)
+        print("masks", self.equal_mask_sizes)
+
         for key, val in self.masks_path.items():
             self.masks_count[key] = len(list(val))
 

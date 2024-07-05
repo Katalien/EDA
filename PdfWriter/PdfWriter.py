@@ -80,12 +80,23 @@ class PdfWriter:
             self.elements.append(Spacer(1, 12))
         self.elements.append(Spacer(1, 12))
 
-        description = Paragraph(f"Image size : {self.dataset_info.image_size}", self.dataset_info_style)
+        if self.dataset_info.equal_image_sizes:
+            image_sizes_str = str(self.dataset_info.image_sizes).strip('{}')
+            description = Paragraph(f"All images  are the same size: {image_sizes_str}", self.dataset_info_style)
+        else:
+            description = Paragraph(f"The images have different sizes (see the plot)",
+                                    self.dataset_info_style)
         self.elements.append(description)
         self.elements.append(Spacer(1, 12))
 
-        description = Paragraph(f"Mask size : {self.dataset_info.image_size}", self.dataset_info_style)
-        # self.elements.append(description)
+        if self.dataset_info.equal_mask_sizes:
+            mask_sizes_str = str(self.dataset_info.mask_sizes).strip('{}')
+            description = Paragraph(f"All masks  are the same size: {mask_sizes_str}",
+                                    self.dataset_info_style)
+        else:
+            description = Paragraph(f"The masks have different sizes (see the plot)",
+                                    self.dataset_info_style)
+        self.elements.append(description)
         self.elements.append(Spacer(1, 12))
         self.elements.append(Spacer(1, 12))
         self.elements.append(Spacer(1, 12))
@@ -201,8 +212,18 @@ class PdfWriter:
         feature_plots_dict = {}
         self.elements.append(Spacer(1, 12))
         for i, feature_sum in enumerate(cur_feature_summaries):
-            description = Paragraph(f"Graphic {i + 1}: {feature_sum.feature_name}", self.styles['Heading2'])
+
+            if feature_sum.feature_name == "Aspect Ratio" and self.dataset_info.equal_image_sizes:
+                continue
+
+            if feature_sum.description is  None:
+                description = Paragraph(f"Graphic {i + 1}: {feature_sum.feature_name}", self.styles['Heading2'])
+            else:
+                description1 = Paragraph(f"Graphic {i + 1}: {feature_sum.feature_name}", self.styles['Heading2'])
+                description2 = Paragraph(feature_sum.description, self.styles['Heading3'])
+                description = (description1, description2)
             feature_plots_dict[description] = []
+
             if feature_sum.is_img_feature:
                 for feature_data in feature_sum.features_list:
                     # for name, feature_img in feature_data.data.items():
@@ -261,7 +282,11 @@ class PdfWriter:
         # self.elements.append(Spacer(1, 12))
 
         for desc, images_names in feature_plots_dict.items():
-            self.elements.append(desc)
+            if isinstance(desc, tuple):
+                self.elements.append(desc[0])
+                self.elements.append(desc[1])
+            else:
+                self.elements.append(desc)
             for img, name in images_names:
                 img.drawHeight, img.drawWidth = self._change_im_size(img)
                 name = Paragraph(name, self.styles['Heading3'])

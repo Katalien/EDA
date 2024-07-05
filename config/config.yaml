@@ -3,11 +3,13 @@ output_path: "../reports/"
 Features:
   Brightness:
     visualization_methods: [ "density" ]
-  MaskedContrastAnalysis:
-    visualization_methods: [ "boxplot" ]
-  MaskedBrightnessAnalysis:
-    visualization_methods: [ "boxplot" ]
-  MaskedGradientAnalysis:
-    visualization_methods: [ "boxplot" ]
+  Color:
+    visualization_methods: ["density"]
+  Contrast:
+    visualization_methods: [ "density" ]
+
+  InstancesPerImage:
+    visualization_methods: [ "density" ]
+
 
 
