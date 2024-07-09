@@ -12,10 +12,12 @@ class LinePlotVisualizer(Visualizer):
         if num_plots == 1:
             axes = [axes]
 
-        for ax, feature_data in zip(axes, feature_data_list):
+        colors = plt.get_cmap('tab10')  # Get a colormap with 10 distinct colors
+
+        for idx, (ax, feature_data) in enumerate(zip(axes, feature_data_list)):
             x = feature_data.data["x"]
             y = feature_data.data["y"]
-            ax.plot(x, y, label=feature_data.class_name)
+            ax.plot(x, y, label=feature_data.class_name, color=colors(idx % 10))  # Cycle through colors
             ax.set_title(f"Line Plot of {feature_data.class_name}", fontsize=16, fontweight='bold')
             if grid:
                 ax.grid(True)
