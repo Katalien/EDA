@@ -16,7 +16,11 @@ class InstancePerImageAnalysis(LabelesFeatures):
         kernel = np.ones((22, 22), np.uint8)
         sample = cv2.morphologyEx(sample, cv2.MORPH_CLOSE, kernel)
 
-        contours, _ = cv2.findContours(sample, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        _contours, _ = cv2.findContours(sample, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours = []
+        for cont in _contours:
+            if cv2.contourArea(cont) >= 5:
+                contours.append(cont)
         num_segments = len(contours)
 
         if class_name not in self.data:
