@@ -7,10 +7,10 @@ from ... import FeatureSummary
 from typing import Dict, List
 from .AtributesFeatures import AtributesFeatures
 
-class ClassesSquareAnalysis(AtributesFeatures):
+class ClassesAreaAnalysis(AtributesFeatures):
     def __init__(self, dataset_info: DatasetInfo):
         super().__init__(dataset_info)
-        self.feature_name = "Square"
+        self.feature_name = "Area"
 
 
     def _process_one_sample(self, sample: np.ndarray,  class_name:str):
@@ -24,6 +24,6 @@ class ClassesSquareAnalysis(AtributesFeatures):
 
     def get_feature(self) -> FeatureSummary:
         super().get_feature()
-        self.summary.set_description("Square of classes segments")
+        self.summary.set_description("Square of classes segments, pxls")
         return self.summary
 

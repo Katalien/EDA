@@ -10,7 +10,7 @@ from typing import Dict, List
 class ClassesBbAspectRatioAnalysis(AtributesFeatures):
     def __init__(self, dataset_info: DatasetInfo):
         super().__init__(dataset_info)
-        self.feature_name = "Bb ratio"
+        self.feature_name = "Bounding box sides ratio"
 
 
     def _process_one_sample(self, sample: np.ndarray,  class_name:str):

@@ -14,16 +14,16 @@ class ChanelSplitAnalysis(ImagesFeatures):
     def __init__(self, dataset_info: DatasetInfo):
         super().__init__(dataset_info)
         self.feature_name = "Chanel split"
-        self.dict_res_figs = {"rgb": [], "hls": [], "YCbCr": []}
+        self.dict_res_figs = {"RGB FORMAT": [], "HLS FORMAT": [], "YCbCr FORMAT": []}
 
     def _process_dataset(self):
         file_dirs = self.dataset_info.images_path
         random_image_path = random.choice(file_dirs)
         image = cv2.imread(random_image_path)
         fig_rgb, fig_hls, fig_ycbcr = self._process_one_sample(image)
-        self.dict_res_figs["rgb"] = fig_rgb
-        self.dict_res_figs["hls"] = fig_hls
-        self.dict_res_figs["YCbCr"] = fig_ycbcr
+        self.dict_res_figs["RGB FORMAT"] = fig_rgb
+        self.dict_res_figs["HLS FORMAT"] = fig_hls
+        self.dict_res_figs["YCbCr FORMAT"] = fig_ycbcr
 
     def _process_one_sample(self, sample: np.ndarray):
         image_rgb = cv2.cvtColor(sample, cv2.COLOR_BGR2RGB)
@@ -61,7 +61,7 @@ class ChanelSplitAnalysis(ImagesFeatures):
                                        is_img=True)
             features.append(feature)
         self.summary = FeatureSummary.FeatureSummary(self.feature_name, features)
-        self.summary.set_description("Examples of splitting channels of random image for 3 formats: RGB, HLS, YCbCr")
+        self.summary.set_description("Splitting a random image by channels in 3 formats: RGB, HLS, YCbCr")
         return self.summary
 
     def get_plots(self, images, titles=None, suptitle="", bgr2rgb=True):
@@ -80,7 +80,7 @@ class ChanelSplitAnalysis(ImagesFeatures):
             ax = fig.add_subplot(cols, 1, i + 1)
             ax.imshow(image)
             ax.axis('off')
-            ax.set_title(title)
+            ax.set_title(title, fontsize=20, fontweight='bold')
 
         # fig.suptitle(suptitle)
         plt.tight_layout()  # Улучшает автоматическое размещение подграфиков

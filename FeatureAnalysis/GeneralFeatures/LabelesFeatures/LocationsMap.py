@@ -8,7 +8,6 @@ from DatasetProcessor import DatasetInfo
 from .LabelesFeatures import LabelesFeatures
 from PIL import Image
 
-
 class LocationsMap(LabelesFeatures):
     def __init__(self, dataset_info: DatasetInfo):
         super().__init__(dataset_info)
@@ -22,24 +21,28 @@ class LocationsMap(LabelesFeatures):
         sample_count = len(file_dirs_dict)
         self.weight = 1
         for i, (class_name, paths) in enumerate(file_dirs_dict.items()):
-            for filepath in paths:
+            for j, filepath in enumerate(paths):
                 image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
-                self._process_one_sample(image, class_name)
+                self._process_one_sample(image, class_name, str(i) + str(j))
 
         fig_dict = {}
         for key, val in self.dict_res_maps.items():
-            fig_dict[key] = self.get_plt(val, title=key)
+            print(key, self.dataset_info.masks_count[key])
+            val = val * (255 // self.dataset_info.masks_count[key])
+            fig_dict[key] = self.get_plt(val, title=key, bgr2rgb=True)
         self.dict_res_maps = fig_dict
 
-    def _process_one_sample(self, sample: str, class_name: str):
+    def _process_one_sample(self, sample: str, class_name: str, i:int):
         if class_name not in self.dict_res_maps:
             mask = np.zeros(shape=self.image_shape, dtype=np.uint8)
             res_mask = cv2.addWeighted(mask, 1, sample, self.weight, 0)
-            self.dict_res_maps[class_name] = res_mask
+            mask += (sample // 255)
+            self.dict_res_maps[class_name] = mask
         else:
             cur_mask = self.dict_res_maps[class_name]
-            res_mask = cv2.addWeighted(cur_mask, 1, sample, self.weight, 0)
-            self.dict_res_maps[class_name] = res_mask
+            cur_mask += (sample // 255)
+            self.dict_res_maps[class_name] = cur_mask
+
 
     def _get_image_size(self):
         filepath = list(self.dataset_info.masks_path.values())[0][0]
@@ -60,7 +63,7 @@ class LocationsMap(LabelesFeatures):
             image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         plt.imshow(image)
         plt.axis('off')
-        plt.title(title)
+        # plt.title(title, fontsize=20, fontweight='bold')
 
         return self.figure_to_array(fig)
 
@@ -87,7 +90,7 @@ class LocationsMap(LabelesFeatures):
 
         return self.summary
 
-    def show_image(self, image, name):
-        im = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
-        cv2.imshow(name, im)
+    def show_image(self, image, name=""):
+        image = cv2.resize(image, (0, 0), fx=0.3, fy=0.3)
+        cv2.imshow(name, image)
         cv2.waitKey()

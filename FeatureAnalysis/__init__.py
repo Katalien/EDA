@@ -5,12 +5,12 @@ from FeatureAnalysis.GeneralFeatures.ImagesFeatures.AspectRatioAnalysis import A
 from FeatureAnalysis.GeneralFeatures.ImagesFeatures.ColorAnalysis import ColorAnalysis
 from FeatureAnalysis.PredictedFeatures import PrecisionAnalysis
 from FeatureAnalysis.PredictedFeatures import RecallAnalysis
-from FeatureAnalysis.CustomFeatures.AtributesFeatures import ClassesSquareAnalysis, ClassesBbAspectRatioAnalysis, \
+from FeatureAnalysis.CustomFeatures.AtributesFeatures import ClassesAreaAnalysis, ClassesBbAspectRatioAnalysis, \
     ClassesDiameterAnalysis
 
 __all__ = ["FeatureAnalysis", "BrightnessAnalysis", "ContrastAnalysis",
            "AspectRatioAnalysis", "ClassFeatureData.py", "ColorAnalysis",
            "ClassesFrequencyAnalysis", "PrecisionAnalysis", "RecallAnalysis",
            "LocationsMap", "InstancePerImageAnalysis", "ChanelSplitAnalysis",
-           "ClassesSquareAnalysis", "ClassesBbAspectRatioAnalysis",
+           "ClassesAreaAnalysis.py", "ClassesBbAspectRatioAnalysis",
            "ClassesDiameterAnalysis"]

@@ -27,6 +27,6 @@ class ClassesDiameterAnalysis(AtributesFeatures):
 
     def get_feature(self) -> FeatureSummary:
         super().get_feature()
-        self.summary.set_description("Diameter of classes segments")
+        self.summary.set_description("Diameter of classes segments, pxls")
         return self.summary
 
