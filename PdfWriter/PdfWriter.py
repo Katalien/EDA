@@ -147,6 +147,7 @@ class PdfWriter:
 
 
     def _create_table(self, type):
+        long_first_column = False
         class_name = "general" if type == "General" else "custom"
         cur_features = self.general_features if type == "General" else self.custom_features
 
@@ -162,6 +163,7 @@ class PdfWriter:
             if feature_data.min is None and feature_data.max is None and feature_data.std is None and feature_data.mean is None:
                 continue
 
+            long_first_column = True if (not long_first_column and len(f"{feature_data.feature_name} {feature_data.class_name}") > 33) else False
 
             row = [
                 feature_data.feature_name if type == "General" else f"{feature_data.feature_name} {feature_data.class_name}",
@@ -186,7 +188,9 @@ class PdfWriter:
 
         # Ширина колонок
         num_columns = len(head)
-        first_col_width = usable_width * 0.4  # 30% of usable width for the first column
+
+        first_col_width = usable_width * 0.4  if not long_first_column else usable_width * 0.45
+        print(long_first_column)
         other_col_width = (usable_width - first_col_width) / (num_columns - 1)
 
         col_widths = [first_col_width] + [other_col_width for _ in range(num_columns - 1)]

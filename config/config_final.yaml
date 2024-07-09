@@ -20,7 +20,7 @@ Features:
     visualization_methods: [ ]
 
 
-  ClassesSquareAnalysis:
+  ClassesAreaAnalysis:
     visualization_methods: ["boxplot"]
   ClassesBbAspectRatioAnalysis:
     visualization_methods: ["boxplot"]

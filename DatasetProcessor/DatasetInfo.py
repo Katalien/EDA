@@ -5,8 +5,8 @@ from typing import List, Dict, Set
 import numpy as np
 
 DatasetClasses = {
-    "sco": "border chip",
-    "top": "border face"
+    "sco": "chip",
+    "top": "topology"
 }
 
 class DatasetInfo:

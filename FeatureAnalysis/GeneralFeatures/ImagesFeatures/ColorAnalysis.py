@@ -5,6 +5,7 @@ from .ImagesFeatures import ImagesFeatures
 from ... import FeatureSummary
 import matplotlib.pyplot as plt
 from .ChanelAnalysis import ChanelAnalysis
+from Visualizer.VisualizeSetiings import VisualizeSettings
 import numpy as np
 import cv2
 
@@ -67,11 +68,17 @@ class ColorAnalysis(ImagesFeatures):
         for color in self.colors:
             chanel_hist = self.data[color]
             data_dict = {"x": range(256), "y": chanel_hist}
-
             feature = ClassFeatureData(self.feature_name,
                                        data_dict,
                                        class_name=str(color))
             features.append(feature)
-        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features)
-        self.summary.set_description("RGB channels' analysis of images in dataset")
+        vis_settings = VisualizeSettings(title="Channel distributions",
+                                         subplots=True,
+                                         colors=["red", "green", "blue"],
+                                         subtitles=["Red", "Green", "Blue"],
+                                         x_axes="Pixel Value",
+                                         y_axes="Frequency",
+                                         grid=True)
+        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features, vis_settings)
+        self.summary.set_description("RGB channels' analysis of images in dataset. Values are normalized")
         return self.summary

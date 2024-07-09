@@ -1,13 +1,15 @@
 from typing import List
+from Visualizer.VisualizeSetiings import VisualizeSettings
 
 class FeatureSummary:
-    def __init__(self, feature_name, features):
+    def __init__(self, feature_name, features, visual_settings: VisualizeSettings = None):
         self.feature_name: str = feature_name
         self.features_list: List = self._set_features(features)
         self.is_img_feature: bool = self._is_img_feature()
         self.visual_method_name: List = None
         self.plots = None
         self.description = None
+        self.visual_settings = visual_settings
 
     def set_visual_methods(self, vis_methods):
         self.visual_method_name = vis_methods
