@@ -1,4 +1,4 @@
-dataset_path: "../dataset/real_dataset/"
+dataset_path: "../dataset/2_seria/"
 output_path: "../reports/"
 Features:
   Brightness:
