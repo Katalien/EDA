@@ -24,14 +24,14 @@ AnalysersClassNamesDict = {
     "Recall": RecallAnalysis.RecallAnalysis,
     "LocationsMap": LocationsMap.LocationsMap,
     "InstancesPerImage": InstancePerImageAnalysis.InstancePerImageAnalysis,
-    "ChanelSplitAnalysis": ChanelSplitAnalysis.ChanelSplitAnalysis,
-    "ClassesAreaAnalysis": ClassesAreaAnalysis.ClassesAreaAnalysis,
-    "ClassesBbAspectRatioAnalysis": ClassesBbAspectRatioAnalysis.ClassesBbAspectRatioAnalysis,
-    "ClassesDiameterAnalysis": ClassesDiameterAnalysis.ClassesDiameterAnalysis,
-    "Class2ImageRatioAnalysis": Class2ImageRatioAnalysis.Class2ImageRatioAnalysis,
-    "MaskedBrightnessAnalysis": MaskedBrightnessAnalysis.MaskedBrightnessAnalysis,
-    "MaskedContrastAnalysis": MaskedContrastAnalysis.MaskedContrastAnalysis,
-    "MaskedGradientAnalysis": MaskedGradientAnalysis.MaskedGradientAnalysis
+    "ChanelSplit": ChanelSplitAnalysis.ChanelSplitAnalysis,
+    "ClassesArea": ClassesAreaAnalysis.ClassesAreaAnalysis,
+    "ClassesBbAspectRatio": ClassesBbAspectRatioAnalysis.ClassesBbAspectRatioAnalysis,
+    "ClassesDiameter": ClassesDiameterAnalysis.ClassesDiameterAnalysis,
+    "Class2ImageRatio": Class2ImageRatioAnalysis.Class2ImageRatioAnalysis,
+    "MaskedBrightness": MaskedBrightnessAnalysis.MaskedBrightnessAnalysis,
+    "MaskedContrast": MaskedContrastAnalysis.MaskedContrastAnalysis,
+    "MaskedGradient": MaskedGradientAnalysis.MaskedGradientAnalysis
 }
 
 VisualizersClassNamesDict = {

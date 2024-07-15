@@ -1,10 +1,43 @@
 dataset_path: "../dataset/real_dataset/"
 output_path: "../reports/"
 Features:
-  MaskedContrastAnalysis:
+  Brightness:
+    visualization_methods: [ "density" ]
+  AspectRatio:
+    visualization_methods: ["boxplot"]
+  Color:
+    visualization_methods: ["line"]
+  Contrast:
+    visualization_methods: [ "density" ]
+  ChanelSplit:
+    visualization_methods: [ ]
+
+  ClassesFrequency:
+    visualization_methods: [ "bar" ]
+  InstancesPerImage:
     visualization_methods: [ "boxplot" ]
-  MaskedBrightnessAnalysis:
+  LocationsMap:
+    visualization_methods: [ ]
+
+  ClassesArea:
+    visualization_methods: ["boxplot"]
+  ClassesBbAspectRatio:
+    visualization_methods: ["boxplot"]
+  ClassesDiameter:
+    visualization_methods: ["boxplot"]
+  Class2ImageRatio:
+    visualization_methods: ["boxplot"]
+
+  MaskedContrast:
     visualization_methods: [ "boxplot" ]
-  MaskedGradientAnalysis:
+  MaskedBrightness:
     visualization_methods: [ "boxplot" ]
+  MaskedGradient:
+    visualization_methods: [ "boxplot" ]
+
+  CompareFeatures:
+    MaskedContrast_vs_MaskedBrightness:
+      features: [ "Brightness", "MaskedBrightness"]
+      visualization_methods: [ "boxplot" ]
+
 
