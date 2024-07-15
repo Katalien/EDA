@@ -3,4 +3,4 @@ DatasetClasses = {
     "top": "topology"
 }
 
-FeatureClasses = ["General", "Labels", "Attributes", "Masks"]
+FeatureClasses = ["General", "Labels", "Attributes", "Masks", "Compare"]

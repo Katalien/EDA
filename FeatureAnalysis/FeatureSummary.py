@@ -11,7 +11,7 @@ class FeatureSummary:
         self.description = None
         self.visual_settings = visual_settings
         self.feature_tag = feature_tag
-        if self.feature_tag not in ["General", "Labels", "Attributes", "Masks"] and self.feature_tag is not None:
+        if self.feature_tag not in ["General", "Labels", "Attributes", "Masks", "Compare"] and self.feature_tag is not None:
             raise ValueError("Invalid tag")
 
     def set_visual_methods(self, vis_methods):
@@ -31,6 +31,9 @@ class FeatureSummary:
 
     def _set_features(self, features):
         return features if isinstance(features, List) else [features]
+
+    def get_feature_list(self):
+        return self.features_list
 
 
 

@@ -51,3 +51,7 @@ class ConfigReader:
         features = self.config.get("Features", None)
         return {feature: methods["visualization_methods"] for feature, methods in features.items()}
 
+    def get_features_2_compare(self):
+        features = self.config.get("CompareFeatures", None)
+        return features
+

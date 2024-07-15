@@ -35,9 +35,12 @@ Features:
   MaskedGradient:
     visualization_methods: [ "boxplot" ]
 
-  CompareFeatures:
-    MaskedContrast_vs_MaskedBrightness:
-      features: [ "Brightness", "MaskedBrightness"]
-      visualization_methods: [ "boxplot" ]
+CompareFeatures:
+  CompareMaskedBrightness:
+    features: [ "Brightness", "MaskedBrightness"]
+    visualization_methods: [ "boxplot" ]
+  CompareMaskedContrast:
+    features: [ "Contrast", "MaskedContrast" ]
+    visualization_methods: [ "boxplot" ]
 
 

@@ -2,6 +2,8 @@ from ConfigReader import ConfigReader
 from utils import ClassNamesDict
 from PdfWriter import PdfWriter
 from DatasetProcessor import DatasetInfo
+from FeatureAnalysis import FeatureSummary
+
 
 GeneralFeatures = ["AspectRatio", "Brightness", "Color", "Contrast"]
 LabeledFeatures = ["ClassesFrequency", "InstancesPerImage", "LocationMap"]
@@ -23,6 +25,7 @@ class DatasetManager:
         self.output_path = config_processor.get_output_path()
         self.dataset_info = DatasetInfo.DatasetInfo(self.dataset_path)
         self.features = config_processor.get_features()
+        self.features2compare = config_processor.get_features_2_compare()
 
     def _check_info_4_feature(self, feature_name):
         if feature_name in GeneralFeatures and self.dataset_info.images_path is None:
@@ -42,8 +45,16 @@ class DatasetManager:
             # sort
             return [self.dataset_info.masks_path, self.dataset_info.prediction_path]
 
+    def _build_feature_sum_2_compare(self, feature_name, feature_summaries):
+        features_list = []
+        for feauture_sum in feature_summaries:
+            features_list.extend(feauture_sum.get_feature_list())
+        new_feature_sum = FeatureSummary.FeatureSummary(feature_name, features_list, feature_tag="Compare")
+        return new_feature_sum
+
     def run(self):
         self._read_config()
+        name_summary_dict = {}
         for feature_name, visual_methods in self.features.items():
             plots = []
             if not self._check_info_4_feature(feature_name):
@@ -52,14 +63,26 @@ class DatasetManager:
 
             feature_analyzer = ClassNamesDict.AnalysersClassNamesDict[feature_name](self.dataset_info)
             featureSummary = feature_analyzer.get_feature()
-            print(type(featureSummary))
             featureSummary.set_visual_methods(visual_methods)
 
             for visual_method in visual_methods:
                 visualizer = ClassNamesDict.VisualizersClassNamesDict[visual_method]()
                 plots.append(visualizer.visualize(featureSummary))
             featureSummary.set_plots(plots)
+            name_summary_dict[feature_name] = featureSummary
             self.featureSummaries.append(featureSummary)
+
+        for features2comp_names, features2comp_data in self.features2compare.items():
+            plots = []
+            feature1_name, feature2_name = features2comp_data["features"][0], features2comp_data["features"][1]
+            feature1 , feature2 = name_summary_dict[feature1_name], name_summary_dict[feature2_name]
+            featureSummaryComp = self._build_feature_sum_2_compare(features2comp_names, [feature1, feature2])
+            visual_methods = features2comp_data["visualization_methods"]
+            for visual_method in visual_methods:
+                visualizer = ClassNamesDict.VisualizersClassNamesDict[visual_method]()
+                plots.append(visualizer.visualize(featureSummaryComp))
+            featureSummaryComp.set_plots(plots)
+            self.featureSummaries.append(featureSummaryComp)
 
         pdfWriter = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path + "report.pdf")
         pdfWriter.write()
