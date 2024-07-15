@@ -5,6 +5,7 @@ from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 from DatasetProcessor import DatasetInfo
 from FeatureAnalysis import FeatureSummary
 from typing import Any
+import numpy as np
 
 
 class LabelesFeatures(FeatureAnalysis):
@@ -20,6 +21,8 @@ class LabelesFeatures(FeatureAnalysis):
         for i, (class_name, paths) in enumerate(file_dirs_dict.items()):
             for filepath in paths:
                 image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+                kernel = np.ones((5, 5), 'uint8')
+                image = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
                 self._process_one_sample(image, class_name)
 
     @abstractmethod
@@ -36,5 +39,5 @@ class LabelesFeatures(FeatureAnalysis):
                                            cur_class_freq,
                                            class_name=key)
             features.append(cur_feature)
-        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features)
+        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features, feature_tag="Labels")
         return self.summary

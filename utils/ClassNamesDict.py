@@ -1,10 +1,11 @@
 from FeatureAnalysis import BrightnessAnalysis, ContrastAnalysis, AspectRatioAnalysis, ColorAnalysis, \
     PrecisionAnalysis, RecallAnalysis
-from FeatureAnalysis.CustomFeatures.AtributesFeatures import ClassesBbAspectRatioAnalysis, ClassesAreaAnalysis, \
-    ClassesDiameterAnalysis, Class2ImageRatioAnalysis
+from FeatureAnalysis.GeneralFeatures.AtributesFeatures import ClassesBbAspectRatioAnalysis, ClassesAreaAnalysis, \
+    Class2ImageRatioAnalysis
+from FeatureAnalysis.GeneralFeatures.AtributesFeatures import ClassesDiameterAnalysis
 from FeatureAnalysis.GeneralFeatures.LabelesFeatures import LocationsMap, InstancePerImageAnalysis, \
     ClassesFrequencyAnalysis
-from FeatureAnalysis.CustomFeatures.MaskedSegmentsAnalysis import MaskedBrightnessAnalysis, MaskedContrastAnalysis,\
+from FeatureAnalysis.GeneralFeatures.MaskedSegmentsAnalysis import MaskedBrightnessAnalysis, MaskedContrastAnalysis,\
                                                             MaskedGradientAnalysis
 from FeatureAnalysis.GeneralFeatures.ImagesFeatures import ChanelSplitAnalysis
 from Visualizer.VisualizationMethods import BarPlotVisualizer, BoxPlotVisualizer, DensityPlotVisualizer, \

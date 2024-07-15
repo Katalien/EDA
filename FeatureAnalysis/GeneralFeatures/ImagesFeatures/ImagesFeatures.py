@@ -43,5 +43,5 @@ class ImagesFeatures(FeatureAnalysis):
                                    _max=self.max,
                                    _mean=self.mean,
                                    _std=self.std)
-        self.summary = FeatureSummary.FeatureSummary(self.feature_name, [feature])
+        self.summary = FeatureSummary.FeatureSummary(self.feature_name, [feature], feature_tag="General")
         return self.summary

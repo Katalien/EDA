@@ -84,7 +84,7 @@ class LocationsMap(LabelesFeatures):
                                        class_name=key,
                                         is_img=True)
             features.append(feature)
-        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features)
+        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features, feature_tag="Labels")
         self.summary.set_is_img_feature(True)
         self.summary.set_description("Locations map for different classes")
 

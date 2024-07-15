@@ -9,7 +9,7 @@ import numpy as np
 class BrightnessAnalysis(ImagesFeatures):
     def __init__(self, dataset_info: DatasetInfo):
         super().__init__(dataset_info)
-        self.feature_name = "Average Brightness"
+        self.feature_name = "Mean Brightness"
 
     def _process_one_sample(self, sample: np.ndarray):
         sample = cv2.cvtColor(sample, cv2.COLOR_BGR2GRAY)

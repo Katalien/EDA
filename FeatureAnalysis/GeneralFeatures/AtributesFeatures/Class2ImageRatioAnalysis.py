@@ -3,7 +3,7 @@ import numpy as np
 from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 from DatasetProcessor import DatasetInfo
-from ... import FeatureSummary
+from FeatureAnalysis import FeatureSummary
 from typing import Dict, List
 from .AtributesFeatures import AtributesFeatures
 
@@ -18,11 +18,12 @@ class Class2ImageRatioAnalysis(AtributesFeatures):
         contours, _ = cv2.findContours(sample, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         for contour in contours:
             area = cv2.contourArea(contour)
-            ratio = area / image_area
-            if str(class_name) not in list(self.classes_attr_dict.keys()):
-                self.classes_attr_dict[class_name] = [ratio]
-            else:
-                self.classes_attr_dict[class_name].append(ratio)
+            if area != 0:
+                ratio = area / image_area
+                if str(class_name) not in list(self.classes_attr_dict.keys()):
+                    self.classes_attr_dict[class_name] = [ratio]
+                else:
+                    self.classes_attr_dict[class_name].append(ratio)
 
     def get_feature(self) -> FeatureSummary:
         super().get_feature()

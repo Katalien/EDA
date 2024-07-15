@@ -60,7 +60,7 @@ class ChanelSplitAnalysis(ImagesFeatures):
                                        class_name=im_format,
                                        is_img=True)
             features.append(feature)
-        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features)
+        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features, feature_tag="General")
         self.summary.set_description("Splitting a random image by channels in 3 formats: RGB, HLS, YCbCr")
         return self.summary
 

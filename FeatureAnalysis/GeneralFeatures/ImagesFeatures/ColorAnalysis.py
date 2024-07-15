@@ -79,6 +79,6 @@ class ColorAnalysis(ImagesFeatures):
                                          x_axes="Pixel Value",
                                          y_axes="Frequency",
                                          grid=True)
-        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features, vis_settings)
+        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features,  visual_settings=vis_settings, feature_tag="General")
         self.summary.set_description("RGB channels' analysis of images in dataset. Values are normalized")
         return self.summary

@@ -3,11 +3,12 @@ from abc import abstractmethod
 import numpy as np
 from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.ClassFeatureData import ClassFeatureData
-from ... import FeatureSummary
+from FeatureAnalysis import FeatureSummary
 from DatasetProcessor import DatasetInfo
 import pandas as pd
 from typing import Dict, List
 from utils.utils import mask_path2image_path
+import matplotlib.pyplot as plt
 
 
 class MaskedFeatures(FeatureAnalysis):
@@ -29,6 +30,8 @@ class MaskedFeatures(FeatureAnalysis):
                 image_path = mask_path2image_path(mask_path)
                 image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
                 mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
+                # kernel = np.ones((3, 3), 'uint8')
+                # mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
                 self.data[class_name].extend(self._process_one_sample(image, mask))
 
 
@@ -77,6 +80,21 @@ class MaskedFeatures(FeatureAnalysis):
                                            _std=_std,
                                            add_info=stat_info)
             features.append(cur_feature)
-        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features)
+        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features, feature_tag="Masks")
 
         return self.summary
+
+    def show_plots(self, cols, images, titles, bgr2rgb=True):
+        new_images = []
+        if bgr2rgb:
+            for image in images:
+                new_images.append(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+            images = new_images
+        for i, image_title in enumerate(zip(images, titles)):
+            image = image_title[0]
+            title = image_title[1]
+            plt.subplot(1, cols, i + 1)  # 1 строка, 2 столбца, позиция 1
+            plt.imshow(image)
+            plt.axis('off')
+            plt.title(title)
+        plt.show()

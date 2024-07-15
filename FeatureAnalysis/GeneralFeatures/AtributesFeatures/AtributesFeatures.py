@@ -3,7 +3,7 @@ from abc import abstractmethod
 import numpy as np
 from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.ClassFeatureData import ClassFeatureData
-from ... import FeatureSummary
+from FeatureAnalysis import FeatureSummary
 from DatasetProcessor import DatasetInfo
 from typing import Dict, List
 
@@ -22,6 +22,8 @@ class AtributesFeatures(FeatureAnalysis):
         for i, (class_name, paths) in enumerate(file_dirs_dict.items()):
             for filepath in paths:
                 image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+                kernel = np.ones((5, 5), 'uint8')
+                image = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
                 self._process_one_sample(image, class_name)
         for class_name, data in self.classes_attr_dict.items():
             _min = min(data)
@@ -45,7 +47,7 @@ class AtributesFeatures(FeatureAnalysis):
     @abstractmethod
     def get_feature(self):
         self._process_dataset()
-        self.summary = FeatureSummary.FeatureSummary(self.feature_name, self.featuresData)
+        self.summary = FeatureSummary.FeatureSummary(self.feature_name, self.featuresData, feature_tag="Attributes")
         return self.featuresData
 
 

@@ -24,7 +24,11 @@ class ClassesFrequencyAnalysis(LabelesFeatures):
 
     def get_feature(self) -> FeatureSummary:
         super().get_feature()
-        self.summary.set_description("General amount of classes in dataset")
+        info = "General amount of classes in dataset: "
+        for class_name, amount in self.data.items():
+            info += f"\n {class_name} - {amount}; "
+        print(info)
+        self.summary.set_description(info)
         return self.summary
 
 

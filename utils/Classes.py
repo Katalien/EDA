@@ -1,4 +1,6 @@
 DatasetClasses = {
     "sco": "chip",
-    "top": "top"
+    "top": "topology"
 }
+
+FeatureClasses = ["General", "Labels", "Attributes", "Masks"]

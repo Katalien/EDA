@@ -1,6 +1,10 @@
 dataset_path: "../dataset/real_dataset/"
 output_path: "../reports/"
 Features:
-  InstancesPerImage:
+  MaskedContrastAnalysis:
+    visualization_methods: [ "boxplot" ]
+  MaskedBrightnessAnalysis:
+    visualization_methods: [ "boxplot" ]
+  MaskedGradientAnalysis:
     visualization_methods: [ "boxplot" ]
 

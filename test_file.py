@@ -1,105 +1,41 @@
-import cv2
-import os
-import matplotlib.pyplot as plt
-import numpy as np
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter, inch
+from reportlab.platypus import Image, Paragraph, SimpleDocTemplate, Table
+from reportlab.lib.styles import getSampleStyleSheet
+doc = SimpleDocTemplate("complex_cell_values.pdf", pagesize=letter)
+# container for the 'Flowable' objects
+elements = []
+styleSheet = getSampleStyleSheet()
 
-
-# def _get_all_files(dataset_path):
-#     image_files = []
-#     deepest_directories = []
-#
-#     for root, dirs, files in os.walk(dataset_path):
-#         root = root.replace("\\", "/")
-#         if not dirs:
-#             current_images = []
-#             for file in files:
-#                 file_path = os.path.join(root, file)
-#                 file_path = file_path.replace("\\", "/")
-#                 if os.path.isfile(file_path):
-#                     current_images.append(file_path)
-#             if current_images:
-#                 image_files.extend(current_images)
-#                 deepest_directories.append(root)
-#     return image_files, deepest_directories
-#
-#
-# def fill_info(dataset_path):
-#     images_path = []
-#     all_paths, files_dirs = _get_all_files(dataset_path)
-#     for i, dir_path in enumerate(files_dirs):
-#         for image_name in os.listdir(dir_path):
-#
-#             filepath = os.path.join(dir_path, image_name)
-#             filepath = filepath.replace("\\", "/")
-#
-#             # исходное изображение
-#             if len(image_name.split("_")) == 1:
-#                 images_path.append(filepath)
-#     return images_path
-#
-#
-# dataset_path = "../dataset/real_dataset/"
-# red, green, blue = None, None, None
-# images_dirs = fill_info(dataset_path)
-# for image_dir in images_dirs:
-#     image = cv2.imread(image_dir)
-#     colors = ("red", "green", "blue")
-#     for channel_id, color in enumerate(colors):
-#         histogram, bin_edges = np.histogram(
-#             image[:, :, channel_id], bins=256, range=(0, 256)
-#         )
-
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Количество бинов
-bins = 256
-
-# Генерация данных для убывающей гистограммы
-hist_data_descending = np.linspace(100, 0, bins)
-data_descending = np.repeat(range(bins), hist_data_descending.astype(int))
-
-# Генерация данных для гистограммы с постоянным значением
-constant_value = 50
-hist_data_constant = np.full(bins, constant_value)
-data_constant = np.repeat(range(bins), hist_data_constant.astype(int))
-
-# Визуализация
-fig, axes = plt.subplots(2, 2, figsize=(14, 12))
-
-# Гистограмма с убывающими значениями
-axes[0, 0].hist(data_descending, bins=bins, color='blue', edgecolor='black')
-axes[0, 0].set_title('Histogram with Descending Values')
-axes[0, 0].set_xlabel('Bins')
-axes[0, 0].set_ylabel('Frequency')
-
-# Гистограмма с постоянным значением
-axes[0, 1].hist(data_constant, bins=bins, color='red', edgecolor='black')
-axes[0, 1].set_title('Histogram with Constant Value')
-axes[0, 1].set_xlabel('Bins')
-axes[0, 1].set_ylabel('Frequency')
-
-# Создание массивов для гистограмм
-hist_descending, _ = np.histogram(data_descending, bins=bins, range=(0, bins))
-hist_constant, _ = np.histogram(data_constant, bins=bins, range=(0, bins))
-
-# Сложение массивов поэлементно
-hist_sum = hist_descending + hist_constant
-
-# Вычисление среднего значений гистограмм
-hist_mean = (hist_descending + hist_constant) / 2
-
-# Визуализация гистограммы суммы
-axes[1, 0].hist(range(bins), bins=bins, weights=hist_sum, color='green', edgecolor='black')
-axes[1, 0].set_title('Sum of Histograms')
-axes[1, 0].set_xlabel('Bins')
-axes[1, 0].set_ylabel('Frequency')
-
-# Визуализация среднего значений гистограмм
-axes[1, 1].hist(range(bins), bins=bins, weights=hist_mean, color='purple', edgecolor='black')
-axes[1, 1].set_title('Mean of Histograms')
-axes[1, 1].set_xlabel('Bins')
-axes[1, 1].set_ylabel('Frequency')
-
-plt.tight_layout()
-plt.show()
+P0 = Paragraph('A paragraph1', styleSheet["BodyText"])
+multiline_text =  '''
+The ReportLab Left
+Logo
+Image'''
+P = Paragraph(multiline_text,
+              styleSheet["BodyText"])
+data= [['A', 'B', 'C', P0, 'D'],
+       ['00', '01', '02', [P,P], '04'],
+       ['10', '11', '12', [P,P], '14'],
+       ['20', '21', '22', '23', '24'],
+       ['30', '31', '32', '33', '34']]
+table = Table(data,style=[('GRID',(1,1),(-2,-2),1,colors.green),
+                          ('BOX',(0,0),(1,-1),2,colors.red),
+                          ('LINEABOVE',(1,2),(-2,2),1,colors.blue),
+                          ('LINEBEFORE',(2,1),(2,-2),1,colors.pink),
+                          ('BACKGROUND', (0, 0), (0, 1), colors.pink),
+                          ('BACKGROUND', (1, 1), (1, 2), colors.lavender),
+                          ('BACKGROUND', (2, 2), (2, 3), colors.orange),
+                          ('BOX',(0,0),(-1,-1),2,colors.black),
+                          ('GRID',(0,0),(-1,-1),0.5,colors.black),
+                          ('VALIGN',(3,0),(3,0),'BOTTOM'),
+                          ('BACKGROUND',(3,0),(3,0),colors.limegreen),
+                          ('BACKGROUND',(3,1),(3,1),colors.khaki),
+                          ('ALIGN',(3,1),(3,1),'CENTER'),
+                          ('BACKGROUND',(3,2),(3,2),colors.beige),
+                          ('ALIGN',(3,2),(3,2),'LEFT'),
+                          ])
+table._argW[3] = 1.5*inch
+elements.append(table)
+# write the document to disk
+doc.build(elements)

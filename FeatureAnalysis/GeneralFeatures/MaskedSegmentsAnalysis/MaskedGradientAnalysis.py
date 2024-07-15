@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from DatasetProcessor import DatasetInfo
 from .MaskedFeatures import MaskedFeatures
-from ... import FeatureSummary
+from FeatureAnalysis import FeatureSummary
 
 
 class MaskedGradientAnalysis(MaskedFeatures):

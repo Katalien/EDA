@@ -3,7 +3,7 @@ import numpy as np
 from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 from DatasetProcessor import DatasetInfo
-from ... import FeatureSummary
+from FeatureAnalysis import FeatureSummary
 from typing import Dict, List
 from .AtributesFeatures import AtributesFeatures
 
@@ -12,7 +12,7 @@ from .AtributesFeatures import AtributesFeatures
 class ClassesDiameterAnalysis(AtributesFeatures):
     def __init__(self, dataset_info: DatasetInfo):
         super().__init__(dataset_info)
-        self.feature_name = "Diameter"
+        self.feature_name = "Diameter (pxls)"
 
 
     def _process_one_sample(self, sample: np.ndarray,  class_name:str):
