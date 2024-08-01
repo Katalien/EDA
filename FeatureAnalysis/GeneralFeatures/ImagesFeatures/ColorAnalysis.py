@@ -8,6 +8,7 @@ from .ChanelAnalysis import ChanelAnalysis
 from Visualizer.VisualizeSetiings import VisualizeSettings
 import numpy as np
 import cv2
+import utils.utils as ut
 
 
 class ColorAnalysis(ImagesFeatures):
@@ -36,7 +37,10 @@ class ColorAnalysis(ImagesFeatures):
     def _process_dataset(self):
         file_dirs = self.dataset_info.images_path
         for i, filepath in enumerate(file_dirs):
-            image = cv2.imread(filepath)
+            if filepath.split(".")[-1] == "psd":
+                image = ut.get_np_from_psd(filepath)
+            else:
+                image = cv2.imread(filepath)
             hist_b, hist_g, hist_r = self.calculate_histogram(image)
 
             self.all_hist_b.append(self.normalize_histogram(hist_b))

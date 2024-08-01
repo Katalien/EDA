@@ -1,4 +1,4 @@
-dataset_path: "../dataset/2_seria/"
+dataset_path: "../cropped_dataset/cropped_dataset/"
 output_path: "../reports/"
 Features:
   Brightness:
@@ -6,27 +6,25 @@ Features:
   AspectRatio:
     visualization_methods: ["boxplot"]
   Color:
-    visualization_methods: ["line"]
+    visualization_methods: ["density"]
   Contrast:
     visualization_methods: [ "density" ]
-  ChanelSplit:
-    visualization_methods: [ ]
 
   ClassesFrequency:
     visualization_methods: [ "bar" ]
   InstancesPerImage:
-    visualization_methods: [ "boxplot" ]
+    visualization_methods: [ "density" ]
   LocationsMap:
     visualization_methods: [ ]
 
   ClassesArea:
-    visualization_methods: ["boxplot"]
+    visualization_methods: [ "boxplot" ]
   ClassesBbAspectRatio:
-    visualization_methods: ["boxplot"]
+    visualization_methods: [ "boxplot" ]
   ClassesDiameter:
-    visualization_methods: ["boxplot"]
+    visualization_methods: [ "boxplot" ]
   Class2ImageRatio:
-    visualization_methods: ["boxplot"]
+    visualization_methods: [ "boxplot" ]
 
   MaskedContrast:
     visualization_methods: [ "boxplot" ]

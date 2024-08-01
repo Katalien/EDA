@@ -4,6 +4,7 @@ import numpy as np
 from FeatureAnalysis import FeatureAnalysis, FeatureSummary
 from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 from DatasetProcessor import DatasetInfo
+import utils.utils as ut
 
 
 class ImagesFeatures(FeatureAnalysis):
@@ -21,7 +22,10 @@ class ImagesFeatures(FeatureAnalysis):
     def _process_dataset(self):
         file_dirs = self.dataset_info.images_path
         for i, filepath in enumerate(file_dirs):
-            image = cv2.imread(filepath)
+            if filepath.split(".")[-1] == "psd":
+                image = ut.get_np_from_psd(filepath)
+            else:
+                image = cv2.imread(filepath)
             self.data.append(self._process_one_sample(image))
         self.min = min(self.data)
         self.max = max(self.data)

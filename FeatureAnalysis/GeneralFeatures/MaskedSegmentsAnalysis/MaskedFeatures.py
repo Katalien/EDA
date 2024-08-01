@@ -5,10 +5,10 @@ from FeatureAnalysis import FeatureAnalysis
 from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 from FeatureAnalysis import FeatureSummary
 from DatasetProcessor import DatasetInfo
-import pandas as pd
 from typing import Dict, List
 from utils.utils import mask_path2image_path
 import matplotlib.pyplot as plt
+import utils.utils as ut
 
 
 class MaskedFeatures(FeatureAnalysis):
@@ -28,10 +28,17 @@ class MaskedFeatures(FeatureAnalysis):
             self.data[class_name] = []
             for mask_path in mask_filepaths:
                 image_path = mask_path2image_path(mask_path)
-                image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-                mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
-                # kernel = np.ones((3, 3), 'uint8')
-                # mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+                # image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+                # mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
+                if image_path.split(".")[-1] == "psd":
+                    image = ut.get_np_from_psd(image_path)
+                else:
+                    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+
+                if mask_path.split(".")[-1] == "psd":
+                    mask = ut.get_np_from_psd(mask_path)
+                else:
+                    mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
                 self.data[class_name].extend(self._process_one_sample(image, mask))
 
 

@@ -6,6 +6,7 @@ from DatasetProcessor import DatasetInfo
 from FeatureAnalysis import FeatureSummary
 from typing import Any
 import numpy as np
+import utils.utils as ut
 
 
 class LabelesFeatures(FeatureAnalysis):
@@ -20,7 +21,11 @@ class LabelesFeatures(FeatureAnalysis):
         file_dirs_dict = self.dataset_info.masks_path
         for i, (class_name, paths) in enumerate(file_dirs_dict.items()):
             for filepath in paths:
-                image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+                # image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+                if filepath.split(".")[-1] == "psd":
+                    image = ut.get_np_from_psd(filepath)
+                else:
+                    image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
                 kernel = np.ones((5, 5), 'uint8')
                 image = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
                 self._process_one_sample(image, class_name)

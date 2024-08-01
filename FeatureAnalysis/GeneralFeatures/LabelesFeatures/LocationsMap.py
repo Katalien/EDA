@@ -33,6 +33,7 @@ class LocationsMap(LabelesFeatures):
         self.dict_res_maps = fig_dict
 
     def _process_one_sample(self, sample: str, class_name: str, i:int):
+        sample = cv2.resize(sample, (self.image_shape[1], self.image_shape[0]), interpolation=cv2.INTER_LINEAR)
         if class_name not in self.dict_res_maps:
             mask = np.zeros(shape=self.image_shape, dtype=np.uint8)
             res_mask = cv2.addWeighted(mask, 1, sample, self.weight, 0)
@@ -45,9 +46,12 @@ class LocationsMap(LabelesFeatures):
 
 
     def _get_image_size(self):
-        filepath = list(self.dataset_info.masks_path.values())[0][0]
-        im = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
-        return im.shape
+        if self.dataset_info.equal_mask_sizes:
+            filepath = list(self.dataset_info.masks_path.values())[0][0]
+            im = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+            return im.shape
+        else:
+            return (800, 800)
 
     def get_plt(self, image, title="", bgr2rgb=False, bgr2gray=False):
         image_height, image_width = image.shape
