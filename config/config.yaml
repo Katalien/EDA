@@ -1,5 +1,7 @@
 dataset_path: "../cropped_dataset/cropped_dataset/"
 output_path: "../reports/"
+Classes: {"sco": "border chip"}
+
 Features:
   Brightness:
     visualization_methods: [ "density" ]

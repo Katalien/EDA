@@ -23,9 +23,11 @@ class DatasetManager:
         config_processor = ConfigReader(self.config_path)
         self.dataset_path = config_processor.get_dataset_path()
         self.output_path = config_processor.get_output_path()
-        self.dataset_info = DatasetInfo.DatasetInfo(self.dataset_path)
+        self.classes = config_processor.get_classes()
+        self.dataset_info = DatasetInfo.DatasetInfo(self.dataset_path, self.classes)
         self.features = config_processor.get_features()
         self.features2compare = config_processor.get_features_2_compare()
+
 
     def _check_info_4_feature(self, feature_name):
         if feature_name in GeneralFeatures and self.dataset_info.images_path is None:

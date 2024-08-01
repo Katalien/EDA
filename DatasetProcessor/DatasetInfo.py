@@ -3,15 +3,12 @@ import cv2
 from typing import List, Dict, Set
 import utils.utils as ut
 
-DatasetClasses = {
-    "sco": "border chip",
-    "top": "border face"
-}
+
 
 class DatasetInfo:
-    def __init__(self, dataset_path):
+    def __init__(self, dataset_path, classes_dict):
         self.dataset_path = dataset_path
-        self.dataset_classes = DatasetClasses
+        self.dataset_classes = classes_dict
         self.images_path: List = []
         self.masks_path: Dict[str, List] = {}
         self.prediction_path = None
@@ -73,8 +70,10 @@ class DatasetInfo:
                 else:
                     self._fill_mask_size(filepath)
                     image_class = image_name.split("_")[1].split(".")[0]
-                    class_name = DatasetClasses[image_class]
-                    if image_class == "top":
+                    class_name = self.dataset_classes[image_class]
+
+                    if image_class not in list(self.dataset_classes.keys()):
+                        print(image_class)
                         continue
                     if class_name not in self.masks_path:
                         self.masks_path[class_name] = []
