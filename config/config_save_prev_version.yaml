@@ -12,18 +12,18 @@ Features:
     visualization_methods: [ "density" ]
   AspectRatio:
     visualization_methods: ["boxplot"]
-#  Color:
-#    visualization_methods: ["density"]
+  Color:
+    visualization_methods: ["density"]
   Contrast:
     visualization_methods: [ "density" ]
-#
-#  ClassesFrequency:
-#    visualization_methods: [ "bar" ]
+
+  ClassesFrequency:
+    visualization_methods: [ "bar" ]
   InstancesPerImage:
     visualization_methods: [ "density" ]
-#  LocationsMap:
-#    visualization_methods: [ ]
-#
+  LocationsMap:
+    visualization_methods: [ ]
+
   ClassesArea:
     visualization_methods: [ "boxplot" ]
   ClassesBbAspectRatio:
@@ -39,13 +39,13 @@ Features:
     visualization_methods: [ "boxplot" ]
   MaskedGradient:
     visualization_methods: [ "boxplot" ]
-#
-#CompareFeatures:
-#  CompareMaskedBrightness:
-#    features: [ "Brightness", "MaskedBrightness"]
-#    visualization_methods: [ "boxplot" ]
-#  CompareMaskedContrast:
-#    features: [ "Contrast", "MaskedContrast" ]
-#    visualization_methods: [ "boxplot" ]
+
+CompareFeatures:
+  CompareMaskedBrightness:
+    features: [ "Brightness", "MaskedBrightness"]
+    visualization_methods: [ "boxplot" ]
+  CompareMaskedContrast:
+    features: [ "Contrast", "MaskedContrast" ]
+    visualization_methods: [ "boxplot" ]
 
 

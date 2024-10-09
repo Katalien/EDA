@@ -2,28 +2,7 @@ import os
 import cv2
 from typing import List, Dict, Set
 import utils.utils as ut
-
-class SamplePathInfo():
-    def __init__(self, image_path):
-        self.__image_path = image_path
-        self.__classes_path = {}
-
-    def set_all_classes_path(self, class_path_dict):
-        self.__classes_path = class_path_dict
-
-    def set_class_path(self, class_name, mask_path):
-        if class_name not in self.__classes_path:
-            self.__classes_path[class_name] = mask_path
-
-    def get_image_path(self):
-        return self.__image_path
-
-    def get_mask_path_by_tag(self, class_name):
-        return self.__classes_path[class_name]
-
-    def get_mask_path_dict(self):
-        return self.__classes_path
-
+from .SamplePathInfo import SamplePathInfo
 
 class DatasetInfo():
     def __init__(self, dataset_path, classes_dict, extensions):
@@ -39,7 +18,7 @@ class DatasetInfo():
         self.mask_sizes: Set = set()
         self.equal_image_sizes = False
         self.equal_mask_sizes = False
-        self.samples_path_info_list = []
+        self.__samples_path_info_list = []
         self.__fill_info()
 
     def __fill_image_size(self, filepath):
@@ -112,7 +91,7 @@ class DatasetInfo():
                     self.__fill_image_size(filepath)
                     masks_path_dict = self.__get_masks_by_image_name(filepath)
                     sample_info.set_all_classes_path(masks_path_dict)
-                    self.samples_path_info_list.append(sample_info)
+                    self.__samples_path_info_list.append(sample_info)
 
         # все файлы в разных директориях
         else:
@@ -121,7 +100,7 @@ class DatasetInfo():
                     sample_info = SamplePathInfo(filepath)
                     masks_path_dict = self.__get_masks_by_image_name(filepath)
                     sample_info.set_all_classes_path(masks_path_dict)
-                    self.samples_path_info_list.append(sample_info)
+                    self.__samples_path_info_list.append(sample_info)
 
         self.images_count = len(self.images_path)
         self.equal_image_sizes = True if len(self.image_sizes) == 1 else False
@@ -132,3 +111,5 @@ class DatasetInfo():
         for key, val in self.masks_path.items():
             self.masks_count[key] = len(list(val))
 
+    def get_samples_path_info(self):
+        return self.__samples_path_info_list

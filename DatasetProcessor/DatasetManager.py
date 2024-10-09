@@ -3,6 +3,9 @@ from utils import ClassNamesDict
 from PdfWriter import PdfWriter
 from DatasetProcessor import DatasetInfo
 from FeatureAnalysis import FeatureSummary
+from .SamplePathInfo import SamplePathInfo
+from .Sample import Sample
+from typing import Dict
 
 
 GeneralFeatures = ["AspectRatio", "Brightness", "Color", "Contrast"]
@@ -97,5 +100,17 @@ class DatasetManager:
 
     def run_(self):
         self._read_config()
-        # for sample_path in self.dataset_path:
-        #     pass
+        print(self.features)
+        for sample_path_item in self.dataset_info.get_samples_path_info():
+            feature_sample = Sample(sample_path_item, self.features.keys())
+            feature_sample.fill_features_info()
+            sample_feature_values = feature_sample.get_feature_values()
+            for key in sample_feature_values.keys():
+                val = sample_feature_values[key]
+                if isinstance(val, float):
+                    print(key, val)
+                elif isinstance(val, dict):
+                    for class_name, val in val.items():
+                        print(f"{key} {class_name} {val}")
+
+            break
