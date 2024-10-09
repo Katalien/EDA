@@ -58,3 +58,8 @@ class ConfigReader:
     def get_classes(self):
         return self.config.get("Classes", None)
 
+    def get_extensions(self):
+        extensions = self.config.get("Ext", None)
+        if extensions is not None:
+            return {"image_ext": extensions["image_ext"], "mask_ext": extensions["mask_ext"]}
+

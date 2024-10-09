@@ -18,13 +18,15 @@ class DatasetManager:
         self.output_path = None
         self.dataset_info = None
         self.dataset_classes = None
+        self.extensions_dict = {}
 
     def _read_config(self):
         config_processor = ConfigReader(self.config_path)
         self.dataset_path = config_processor.get_dataset_path()
         self.output_path = config_processor.get_output_path()
         self.classes = config_processor.get_classes()
-        self.dataset_info = DatasetInfo.DatasetInfo(self.dataset_path, self.classes)
+        extensions_dict = config_processor.get_extensions()
+        self.dataset_info = DatasetInfo.DatasetInfo(self.dataset_path, self.classes, extensions_dict)
         self.features = config_processor.get_features()
         self.features2compare = config_processor.get_features_2_compare()
 
@@ -92,3 +94,8 @@ class DatasetManager:
 
         pdfWriter = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path + "report.pdf")
         pdfWriter.write()
+
+    def run_(self):
+        self._read_config()
+        # for sample_path in self.dataset_path:
+        #     pass

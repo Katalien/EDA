@@ -1,6 +1,11 @@
+#dataset_path: "C:/Users/z.kate/source/GitHubRepos/EDA/racovini/rakovini_dataset/seria_4-5_edited/"
 dataset_path: "../cropped_dataset/cropped_dataset/"
 output_path: "../reports/"
-Classes: {"sco": "border chip"}
+Classes: {"sco": "sco","rak": "rak", "top": top}
+Ext:
+  image_ext: "tif"
+  mask_ext: "tif"
+
 
 Features:
   Brightness:
