@@ -8,14 +8,13 @@ class ClassesDiameterFeature(Feature):
         for mask_class in sample.get_all_mask_classes():
             if mask_class == "General":
                 continue
-            mask = sample.load_mask(mask_class)
-            value = self.calculate_diameters(mask)
+            contours = sample.get_contours_by_class(mask_class)
+            value = self.calculate_diameters(contours)
             mask_val_dict[mask_class] = value
         return mask_val_dict
 
-    def calculate_diameters(self, mask):
+    def calculate_diameters(self, contours):
         diameters = []
-        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         for contour in contours:
             x, y, w, h = cv2.boundingRect(contour)
             diameter = w if w > h else h

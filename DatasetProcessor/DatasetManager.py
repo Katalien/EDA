@@ -9,10 +9,12 @@ from FeatureAnalysis import FeatureSummary
 from .SamplePathInfo import SamplePathInfo
 from .Sample import Sample
 from typing import Dict
+from tqdm import tqdm
 
 
 GeneralFeatures = ["AspectRatio", "Brightness", "Color", "Contrast"]
-LabeledFeatures = ["ClassesFrequency", "InstancesPerImage", "LocationMap", "ClassesArea"]
+LabeledFeatures = ["ClassesFrequency", "InstancesPerImage", "LocationMap", "ClassesArea",
+                   "ClassesBbAspectRatio", "ClassesDiameter", "Class2ImageRatio"]
 MaskedFeatures = ["MaskedContrast", "MaskedBrightness", "MaskedGradient"]
 PredictedFeatures = ["Precision", "Recall"]
 
@@ -135,7 +137,7 @@ class DatasetManager:
                 if class_name in list(sample_val.keys()):
                     if isinstance(sample_val[class_name], list):
                         class_values.extend(sample_val[class_name])
-                    elif isinstance(sample_val[class_name], np.float64) or isinstance(sample_val[class_name], float):
+                    elif isinstance(sample_val[class_name], int) or isinstance(sample_val[class_name], float):
                         class_values.append(sample_val[class_name])
             if len(class_values) != 0:
                 feature = self.__build_feature_class(feature_name, class_values, class_name)
@@ -151,7 +153,7 @@ class DatasetManager:
         all_samples = []
         self._read_config()
 
-        for sample_path_item in self.dataset_info.get_samples_path_info():
+        for sample_path_item in tqdm(self.dataset_info.get_samples_path_info(), desc="Count features for all samples"):
             feature_sample = Sample(sample_path_item, self.features.keys())
             feature_sample.fill_features_info()
             all_samples.append(feature_sample)
@@ -161,11 +163,12 @@ class DatasetManager:
 
         for feature_name, visual_methods in self.features.items():
             all_feature_values = []
-            for sample in all_samples:
+            for sample in tqdm(all_samples, desc=f"Process {feature_name} feature"):
                 feature_val_dict = sample.get_feature_val_by_feature_name(feature_name)
                 all_feature_values.append(feature_val_dict)
             feature_summary = self.__build_feature_summary(feature_name, all_classes, all_feature_values)
             feature_summary.visualize(visual_methods)
+            print(feature_summary.feature_tag)
             feature_summaries_dict[feature_name] = feature_summary
             self.featureSummaries.append(feature_summary)
         pdfWriter = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path + "report_new_arch.pdf")

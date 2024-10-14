@@ -3,6 +3,7 @@ import cv2
 from typing import List, Dict, Set
 import utils.utils as ut
 from .SamplePathInfo import SamplePathInfo
+from tqdm import tqdm
 
 class DatasetInfo():
     def __init__(self, dataset_path, classes_dict, extensions):
@@ -12,7 +13,7 @@ class DatasetInfo():
         self.images_path: List = []
         self.masks_path: Dict[str, List] = {}
 
-        self.images_count = None
+        self.images_count = 0
         self.masks_count: Dict[str, int] = {}
         self.image_sizes: Set = set()
         self.mask_sizes: Set = set()
@@ -64,6 +65,12 @@ class DatasetInfo():
                 return True
         return False
 
+    def __update_mask_count(self, tag):
+        if tag not in self.masks_count:
+            self.masks_count[tag] = 1
+        else:
+            self.masks_count[tag] += 1
+
     def __get_masks_by_image_name(self, image_path):
         masks_path_dict = {}
         dir_name = os.path.dirname(image_path)
@@ -74,39 +81,25 @@ class DatasetInfo():
             if not os.path.exists(mask_path):
                 continue
             self.__fill_mask_size(mask_path)
+            self.__update_mask_count(tag)
             mask_path = mask_path.replace("\\", "/")
             masks_path_dict[tag] = mask_path
         return masks_path_dict
 
 
-
-
     def __fill_info(self):
         image_filepaths, deepest_directories = self.__get_all_files_and_dirs()
-        # все файлы в одной директории
-        if len(deepest_directories) == 1:
-            for filepath in image_filepaths:
-                if not self.__is_mask(filepath):
-                    sample_info = SamplePathInfo(filepath)
-                    self.__fill_image_size(filepath)
-                    masks_path_dict = self.__get_masks_by_image_name(filepath)
-                    sample_info.set_all_classes_path(masks_path_dict)
-                    self.__samples_path_info_list.append(sample_info)
+        for filepath in tqdm(image_filepaths, desc="Fill info about dataset"):
+            if not self.__is_mask(filepath):
+                sample_info = SamplePathInfo(filepath)
+                self.__fill_image_size(filepath)
+                masks_path_dict = self.__get_masks_by_image_name(filepath)
+                sample_info.set_all_classes_path(masks_path_dict)
+                self.__samples_path_info_list.append(sample_info)
+                self.images_count += 1
 
-        # все файлы в разных директориях
-        else:
-            for filepath in image_filepaths:
-                if not self.__is_mask(filepath):
-                    sample_info = SamplePathInfo(filepath)
-                    masks_path_dict = self.__get_masks_by_image_name(filepath)
-                    sample_info.set_all_classes_path(masks_path_dict)
-                    self.__samples_path_info_list.append(sample_info)
-
-        self.images_count = len(self.images_path)
         self.equal_image_sizes = True if len(self.image_sizes) == 1 else False
         self.equal_mask_sizes = True if len(self.mask_sizes) == 1 else False
-        print("images", self.equal_image_sizes)
-        print("masks", self.equal_mask_sizes)
 
         for key, val in self.masks_path.items():
             self.masks_count[key] = len(list(val))

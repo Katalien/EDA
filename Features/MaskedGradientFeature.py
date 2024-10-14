@@ -11,12 +11,12 @@ class MaskedGradientFeature(Feature):
             if mask_class == "General":
                 continue
             mask = sample.load_mask(mask_class)
-            value = self.calculate_masked_gradient(image, mask)
+            contours = sample.get_contours_by_class(mask_class)
+            value = self.calculate_masked_gradient(image, mask, contours)
             mask_val_dict[mask_class] = value
         return mask_val_dict
 
-    def calculate_masked_gradient(self, image, mask):
-        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    def calculate_masked_gradient(self, image, mask, contours):
         values =[]
         for contour in contours:
             cur_mask = np.zeros_like(mask)

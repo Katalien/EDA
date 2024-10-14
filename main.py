@@ -9,7 +9,8 @@ from DatasetProcessor import DatasetManager
 # проверить нули в таблицах
 # карта градиента? объединить
 
-
+# добавить контуры в инфо
+# добавить обработку ошибок: конциг ридер
 if __name__ == "__main__":
     manager = DatasetManager.DatasetManager("./config/config.yaml")
     manager.run_()
