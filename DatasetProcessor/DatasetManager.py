@@ -9,6 +9,7 @@ from FeatureAnalysis import FeatureSummary
 from .SamplePathInfo import SamplePathInfo
 from .Sample import Sample
 from typing import Dict
+from Features import LocationMapBuilder
 from tqdm import tqdm
 
 
@@ -147,7 +148,9 @@ class DatasetManager:
                                              features,
                                              feature_tag=self.__get_feature_tag(feature_name))
 
-
+    def __process_locations_map(self, dataset_info):
+        loc_map_builder = LocationMapBuilder.LocationsMapBuilder(dataset_info)
+        return loc_map_builder.get_feature()
 
     def run_(self):
         all_samples = []
@@ -162,15 +165,20 @@ class DatasetManager:
         feature_summaries_dict = {}
 
         for feature_name, visual_methods in self.features.items():
-            all_feature_values = []
-            for sample in tqdm(all_samples, desc=f"Process {feature_name} feature"):
-                feature_val_dict = sample.get_feature_val_by_feature_name(feature_name)
-                all_feature_values.append(feature_val_dict)
-            feature_summary = self.__build_feature_summary(feature_name, all_classes, all_feature_values)
-            feature_summary.visualize(visual_methods)
-            print(feature_summary.feature_tag)
-            feature_summaries_dict[feature_name] = feature_summary
-            self.featureSummaries.append(feature_summary)
+            if feature_name == "LocationsMap":
+                loc_map_feature_summary = self.__process_locations_map(self.dataset_info)
+                self.featureSummaries.append(loc_map_feature_summary)
+                feature_summaries_dict[feature_name] = loc_map_feature_summary
+            else:
+                all_feature_values = []
+                for sample in tqdm(all_samples, desc=f"Process {feature_name} feature"):
+                    feature_val_dict = sample.get_feature_val_by_feature_name(feature_name)
+                    all_feature_values.append(feature_val_dict)
+                feature_summary = self.__build_feature_summary(feature_name, all_classes, all_feature_values)
+                feature_summary.visualize(visual_methods)
+                print(feature_summary.feature_tag)
+                feature_summaries_dict[feature_name] = feature_summary
+                self.featureSummaries.append(feature_summary)
         pdfWriter = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path + "report_new_arch.pdf")
         pdfWriter.write()
 

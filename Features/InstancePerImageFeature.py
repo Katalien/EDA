@@ -1,6 +1,5 @@
 from .Feature import Feature
 from typing import Dict
-import cv2
 
 class InstancePerImageFeature(Feature):
     def calculate(self, sample) -> Dict:

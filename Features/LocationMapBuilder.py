@@ -1,42 +1,42 @@
 import cv2
 import numpy as np
-from ... import FeatureSummary
 from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from DatasetProcessor import DatasetInfo
-from .LabelesFeatures import LabelesFeatures
 from PIL import Image
+from FeatureAnalysis import FeatureSummary
 
-class LocationsMap(LabelesFeatures):
+class LocationsMapBuilder():
     def __init__(self, dataset_info: DatasetInfo):
-        super().__init__(dataset_info)
+        self.dataset_info = dataset_info
         self.feature_name = "Object location map"
         self.dict_res_maps = {}
         self.weight = 1
         self.image_shape = self._get_image_size()
+        self.classes = set()
 
     def _process_dataset(self):
-        file_dirs_dict = self.dataset_info.masks_path
+        sample_paths_items = self.dataset_info.get_samples_path_info()
 
-
-        for i, (class_name, paths) in enumerate(file_dirs_dict.items()):
-            for j, filepath in enumerate(paths):
-                image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
-                self._process_one_sample(image, class_name, str(i) + str(j))
+        for sample_path_item in sample_paths_items:
+            masks_path = sample_path_item.get_mask_path_dict()
+            for class_name, path in masks_path.items():
+                mask = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+                self.__process_one_sample(mask, class_name)
 
         fig_dict = {}
         for key, val in self.dict_res_maps.items():
             print(key, self.dataset_info.masks_count[key])
             val = val * (255 // self.dataset_info.masks_count[key])
             fig_dict[key] = self.get_plt(val, title=key, bgr2rgb=True)
+
         self.dict_res_maps = fig_dict
 
-    def _process_one_sample(self, sample: str, class_name: str,):
+    def __process_one_sample(self, sample, class_name):
         sample = cv2.resize(sample, (self.image_shape[1], self.image_shape[0]), interpolation=cv2.INTER_LINEAR)
         if class_name not in self.dict_res_maps:
             mask = np.zeros(shape=self.image_shape, dtype=np.uint8)
-            res_mask = cv2.addWeighted(mask, 1, sample, self.weight, 0)
             mask += (sample // 255)
             self.dict_res_maps[class_name] = mask
         else:
@@ -79,14 +79,14 @@ class LocationsMap(LabelesFeatures):
         image = cv2.cvtColor(image, cv2.COLOR_RGBA2RGB)
         return image
 
-    def get_feature(self) -> FeatureSummary:
+    def get_feature(self):
         self._process_dataset()
         features = []
         for key, plt in self.dict_res_maps.items():
             feature = ClassFeatureData(self.feature_name,
                                        plt,
                                        class_name=key,
-                                        is_img=True)
+                                       is_img=True)
             features.append(feature)
         self.summary = FeatureSummary.FeatureSummary(self.feature_name, features, feature_tag="Labels")
         self.summary.set_is_img_feature(True)
