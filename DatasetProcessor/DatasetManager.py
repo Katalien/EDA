@@ -9,7 +9,7 @@ from FeatureAnalysis import FeatureSummary
 from .SamplePathInfo import SamplePathInfo
 from .Sample import Sample
 from typing import Dict
-from Features import LocationMapBuilder
+from Features import LocationMapBuilder, ClassesFrequencyBuilder, ColorHistogramBuilder
 from tqdm import tqdm
 
 
@@ -148,9 +148,16 @@ class DatasetManager:
                                              features,
                                              feature_tag=self.__get_feature_tag(feature_name))
 
-    def __process_locations_map(self, dataset_info):
-        loc_map_builder = LocationMapBuilder.LocationsMapBuilder(dataset_info)
+    def __process_locations_map(self):
+        loc_map_builder = LocationMapBuilder.LocationsMapBuilder(self.dataset_info)
         return loc_map_builder.get_feature()
+
+    def __process_color_histogram(self):
+        color_hist_builder = ColorHistogramBuilder.ColorHistogramBuilder(self.dataset_info)
+        return color_hist_builder.get_feature()
+    def __process_classes_frequency(self):
+        class_freq_builder = ClassesFrequencyBuilder.ClassesFrequencyBuilder(self.dataset_info)
+        return class_freq_builder.get_feature()
 
     def run_(self):
         all_samples = []
@@ -166,9 +173,19 @@ class DatasetManager:
 
         for feature_name, visual_methods in self.features.items():
             if feature_name == "LocationsMap":
-                loc_map_feature_summary = self.__process_locations_map(self.dataset_info)
+                loc_map_feature_summary = self.__process_locations_map()
                 self.featureSummaries.append(loc_map_feature_summary)
                 feature_summaries_dict[feature_name] = loc_map_feature_summary
+            elif feature_name == "ClassesFrequency":
+                class_freq_feature_summary = self.__process_classes_frequency()
+                class_freq_feature_summary.visualize(visual_methods)
+                self.featureSummaries.append(class_freq_feature_summary)
+                feature_summaries_dict[feature_name] = class_freq_feature_summary
+            elif feature_name == "Color":
+                color_feature_summary = self.__process_color_histogram()
+                color_feature_summary.visualize(visual_methods)
+                self.featureSummaries.append(color_feature_summary)
+                feature_summaries_dict[feature_name] = color_feature_summary
             else:
                 all_feature_values = []
                 for sample in tqdm(all_samples, desc=f"Process {feature_name} feature"):
@@ -179,6 +196,22 @@ class DatasetManager:
                 print(feature_summary.feature_tag)
                 feature_summaries_dict[feature_name] = feature_summary
                 self.featureSummaries.append(feature_summary)
+
+        if self.features2compare is not None:
+            for features2comp_names, features2comp_data in self.features2compare.items():
+                plots = []
+                feature1_name, feature2_name = features2comp_data["features"][0], features2comp_data["features"][1]
+                feature1 , feature2 = feature_summaries_dict.get(feature1_name, None), feature_summaries_dict.get(feature2_name, None)
+                if feature1 is None or feature2 is None:
+                    print("No necessary features above")
+                    continue
+                featureSummaryComp = self._build_feature_sum_2_compare(features2comp_names, [feature1, feature2])
+                visual_methods = features2comp_data["visualization_methods"]
+                for visual_method in visual_methods:
+                    visualizer = ClassNamesDict.VisualizersClassNamesDict[visual_method]()
+                    plots.append(visualizer.visualize(featureSummaryComp))
+                featureSummaryComp.set_plots(plots)
+                self.featureSummaries.append(featureSummaryComp)
         pdfWriter = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path + "report_new_arch.pdf")
         pdfWriter.write()
 

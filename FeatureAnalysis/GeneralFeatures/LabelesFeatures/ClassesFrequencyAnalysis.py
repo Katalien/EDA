@@ -7,6 +7,7 @@ from DatasetProcessor import DatasetInfo
 from .LabelesFeatures import LabelesFeatures
 
 
+
 # общее количество всех классов в датасете
 class ClassesFrequencyAnalysis(LabelesFeatures):
     def __init__(self, dataset_info: DatasetInfo):

@@ -97,6 +97,7 @@ class DatasetInfo():
                 sample_info.set_all_classes_path(masks_path_dict)
                 self.__samples_path_info_list.append(sample_info)
                 self.images_count += 1
+                self.images_path.append(filepath)
 
         self.equal_image_sizes = True if len(self.image_sizes) == 1 else False
         self.equal_mask_sizes = True if len(self.mask_sizes) == 1 else False
@@ -106,3 +107,6 @@ class DatasetInfo():
 
     def get_samples_path_info(self):
         return self.__samples_path_info_list
+
+    def get_images_paths(self):
+        return self.images_path
