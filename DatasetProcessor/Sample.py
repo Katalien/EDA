@@ -30,7 +30,7 @@ class Sample:
         self.__fill_mask_classes()
 
     def __fill_mask_classes(self):
-        self.mask_classes = []
+        self.mask_classes = ["General"]
         for class_name in self.sample_path_info.get_mask_path_dict().keys():
             self.mask_classes.append(class_name)
 
@@ -63,6 +63,9 @@ class Sample:
         mask_path = self.sample_path_info.get_mask_path_by_tag(class_name)
         return cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
 
+
+    def get_feature_val_by_feature_name(self, feature_name):
+        return self.feature_values_dict[feature_name]
     def get_feature_values(self):
         return self.feature_values_dict
 

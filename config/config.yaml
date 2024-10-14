@@ -16,29 +16,29 @@ Features:
 #    visualization_methods: ["density"]
   Contrast:
     visualization_methods: [ "density" ]
-#
+##
 #  ClassesFrequency:
 #    visualization_methods: [ "bar" ]
-  InstancesPerImage:
-    visualization_methods: [ "density" ]
-#  LocationsMap:
-#    visualization_methods: [ ]
-#
+#  InstancesPerImage:
+#    visualization_methods: [ "density" ]
+##  LocationsMap:
+##    visualization_methods: [ ]
+##
   ClassesArea:
     visualization_methods: [ "boxplot" ]
-  ClassesBbAspectRatio:
-    visualization_methods: [ "boxplot" ]
-  ClassesDiameter:
-    visualization_methods: [ "boxplot" ]
-  Class2ImageRatio:
-    visualization_methods: [ "boxplot" ]
-
-  MaskedContrast:
-    visualization_methods: [ "boxplot" ]
-  MaskedBrightness:
-    visualization_methods: [ "boxplot" ]
-  MaskedGradient:
-    visualization_methods: [ "boxplot" ]
+#  ClassesBbAspectRatio:
+#    visualization_methods: [ "boxplot" ]
+#  ClassesDiameter:
+#    visualization_methods: [ "boxplot" ]
+#  Class2ImageRatio:
+#    visualization_methods: [ "boxplot" ]
+#
+#  MaskedContrast:
+#    visualization_methods: [ "boxplot" ]
+#  MaskedBrightness:
+#    visualization_methods: [ "boxplot" ]
+#  MaskedGradient:
+#    visualization_methods: [ "boxplot" ]
 #
 #CompareFeatures:
 #  CompareMaskedBrightness:

@@ -1,21 +1,26 @@
 from typing import List
 from Visualizer.VisualizeSetiings import VisualizeSettings
+from utils import ClassNamesDict
+import time
+
 
 class FeatureSummary:
-    def __init__(self, feature_name, features, feature_tag=None,  visual_settings: VisualizeSettings = None):
+    def __init__(self, feature_name, features, feature_tag=None, visual_settings: VisualizeSettings = None):
         self.feature_name: str = feature_name
         self.features_list: List = self._set_features(features)
         self.is_img_feature: bool = self._is_img_feature()
-        self.visual_method_name: List = None
-        self.plots = None
+        self.visual_methods_name: List = None
+        self.plots = []
         self.description = None
         self.visual_settings = visual_settings
         self.feature_tag = feature_tag
         if self.feature_tag not in ["General", "Labels", "Attributes", "Masks", "Compare"] and self.feature_tag is not None:
             raise ValueError("Invalid tag")
 
+    def __repr__(self):
+        return f"Feature Summary\n Feature: {self.feature_name}\n"
     def set_visual_methods(self, vis_methods):
-        self.visual_method_name = vis_methods
+        self.visual_methods_name = vis_methods
 
     def set_description(self, description):
         self.description = description
@@ -34,6 +39,16 @@ class FeatureSummary:
 
     def get_feature_list(self):
         return self.features_list
+
+    def visualize(self, visual_methods):
+        try:
+            self.visual_methods_name = visual_methods
+            for visual_method in self.visual_methods_name:
+                visualizer = ClassNamesDict.VisualizersClassNamesDict[visual_method]()
+                plot = visualizer.visualize(self)
+                self.plots.append(plot)
+        except Exception as e:
+            print(f"Error {e}")
 
 
 

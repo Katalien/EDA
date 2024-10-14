@@ -8,6 +8,8 @@ class MaskedContrastFeature(Feature):
         image = sample.load_image()
         mask_val_dict = {}
         for mask_class in sample.get_all_mask_classes():
+            if mask_class == "General":
+                continue
             mask = sample.load_mask(mask_class)
             value = self.calculate_masked_contrast(image, mask)
             mask_val_dict[mask_class] = value

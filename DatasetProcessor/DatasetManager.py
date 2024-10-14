@@ -1,4 +1,7 @@
+import numpy as np
+
 from ConfigReader import ConfigReader
+from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 from utils import ClassNamesDict
 from PdfWriter import PdfWriter
 from DatasetProcessor import DatasetInfo
@@ -9,7 +12,8 @@ from typing import Dict
 
 
 GeneralFeatures = ["AspectRatio", "Brightness", "Color", "Contrast"]
-LabeledFeatures = ["ClassesFrequency", "InstancesPerImage", "LocationMap"]
+LabeledFeatures = ["ClassesFrequency", "InstancesPerImage", "LocationMap", "ClassesArea"]
+MaskedFeatures = ["MaskedContrast", "MaskedBrightness", "MaskedGradient"]
 PredictedFeatures = ["Precision", "Recall"]
 
 class DatasetManager:
@@ -98,19 +102,73 @@ class DatasetManager:
         pdfWriter = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path + "report.pdf")
         pdfWriter.write()
 
+    def __get_feature_tag(self, feature_name):
+        if feature_name in GeneralFeatures:
+            return "General"
+        if feature_name in LabeledFeatures:
+            return "Labels"
+        if feature_name in MaskedFeatures:
+            return "Masks"
+    #     compare
+
+    def __build_feature_class(self, feature_name, data_list, class_name):
+        data = np.array(data_list)
+        _min = data.min()
+        _max = data.max()
+        _std = data.std()
+        _mean = data.mean()
+        data_dict = {"x": len(data), "y": data}
+        feature = ClassFeatureData(feature_name,
+                                   data_dict,
+                                   class_name=class_name,
+                                   _min=_min,
+                                   _max=_max,
+                                   _mean=_mean,
+                                   _std=_std)
+        return feature
+
+    def __build_feature_summary(self, feature_name, class_names, all_feature_values):
+        features = []
+        for class_name in class_names:
+            class_values = []
+            for sample_val in all_feature_values:
+                if class_name in list(sample_val.keys()):
+                    if isinstance(sample_val[class_name], list):
+                        class_values.extend(sample_val[class_name])
+                    elif isinstance(sample_val[class_name], np.float64) or isinstance(sample_val[class_name], float):
+                        class_values.append(sample_val[class_name])
+            if len(class_values) != 0:
+                feature = self.__build_feature_class(feature_name, class_values, class_name)
+                features.append(feature)
+
+        return FeatureSummary.FeatureSummary(feature_name,
+                                             features,
+                                             feature_tag=self.__get_feature_tag(feature_name))
+
+
+
     def run_(self):
+        all_samples = []
         self._read_config()
-        print(self.features)
+
         for sample_path_item in self.dataset_info.get_samples_path_info():
             feature_sample = Sample(sample_path_item, self.features.keys())
             feature_sample.fill_features_info()
-            sample_feature_values = feature_sample.get_feature_values()
-            for key in sample_feature_values.keys():
-                val = sample_feature_values[key]
-                if isinstance(val, float):
-                    print(key, val)
-                elif isinstance(val, dict):
-                    for class_name, val in val.items():
-                        print(f"{key} {class_name} {val}")
+            all_samples.append(feature_sample)
 
-            break
+        all_classes = all_samples[0].get_all_mask_classes()
+        feature_summaries_dict = {}
+
+        for feature_name, visual_methods in self.features.items():
+            all_feature_values = []
+            for sample in all_samples:
+                feature_val_dict = sample.get_feature_val_by_feature_name(feature_name)
+                all_feature_values.append(feature_val_dict)
+            feature_summary = self.__build_feature_summary(feature_name, all_classes, all_feature_values)
+            feature_summary.visualize(visual_methods)
+            feature_summaries_dict[feature_name] = feature_summary
+            self.featureSummaries.append(feature_summary)
+        pdfWriter = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path + "report_new_arch.pdf")
+        pdfWriter.write()
+
+

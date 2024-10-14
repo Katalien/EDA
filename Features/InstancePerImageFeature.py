@@ -6,6 +6,8 @@ class InstancePerImageFeature(Feature):
     def calculate(self, sample) -> Dict:
         mask_val_dict = {}
         for mask_class in sample.get_all_mask_classes():
+            if mask_class == "General":
+                continue
             mask = sample.load_mask(mask_class)
             value = self.calculate_objects_per_image(mask)
             mask_val_dict[mask_class] = value

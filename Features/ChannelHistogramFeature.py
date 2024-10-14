@@ -3,9 +3,9 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 class ChannelsHistogramFeature(Feature):
-    def calculate(self, sample) -> float:
+    def calculate(self, sample) -> dict:
         image = sample.load_image()
-        return self.calculate_masked_brightness(image)
+        return  {"General": self.calculate_masked_brightness(image)}
 
     def calculate_channel_histogram(self, sample):
         color_idx = {"r": 2, "g": 1, "b": 0}
