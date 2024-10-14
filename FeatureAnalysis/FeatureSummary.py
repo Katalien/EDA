@@ -40,6 +40,8 @@ class FeatureSummary:
         return self.features_list
 
     def visualize(self, visual_methods):
+        if self.is_img_feature:
+            return
         try:
             self.visual_methods_name = visual_methods
             for visual_method in self.visual_methods_name:

@@ -1,20 +1,14 @@
 import numpy as np
-
 from ConfigReader import ConfigReader
 from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 from utils.FeatureMetadata import VisualizersClassNamesDict
 from PdfWriter import PdfWriter
 from DatasetProcessor import DatasetInfo
 from FeatureAnalysis import FeatureSummary
-from .SamplePathInfo import SamplePathInfo
 from .Sample import Sample
-from typing import Dict
 from Features import LocationMapBuilder, ClassesFrequencyBuilder, ColorHistogramBuilder
 from tqdm import tqdm
 from utils.FeatureMetadata import GeneralFeatures, LabeledFeatures, MaskedFeatures
-
-
-
 
 class DatasetManager:
     def __init__(self, config_path: str = "./config.yaml"):
@@ -37,79 +31,28 @@ class DatasetManager:
         self.features = config_processor.get_features()
         self.features2compare = config_processor.get_features_2_compare()
 
-
-    def _check_info_4_feature(self, feature_name):
-        if feature_name in GeneralFeatures and self.dataset_info.images_path is None:
-            return False
-        if feature_name in LabeledFeatures and self.dataset_info.masks_path is None:
-            return False
-        return True
-
-    def _get_target_info(self, feature_name):
-        if feature_name in GeneralFeatures:
-            return self.dataset_info.images_path
-        if feature_name in LabeledFeatures:
-            return self.dataset_info.masks_path
-
-    def _build_feature_sum_2_compare(self, feature_name, feature_summaries):
+    @staticmethod
+    def __build_feature_sum_2_compare(feature_name, feature_summaries):
         features_list = []
-        for feauture_sum in feature_summaries:
-            features_list.extend(feauture_sum.get_feature_list())
+        for feature_sum in feature_summaries:
+            features_list.extend(feature_sum.get_feature_list())
         new_feature_sum = FeatureSummary.FeatureSummary(feature_name, features_list, feature_tag="Compare")
         return new_feature_sum
 
-    # def run(self):
-    #     self._read_config()
-    #     name_summary_dict = {}
-    #     for feature_name, visual_methods in self.features.items():
-    #         plots = []
-    #         if not self._check_info_4_feature(feature_name):
-    #             print(f"No info for this feature: {feature_name}")
-    #             continue
-    #
-    #         feature_analyzer = ClassNamesDict.AnalysersClassNamesDict[feature_name](self.dataset_info)
-    #         featureSummary = feature_analyzer.get_feature()
-    #         featureSummary.set_visual_methods(visual_methods)
-    #
-    #         for visual_method in visual_methods:
-    #             visualizer = ClassNamesDict.VisualizersClassNamesDict[visual_method]()
-    #             plots.append(visualizer.visualize(featureSummary))
-    #         featureSummary.set_plots(plots)
-    #         name_summary_dict[feature_name] = featureSummary
-    #         self.featureSummaries.append(featureSummary)
-    #
-    #     if self.features2compare is not None:
-    #         for features2comp_names, features2comp_data in self.features2compare.items():
-    #             plots = []
-    #             feature1_name, feature2_name = features2comp_data["features"][0], features2comp_data["features"][1]
-    #             feature1 , feature2 = name_summary_dict.get(feature1_name, None), name_summary_dict.get(feature2_name, None)
-    #             if feature1 is None or feature2 is None:
-    #                 print("No necessary features above")
-    #                 continue
-    #             featureSummaryComp = self._build_feature_sum_2_compare(features2comp_names, [feature1, feature2])
-    #             visual_methods = features2comp_data["visualization_methods"]
-    #             for visual_method in visual_methods:
-    #                 visualizer = ClassNamesDict.VisualizersClassNamesDict[visual_method]()
-    #                 plots.append(visualizer.visualize(featureSummaryComp))
-    #             featureSummaryComp.set_plots(plots)
-    #             self.featureSummaries.append(featureSummaryComp)
-    #
-    #     pdfWriter = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path + "report.pdf")
-    #     pdfWriter.write()
-
-    def __get_feature_tag(self, feature_name):
+    @staticmethod
+    def __get_feature_tag(feature_name):
         if feature_name in GeneralFeatures:
             return "General"
         if feature_name in LabeledFeatures:
             return "Labels"
         if feature_name in MaskedFeatures:
             return "Masks"
-    #     compare
 
-    def __build_feature_class(self, feature_name, data_list, class_name):
+    @staticmethod
+    def __build_class_feature_data(feature_name, data_list, class_name):
         data = np.array(data_list)
-        _min = data.min()
-        _max = data.max()
+        _min = np.min(data)
+        _max = np.max(data)
         _std = data.std()
         _mean = data.mean()
         data_dict = {"x": len(data), "y": data}
@@ -122,7 +65,8 @@ class DatasetManager:
                                    _std=_std)
         return feature
 
-    def __build_feature_summary(self, feature_name, class_names, all_feature_values):
+    @staticmethod
+    def __build_feature_summary(feature_name, class_names, all_feature_values):
         features = []
         for class_name in class_names:
             class_values = []
@@ -133,12 +77,12 @@ class DatasetManager:
                     elif isinstance(sample_val[class_name], int) or isinstance(sample_val[class_name], float):
                         class_values.append(sample_val[class_name])
             if len(class_values) != 0:
-                feature = self.__build_feature_class(feature_name, class_values, class_name)
+                feature = DatasetManager.__build_class_feature_data(feature_name, class_values, class_name)
                 features.append(feature)
 
         return FeatureSummary.FeatureSummary(feature_name,
                                              features,
-                                             feature_tag=self.__get_feature_tag(feature_name))
+                                             feature_tag=DatasetManager.__get_feature_tag(feature_name))
 
     def __process_locations_map(self):
         loc_map_builder = LocationMapBuilder.LocationsMapBuilder(self.dataset_info)
@@ -147,64 +91,68 @@ class DatasetManager:
     def __process_color_histogram(self):
         color_hist_builder = ColorHistogramBuilder.ColorHistogramBuilder(self.dataset_info)
         return color_hist_builder.get_feature()
+
     def __process_classes_frequency(self):
         class_freq_builder = ClassesFrequencyBuilder.ClassesFrequencyBuilder(self.dataset_info)
         return class_freq_builder.get_feature()
 
-    def run_(self):
+    def __fill_samples_info(self):
         all_samples = []
-        self._read_config()
-
-        for sample_path_item in tqdm(self.dataset_info.get_samples_path_info(), desc="Count features for all samples"):
+        sample_path_items = self.dataset_info.get_samples_path_info()
+        for sample_path_item in tqdm(sample_path_items, desc="Count features for all samples"):
             feature_sample = Sample(sample_path_item, self.features.keys())
             feature_sample.fill_features_info()
             all_samples.append(feature_sample)
+        return all_samples
 
-        all_classes = all_samples[0].get_all_mask_classes()
+    def __fill_feature_summaries_info(self, all_samples, all_classes):
         feature_summaries_dict = {}
-
         for feature_name, visual_methods in self.features.items():
             if feature_name == "LocationsMap":
-                loc_map_feature_summary = self.__process_locations_map()
-                self.featureSummaries.append(loc_map_feature_summary)
-                feature_summaries_dict[feature_name] = loc_map_feature_summary
+                feature_summary = self.__process_locations_map()
             elif feature_name == "ClassesFrequency":
-                class_freq_feature_summary = self.__process_classes_frequency()
-                class_freq_feature_summary.visualize(visual_methods)
-                self.featureSummaries.append(class_freq_feature_summary)
-                feature_summaries_dict[feature_name] = class_freq_feature_summary
+                feature_summary = self.__process_classes_frequency()
             elif feature_name == "Color":
-                color_feature_summary = self.__process_color_histogram()
-                color_feature_summary.visualize(visual_methods)
-                self.featureSummaries.append(color_feature_summary)
-                feature_summaries_dict[feature_name] = color_feature_summary
+                feature_summary = self.__process_color_histogram()
             else:
                 all_feature_values = []
                 for sample in tqdm(all_samples, desc=f"Process {feature_name} feature"):
                     feature_val_dict = sample.get_feature_val_by_feature_name(feature_name)
                     all_feature_values.append(feature_val_dict)
-                feature_summary = self.__build_feature_summary(feature_name, all_classes, all_feature_values)
-                feature_summary.visualize(visual_methods)
-                print(feature_summary.feature_tag)
-                feature_summaries_dict[feature_name] = feature_summary
-                self.featureSummaries.append(feature_summary)
+                feature_summary = DatasetManager.__build_feature_summary(feature_name, all_classes, all_feature_values)
+            feature_summary.visualize(visual_methods)
+            feature_summaries_dict[feature_name] = feature_summary
+            self.featureSummaries.append(feature_summary)
+        return feature_summaries_dict
 
+    def __fill_feature2compare_info(self, feature_summaries_dict):
         if self.features2compare is not None:
             for features2comp_names, features2comp_data in self.features2compare.items():
                 plots = []
                 feature1_name, feature2_name = features2comp_data["features"][0], features2comp_data["features"][1]
-                feature1 , feature2 = feature_summaries_dict.get(feature1_name, None), feature_summaries_dict.get(feature2_name, None)
+                feature1, feature2 = feature_summaries_dict.get(feature1_name, None), feature_summaries_dict.get(feature2_name, None)
                 if feature1 is None or feature2 is None:
-                    print("No necessary features above")
+                    print("No necessary features to compare")
                     continue
-                featureSummaryComp = self._build_feature_sum_2_compare(features2comp_names, [feature1, feature2])
+                feature_summary_comp = DatasetManager.__build_feature_sum_2_compare(features2comp_names, [feature1, feature2])
                 visual_methods = features2comp_data["visualization_methods"]
                 for visual_method in visual_methods:
                     visualizer = VisualizersClassNamesDict[visual_method]()
-                    plots.append(visualizer.visualize(featureSummaryComp))
-                featureSummaryComp.set_plots(plots)
-                self.featureSummaries.append(featureSummaryComp)
-        pdfWriter = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path + "report_new_arch.pdf")
-        pdfWriter.write()
+                    plots.append(visualizer.visualize(feature_summary_comp))
+                feature_summary_comp.set_plots(plots)
+                self.featureSummaries.append(feature_summary_comp)
+
+    def run(self):
+        self._read_config()
+        all_samples = self.__fill_samples_info()
+
+        all_classes = list(self.classes.keys())
+        all_classes.append("General")
+
+        feature_summaries_dict = self.__fill_feature_summaries_info(all_samples, all_classes)
+        self.__fill_feature2compare_info(feature_summaries_dict)
+
+        pdf_writer = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path)
+        pdf_writer.write()
 
 

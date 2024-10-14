@@ -5,6 +5,7 @@ import utils.utils as ut
 from .SamplePathInfo import SamplePathInfo
 from tqdm import tqdm
 
+
 class DatasetInfo:
     def __init__(self, dataset_path, classes_dict, extensions):
         self.dataset_path = dataset_path
@@ -12,7 +13,6 @@ class DatasetInfo:
         self.extensions_dict = extensions
         self.images_path: List = []
         self.masks_path: Dict[str, List] = {}
-
         self.images_count = 0
         self.masks_count: Dict[str, int] = {}
         self.image_sizes: Set = set()
@@ -30,7 +30,6 @@ class DatasetInfo:
         if image is None:
             raise ValueError(f"Image is None. Filepath {filepath}")
         self.image_sizes.add(image.shape)
-
 
     def __fill_mask_size(self, filepath):
         mask = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
@@ -56,7 +55,6 @@ class DatasetInfo:
                     image_files.extend(current_images)
                     deepest_directories.append(root)
         return image_files, deepest_directories
-
 
     def __is_mask(self, path):
         image_name = os.path.basename(path)
@@ -85,7 +83,6 @@ class DatasetInfo:
             mask_path = mask_path.replace("\\", "/")
             masks_path_dict[tag] = mask_path
         return masks_path_dict
-
 
     def __fill_info(self):
         image_filepaths, deepest_directories = self.__get_all_files_and_dirs()

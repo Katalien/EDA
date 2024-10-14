@@ -45,11 +45,6 @@ class Sample:
                 feature_value = feature_class.calculate(self)
                 self.feature_values_dict[feature] = feature_value
 
-
-
-    def get_feature_info(self, feature_name):
-        pass
-
     def load_image(self):
         image_path = self.sample_path_info.get_image_path()
         if image_path.split(".")[-1] != "psd":
@@ -61,9 +56,9 @@ class Sample:
         mask_path = self.sample_path_info.get_mask_path_by_tag(class_name)
         return cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
 
-
     def get_feature_val_by_feature_name(self, feature_name):
         return self.feature_values_dict[feature_name]
+
     def get_feature_values(self):
         return self.feature_values_dict
 
