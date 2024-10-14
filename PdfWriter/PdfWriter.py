@@ -7,11 +7,11 @@ import numpy as np
 from PIL import Image as PILImage
 from DatasetProcessor import DatasetInfo
 from reportlab.lib.units import inch
-from utils.Classes import FeatureClasses
+from utils.FeatureMetadata import FeatureClasses
 
 
 class PdfWriter:
-    def __init__(self,  features_summaries, dataset_info: DatasetInfo, output_filename):
+    def __init__(self, features_summaries, dataset_info: DatasetInfo, output_filename):
         self.styles = getSampleStyleSheet()
         self.elements = []
         self.features_summaries = features_summaries

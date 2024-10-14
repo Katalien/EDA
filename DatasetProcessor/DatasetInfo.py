@@ -5,7 +5,7 @@ import utils.utils as ut
 from .SamplePathInfo import SamplePathInfo
 from tqdm import tqdm
 
-class DatasetInfo():
+class DatasetInfo:
     def __init__(self, dataset_path, classes_dict, extensions):
         self.dataset_path = dataset_path
         self.dataset_classes = classes_dict

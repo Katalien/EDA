@@ -54,7 +54,6 @@ class ConfigReader:
     def get_features_2_compare(self):
         return self.config.get("CompareFeatures", None)
 
-
     def get_classes(self):
         return self.config.get("Classes", None)
 

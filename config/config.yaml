@@ -1,7 +1,7 @@
 #dataset_path: "C:/Users/z.kate/source/GitHubRepos/EDA/racovini/rakovini_dataset/seria_4-5_edited/"
 dataset_path: "../cropped_dataset/cropped_dataset/"
 output_path: "../reports/"
-Classes: {"sco": "sco","rak": "rak", "top": "top"}
+Classes: {"sco": "border chip","rak": "shells", "top": "topology"}
 Ext:
   image_ext: "tif"
   mask_ext: "tif"
@@ -16,7 +16,7 @@ Features:
     visualization_methods: ["density"]
   Contrast:
     visualization_methods: [ "density" ]
-##
+#
   ClassesFrequency:
     visualization_methods: [ "bar" ]
   InstancesPerImage:

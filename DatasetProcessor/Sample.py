@@ -2,23 +2,8 @@ from typing import Dict, List
 from .SamplePathInfo import SamplePathInfo
 import cv2
 import utils.utils as ut
-from Features import Feature, BrightnessFeature, ContrastFeature, AspectRatioFeature, MaskedContrastFeature, \
-    MaskedBrightnessFeature, MaskedGradientFeature, InstancePerImageFeature, ClassesAreaFeature, \
-    ClassesBBAspectRatioFeature, ClassesDiameterFeature, Class2ImageRatioFeature
+from utils import FeatureMetadata
 
-feature_class_dict = {
-    "Brightness": BrightnessFeature.BrightnessFeature,
-    "Contrast": ContrastFeature.ContrastFeature,
-    "AspectRatio": AspectRatioFeature.AspectRatioFeature,
-    "MaskedBrightness": MaskedBrightnessFeature.MaskedBrightnessFeature,
-    "MaskedContrast": MaskedContrastFeature.MaskedContrastFeature,
-    "MaskedGradient": MaskedGradientFeature.MaskedGradientFeature,
-    "InstancesPerImage": InstancePerImageFeature.InstancePerImageFeature,
-    "ClassesArea": ClassesAreaFeature.ClassesAreaFeature,
-    "ClassesBbAspectRatio": ClassesBBAspectRatioFeature.ClassesBBAspectRatioFeature,
-    "ClassesDiameter": ClassesDiameterFeature.ClassesDiameterFeature,
-    "Class2ImageRatio":   Class2ImageRatioFeature.Class2ImageRatioFeature
-}
 
 class Sample:
     def __init__(self, sample_path_info: SamplePathInfo,  feature_list: List):
@@ -55,15 +40,12 @@ class Sample:
 
     def fill_features_info(self):
         for feature in self.feature_values_dict.keys():
-            try:
-                if feature in feature_class_dict:
-                    feature_class = feature_class_dict[feature]()
-                    feature_value = feature_class.calculate(self)
-                    self.feature_values_dict[feature] = feature_value
-                else:
-                    raise KeyError(f"No such feature available {feature}")
-            except KeyError as e:
-                print(f"Error {e}. Skipping feature {feature}")
+            if feature in FeatureMetadata.FeatureClassDict:
+                feature_class = FeatureMetadata.FeatureClassDict[feature]()
+                feature_value = feature_class.calculate(self)
+                self.feature_values_dict[feature] = feature_value
+
+
 
     def get_feature_info(self, feature_name):
         pass

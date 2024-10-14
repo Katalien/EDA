@@ -1,6 +1,6 @@
 from typing import List
 from Visualizer.VisualizeSetiings import VisualizeSettings
-from utils import ClassNamesDict
+from utils.FeatureMetadata import VisualizersClassNamesDict
 import time
 
 
@@ -44,7 +44,7 @@ class FeatureSummary:
         try:
             self.visual_methods_name = visual_methods
             for visual_method in self.visual_methods_name:
-                visualizer = ClassNamesDict.VisualizersClassNamesDict[visual_method]()
+                visualizer = VisualizersClassNamesDict[visual_method]()
                 plot = visualizer.visualize(self)
                 self.plots.append(plot)
         except Exception as e:
