@@ -1,7 +1,6 @@
 from typing import List
 from Visualizer.VisualizeSetiings import VisualizeSettings
 from utils.FeatureMetadata import VisualizersClassNamesDict
-import time
 
 
 class FeatureSummary:
