@@ -18,14 +18,16 @@ class ColorHistogramBuilder:
         self.all_hist_g = []
         self.all_hist_r = []
         self.data = {}
+        self.summary: FeatureSummary = None
 
-    def __calculate_histogram(self, image):
+    @staticmethod
+    def __calculate_histogram(image):
         hist_b = cv2.calcHist([image], [0], None, [256], [0, 256])
         hist_g = cv2.calcHist([image], [1], None, [256], [0, 256])
         hist_r = cv2.calcHist([image], [2], None, [256], [0, 256])
         return hist_b, hist_g, hist_r
-
-    def __normalize_histogram(self, hist):
+    @staticmethod
+    def __normalize_histogram(hist):
         return hist / hist.sum()
 
     def __process_dataset(self):
@@ -35,11 +37,11 @@ class ColorHistogramBuilder:
                 image = ut.get_np_from_psd(filepath)
             else:
                 image = cv2.imread(filepath)
-            hist_b, hist_g, hist_r = self.__calculate_histogram(image)
+            hist_b, hist_g, hist_r = ColorHistogramBuilder.__calculate_histogram(image)
 
-            self.all_hist_b.append(self.__normalize_histogram(hist_b))
-            self.all_hist_g.append(self.__normalize_histogram(hist_g))
-            self.all_hist_r.append(self.__normalize_histogram(hist_r))
+            self.all_hist_b.append(ColorHistogramBuilder.__normalize_histogram(hist_b))
+            self.all_hist_g.append(ColorHistogramBuilder.__normalize_histogram(hist_g))
+            self.all_hist_r.append(ColorHistogramBuilder.__normalize_histogram(hist_r))
 
         self.all_hist_b = np.array(self.all_hist_b)
         self.all_hist_g = np.array(self.all_hist_g)
@@ -54,17 +56,15 @@ class ColorHistogramBuilder:
         self.data["g"] = avg_hist_g
         self.data["b"] = avg_hist_b
 
-
     def get_feature(self) -> FeatureSummary:
         self.__process_dataset()
         features = []
         for color in self.colors:
             chanel_hist = self.data[color]
             data_dict = {"x": range(256), "y": chanel_hist}
-            feature = ClassFeatureData(self.feature_name,
-                                       data_dict,
-                                       class_name=str(color))
+            feature = ClassFeatureData(self.feature_name, data_dict, class_name=str(color))
             features.append(feature)
+
         vis_settings = VisualizeSettings(title="Channel distributions",
                                          subplots=True,
                                          colors=["red", "green", "blue"],
@@ -72,6 +72,9 @@ class ColorHistogramBuilder:
                                          x_axes="Pixel Value",
                                          y_axes="Frequency",
                                          grid=True)
-        self.summary = FeatureSummary.FeatureSummary(self.feature_name, features,  visual_settings=vis_settings, feature_tag="General")
+        self.summary = FeatureSummary.FeatureSummary(self.feature_name,
+                                                     features,
+                                                     visual_settings=vis_settings,
+                                                     feature_tag="General")
         self.summary.set_description("RGB channels' analysis of images in dataset. Values are normalized")
         return self.summary

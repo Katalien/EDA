@@ -1,9 +1,7 @@
 from .Feature import Feature
+import numpy as np
 
 class ContrastFeature(Feature):
     def calculate(self, sample) -> dict:
         image = sample.load_image()
-        return  {"General": self.calculate_contrast(image)}
-
-    def calculate_contrast(self, image):
-        return image.std()
+        return {"General": np.std(image)}

@@ -1,5 +1,6 @@
 from .Feature import Feature
 
+
 class AspectRatioFeature(Feature):
     def calculate(self, sample) -> dict:
         image = sample.load_image()

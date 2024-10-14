@@ -7,16 +7,17 @@ from DatasetProcessor import DatasetInfo
 from PIL import Image
 from FeatureAnalysis import FeatureSummary
 
-class LocationsMapBuilder():
+
+class LocationsMapBuilder:
     def __init__(self, dataset_info: DatasetInfo):
         self.dataset_info = dataset_info
         self.feature_name = "Object location map"
         self.dict_res_maps = {}
-        self.weight = 1
-        self.image_shape = self._get_image_size()
+        self.image_shape = self.__get_image_size()
         self.classes = set()
+        self.summary: FeatureSummary = None
 
-    def _process_dataset(self):
+    def __process_dataset(self):
         sample_paths_items = self.dataset_info.get_samples_path_info()
 
         for sample_path_item in sample_paths_items:
@@ -29,7 +30,7 @@ class LocationsMapBuilder():
         for key, val in self.dict_res_maps.items():
             print(key, self.dataset_info.masks_count[key])
             val = val * (255 // self.dataset_info.masks_count[key])
-            fig_dict[key] = self.get_plt(val, title=key, bgr2rgb=True)
+            fig_dict[key] = LocationsMapBuilder.__get_plt(val, bgr2rgb=True)
 
         self.dict_res_maps = fig_dict
 
@@ -44,16 +45,16 @@ class LocationsMapBuilder():
             cur_mask += (sample // 255)
             self.dict_res_maps[class_name] = cur_mask
 
-
-    def _get_image_size(self):
+    def __get_image_size(self):
         if self.dataset_info.equal_mask_sizes:
             filepath = list(self.dataset_info.masks_path.values())[0][0]
             im = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
             return im.shape
         else:
-            return (800, 800)
+            return 800, 800
 
-    def get_plt(self, image, title="", bgr2rgb=False, bgr2gray=False):
+    @staticmethod
+    def __get_plt(image, bgr2rgb=False, bgr2gray=False):
         image_height, image_width = image.shape
         aspect_ratio = image_width / image_height
 
@@ -67,11 +68,11 @@ class LocationsMapBuilder():
             image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         plt.imshow(image)
         plt.axis('off')
-        # plt.title(title, fontsize=20, fontweight='bold')
 
-        return self.figure_to_array(fig)
+        return LocationsMapBuilder.__figure_to_array(fig)
 
-    def figure_to_array(self, fig):
+    @staticmethod
+    def __figure_to_array(fig):
         canvas = FigureCanvas(fig)
         canvas.draw()
         buf = canvas.buffer_rgba()
@@ -80,21 +81,13 @@ class LocationsMapBuilder():
         return image
 
     def get_feature(self):
-        self._process_dataset()
+        self.__process_dataset()
         features = []
-        for key, plt in self.dict_res_maps.items():
-            feature = ClassFeatureData(self.feature_name,
-                                       plt,
-                                       class_name=key,
-                                       is_img=True)
+        for key, plot in self.dict_res_maps.items():
+            feature = ClassFeatureData(self.feature_name, plot, class_name=key, is_img=True)
             features.append(feature)
         self.summary = FeatureSummary.FeatureSummary(self.feature_name, features, feature_tag="Labels")
         self.summary.set_is_img_feature(True)
         self.summary.set_description("Locations map for different classes")
-
         return self.summary
 
-    def show_image(self, image, name=""):
-        image = cv2.resize(image, (0, 0), fx=0.3, fy=0.3)
-        cv2.imshow(name, image)
-        cv2.waitKey()

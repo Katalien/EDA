@@ -1,5 +1,3 @@
-import os
-import json
 import cv2
 import numpy as np
 from FeatureAnalysis import FeatureSummary
@@ -8,15 +6,14 @@ from DatasetProcessor import DatasetInfo
 import utils.utils as ut
 
 
-# общее количество всех классов в датасете
-class ClassesFrequencyBuilder():
+class ClassesFrequencyBuilder:
     def __init__(self, dataset_info: DatasetInfo):
         self.dataset_info = dataset_info
         self.feature_name = "Classes frequency"
         self.data = {}
-        self.summary = None
+        self.summary: FeatureSummary = None
 
-    def _process_dataset(self):
+    def __process_dataset(self):
         sample_paths_items = self.dataset_info.get_samples_path_info()
 
         for sample_path_item in sample_paths_items:
@@ -26,20 +23,17 @@ class ClassesFrequencyBuilder():
                     image = ut.get_np_from_psd(filepath)
                 else:
                     image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
-                kernel = np.ones((5, 5), 'uint8')
-                image = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
                 self.__process_one_sample(image, class_name)
 
     def __process_one_sample(self, sample: np.ndarray,  class_name: str):
         contours, _ = cv2.findContours(sample, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        num_segments = len(contours)
         if str(class_name) in list(self.data.keys()):
-            self.data[class_name] += num_segments
+            self.data[class_name] += len(contours)
         else:
-            self.data[class_name] = num_segments
+            self.data[class_name] = len(contours)
 
     def __get_feature_info(self) -> FeatureSummary:
-        self._process_dataset()
+        self.__process_dataset()
         features = []
         for key, val in self.data.items():
             cur_class_freq = {"x": key, "y": val}
