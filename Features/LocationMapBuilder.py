@@ -28,7 +28,6 @@ class LocationsMapBuilder:
 
         fig_dict = {}
         for key, val in self.dict_res_maps.items():
-            print(key, self.dataset_info.masks_count[key])
             val = val * (255 // self.dataset_info.masks_count[key])
             fig_dict[key] = LocationsMapBuilder.__get_plt(val, bgr2rgb=True)
 

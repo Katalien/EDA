@@ -131,22 +131,27 @@ class DatasetManager:
 
     def __fill_feature2compare_info(self, feature_summaries_dict):
         for features2comp_names, features2comp_data in self.features2compare.items():
-            plots = []
-            feature1_name = features2comp_data["features"][0]
-            feature2_name = features2comp_data["features"][1]
-            feature1 = feature_summaries_dict.get(feature1_name, None)
-            feature2 = feature_summaries_dict.get(feature2_name, None)
-            if feature1 is None or feature2 is None:
-                print("No necessary features to compare")
+            try:
+                plots = []
+                feature1_name = features2comp_data["features"][0]
+                feature2_name = features2comp_data["features"][1]
+                feature1 = feature_summaries_dict.get(feature1_name, None)
+                feature2 = feature_summaries_dict.get(feature2_name, None)
+                if feature1 is None or feature2 is None:
+                    raise ValueError(f"Missing features: {feature1_name}, {feature2_name}")
+
+                feature_summary_comp = DatasetManager.__build_feature_summary_2_compare(features2comp_names,
+                                                                                        [feature1, feature2])
+                visual_methods = features2comp_data["visualization_methods"]
+                for visual_method in visual_methods:
+                    visualizer = VisualizersClassNamesDict[visual_method]()
+                    plots.append(visualizer.visualize(feature_summary_comp))
+                feature_summary_comp.set_plots(plots)
+                self.featureSummaries.append(feature_summary_comp)
+            except ValueError as e:
+                print(f"Error: {e}. Skipping this comparison and continuing.")
                 continue
-            feature_summary_comp = DatasetManager.__build_feature_summary_2_compare(features2comp_names,
-                                                                                    [feature1, feature2])
-            visual_methods = features2comp_data["visualization_methods"]
-            for visual_method in visual_methods:
-                visualizer = VisualizersClassNamesDict[visual_method]()
-                plots.append(visualizer.visualize(feature_summary_comp))
-            feature_summary_comp.set_plots(plots)
-            self.featureSummaries.append(feature_summary_comp)
+
 
     def run(self):
         self.__read_config()

@@ -5,8 +5,10 @@ from Visualizer.VisualizationMethods import BarPlotVisualizer, BoxPlotVisualizer
                                             HistogramVisualizer, LinePlotVisualizer, ScatterPlotVisualizer,\
                                             ViolinPlotVisualizer
 
-FeatureClasses = ["General", "Labels", "Attributes", "Masks", "Compare"]
+# Classes for current feature types
+FeatureClasses = ["General", "Labels", "Masks", "Compare"]
 
+# Dictionary mapping feature names to their respective feature extraction classes
 FeatureClassDict = {
     "Brightness": BrightnessFeature.BrightnessFeature,
     "Contrast": ContrastFeature.ContrastFeature,
@@ -21,6 +23,7 @@ FeatureClassDict = {
     "Class2ImageRatio":   Class2ImageRatioFeature.Class2ImageRatioFeature
 }
 
+# Dictionary mapping visual method names to their respective feature extraction classes
 VisualizersClassNamesDict = {
     "bar": BarPlotVisualizer,
     "boxplot": BoxPlotVisualizer,
@@ -31,12 +34,14 @@ VisualizersClassNamesDict = {
     "violin": ViolinPlotVisualizer
 }
 
+# Metadata categorizing the available features in the project.
+# These lists represent features belonging to specific categories.
 GeneralFeatures = ["AspectRatio", "Brightness", "Color", "Contrast"]
 LabeledFeatures = ["ClassesFrequency", "InstancesPerImage", "LocationMap", "ClassesArea",
                    "ClassesBbAspectRatio", "ClassesDiameter", "Class2ImageRatio"]
 MaskedFeatures = ["MaskedContrast", "MaskedBrightness", "MaskedGradient"]
 
-
+# Dictionary mapping feature names to their descriptions which will be shown in final report
 FeatureDescriptions = {
     "Brightness": "Overall brightness for all images in the dataset",
     "Contrast": "Overall contrast for all images in the dataset",

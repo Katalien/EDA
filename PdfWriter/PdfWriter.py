@@ -24,7 +24,6 @@ class PdfWriter:
 
     def __fill_feature_classes_dict(self):
         for feature_sum in self.features_summaries:
-            print(feature_sum.feature_name, feature_sum.feature_tag)
             self.feature_classes_dict[feature_sum.feature_tag].append(feature_sum)
 
 
@@ -48,6 +47,7 @@ class PdfWriter:
         self.__create_features_list()
         for feature_class in self.feature_classes_dict.keys():
             self.__create_table(feature_class)
+        self.elements.append(PageBreak())
         for feature_class in self.feature_classes_dict.keys():
             self.__create_plots_block(feature_class)
         doc.build(self.elements)
@@ -112,6 +112,8 @@ class PdfWriter:
 
 
         for feature_class, features in self.feature_classes_dict.items():
+            if len(features) == 0:
+                continue
             num_images_text = Paragraph(f"{feature_class}:", self.dataset_info_style)
             self.elements.append(num_images_text)
             self.elements.append(Spacer(1, 12))
@@ -121,14 +123,13 @@ class PdfWriter:
                 self.elements.append(feature_paragraph)
                 self.elements.append(Spacer(1, 12))
 
-
         self.elements.append(PageBreak())
 
 
     def __create_table(self, feature_class):
         long_first_column = False
 
-        if feature_class == "Labels":
+        if feature_class == "Labels" or len(self.feature_classes_dict[feature_class]) == 0:
             return
 
         table_title = Paragraph(f"Table of {feature_class} features", self.styles['Title'])
@@ -186,7 +187,6 @@ class PdfWriter:
         num_columns = len(head)
 
         first_col_width = usable_width * 0.4  if not long_first_column else usable_width * 0.45
-        print(long_first_column)
         other_col_width = (usable_width - first_col_width) / (num_columns - 1)
 
         col_widths = [first_col_width] + [other_col_width for _ in range(num_columns - 1)]
@@ -206,7 +206,6 @@ class PdfWriter:
 
         self.elements.append(table)
         self.elements.append(Spacer(1, 12))
-        self.elements.append(PageBreak())
 
     def __fill_plots_section_info(self, feature_class):
         feature_plots_dict = {}
@@ -273,7 +272,8 @@ class PdfWriter:
         return img.drawHeight, img.drawWidth
 
     def __create_plots_block(self, feature_class):
-
+        if len(self.feature_classes_dict[feature_class]) == 0:
+            return
         feature_plots_dict = self.__fill_plots_section_info(feature_class)
 
         description = Paragraph(f"{feature_class} graphics", self.styles['Heading1'])

@@ -49,7 +49,6 @@ class ClassesFrequencyBuilder:
         info = "General amount of classes in dataset: "
         for class_name, amount in self.data.items():
             info += f"\n {class_name} - {amount}; "
-        print(info)
         self.summary.set_description(info)
         return self.summary
 
