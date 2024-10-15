@@ -1681,7 +1681,7 @@
             "visual_methods_name": [
                 "density"
             ],
-            "visual_settings": "<Visualizer.VisualizeSetiings.VisualizeSettings object at 0x00000121F04FE590>"
+            "visual_settings": "<Visualizer.VisualizeSetiings.VisualizeSettings object at 0x0000022D782E2530>"
         },
         {
             "feature_name": "Contrast",

@@ -1,4 +1,3 @@
-#dataset_path: "C:/Users/z.kate/source/GitHubRepos/EDA/racovini/rakovini_dataset/seria_4-5_edited/"
 Dataset Path: "../cropped_dataset/cropped_dataset_mini/"
 Output Path: "../reports/report_new_arch.pdf"
 Classes: {"sco": "border chip","rak": "shells", "top": "topology"}
@@ -24,7 +23,7 @@ Features:
     visualization_methods: [ "density" ]
   LocationsMap:
     visualization_methods: [ ]
-##
+
   ClassesArea:
     visualization_methods: [ "boxplot" ]
   ClassesBbAspectRatio:
