@@ -9,7 +9,6 @@ from DatasetProcessor import DatasetInfo
 from reportlab.lib.units import inch
 from utils.FeatureMetadata import FeatureClasses
 
-
 class PdfWriter:
     def __init__(self, features_summaries, dataset_info: DatasetInfo, output_filename):
         self.styles = getSampleStyleSheet()
@@ -73,7 +72,8 @@ class PdfWriter:
         self.elements.append(description)
         self.elements.append(Spacer(1, 12))
         for key, val in self.dataset_info.masks_count.items():
-            desc = Paragraph(f"{key} : {val}", self.enum_styles)
+            final_class_name = self.dataset_info.get_final_class_name_by_tag(key)
+            desc = Paragraph(f"{final_class_name} : {val}", self.enum_styles)
             self.elements.append(desc)
             self.elements.append(Spacer(1, 12))
         self.elements.append(Spacer(1, 12))
@@ -145,11 +145,12 @@ class PdfWriter:
                 if feature_data.min is None and feature_data.max is None and feature_data.std is None and feature_data.mean is None:
                     continue
 
-                long_first_column = True if (not long_first_column and len(f"{feature_data.feature_name} {feature_data.class_name}") > 33) else False
+                final_class_name = feature_data.class_name
+                long_first_column = True if (not long_first_column and len(f"{feature_data.feature_name} {final_class_name}") > 33) else False
 
                 if feature_class == "General":
                     row = [
-                        feature_data.feature_name if feature_class == "General" else f"{feature_data.feature_name} {feature_data.class_name}",
+                        feature_data.feature_name if feature_class == "General" else f"{feature_data.feature_name} {final_class_name}",
                         self.__format_value(feature_data.min),
                         self.__format_value(feature_data.max),
                         self.__format_value(feature_data.mean),
@@ -158,7 +159,7 @@ class PdfWriter:
                     self.data.append(row)
 
                 else:
-                    feature_name = feature_data.feature_name if feature_class == "General" else f"{feature_data.feature_name} {feature_data.class_name}"
+                    feature_name = feature_data.feature_name if feature_class == "General" else f"{feature_data.feature_name} {final_class_name}"
                     values = [
                         self.__format_value(feature_data.min),
                         self.__format_value(feature_data.max),
@@ -214,7 +215,7 @@ class PdfWriter:
             if feature_sum.feature_name == "Aspect Ratio" and self.dataset_info.equal_image_sizes:
                 continue
 
-            if feature_sum.description is  None:
+            if feature_sum.description is None:
                 description = Paragraph(f"Graphic {i + 1}: {feature_sum.feature_name}", self.styles['Heading2'])
             else:
                 description1 = Paragraph(f"Graphic {i + 1}: {feature_sum.feature_name}", self.styles['Heading2'])

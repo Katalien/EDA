@@ -1,5 +1,5 @@
 #dataset_path: "C:/Users/z.kate/source/GitHubRepos/EDA/racovini/rakovini_dataset/seria_4-5_edited/"
-Dataset Path: "../cropped_dataset/cropped_dataset/"
+Dataset Path: "../cropped_dataset/cropped_dataset_mini/"
 Output Path: "../reports/report_new_arch.pdf"
 Classes: {"sco": "border chip","rak": "shells", "top": "topology"}
 Save Json: "./meta.json"
@@ -11,42 +11,42 @@ Ext:
 Features:
   Brightness:
     visualization_methods: [ "density" ]
-#  AspectRatio:
-#    visualization_methods: ["boxplot"]
-#  Color:
-#    visualization_methods: ["density"]
-#  Contrast:
-#    visualization_methods: [ "density" ]
-#
-#  ClassesFrequency:
-#    visualization_methods: [ "bar" ]
-#  InstancesPerImage:
-#    visualization_methods: [ "density" ]
-#  LocationsMap:
-#    visualization_methods: [ ]
-###
-#  ClassesArea:
-#    visualization_methods: [ "boxplot" ]
-#  ClassesBbAspectRatio:
-#    visualization_methods: [ "boxplot" ]
-#  ClassesDiameter:
-#    visualization_methods: [ "boxplot" ]
-#  Class2ImageRatio:
-#    visualization_methods: [ "boxplot" ]
-#
-#  MaskedContrast:
-#    visualization_methods: [ "boxplot" ]
+  AspectRatio:
+    visualization_methods: ["boxplot"]
+  Color:
+    visualization_methods: ["density"]
+  Contrast:
+    visualization_methods: [ "density" ]
+
+  ClassesFrequency:
+    visualization_methods: [ "bar" ]
+  InstancesPerImage:
+    visualization_methods: [ "density" ]
+  LocationsMap:
+    visualization_methods: [ ]
+##
+  ClassesArea:
+    visualization_methods: [ "boxplot" ]
+  ClassesBbAspectRatio:
+    visualization_methods: [ "boxplot" ]
+  ClassesDiameter:
+    visualization_methods: [ "boxplot" ]
+  Class2ImageRatio:
+    visualization_methods: [ "boxplot" ]
+
+  MaskedContrast:
+    visualization_methods: [ "boxplot" ]
   MaskedBrightness:
     visualization_methods: [ "boxplot" ]
-#  MaskedGradient:
-#    visualization_methods: [ "boxplot" ]
+  MaskedGradient:
+    visualization_methods: [ "boxplot" ]
 
 CompareFeatures:
   CompareMaskedBrightness:
     features: [ "Brightness", "MaskedBrightness"]
     visualization_methods: [ "boxplot" ]
-#  CompareMaskedContrast:
-#    features: [ "Contrast", "MaskedContrast" ]
-#    visualization_methods: [ "boxplot" ]
+  CompareMaskedContrast:
+    features: [ "Contrast", "MaskedContrast" ]
+    visualization_methods: [ "boxplot" ]
 
 

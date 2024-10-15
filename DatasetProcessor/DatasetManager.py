@@ -55,8 +55,8 @@ class DatasetManager:
         if feature_name in MaskedFeatures:
             return "Masks"
 
-    @staticmethod
-    def __build_class_feature_data(feature_name, data_list, class_name):
+
+    def __build_class_feature_data(self, feature_name, data_list, class_name):
         data = np.array(data_list)
         _min = np.min(data)
         _max = np.max(data)
@@ -65,15 +65,14 @@ class DatasetManager:
         data_dict = {"x": len(data), "y": data}
         feature = ClassFeatureData(feature_name,
                                    data_dict,
-                                   class_name=class_name,
+                                   class_name=self.dataset_info.get_final_class_name_by_tag(class_name),
                                    _min=_min,
                                    _max=_max,
                                    _mean=_mean,
                                    _std=_std)
         return feature
 
-    @staticmethod
-    def __build_feature_summary(feature_name, class_names, all_feature_values):
+    def __build_feature_summary(self, feature_name, class_names, all_feature_values):
         features = []
         for class_name in class_names:
             class_values = []
@@ -84,7 +83,7 @@ class DatasetManager:
                     elif isinstance(sample_val[class_name], int) or isinstance(sample_val[class_name], float):
                         class_values.append(sample_val[class_name])
             if len(class_values) != 0:
-                feature = DatasetManager.__build_class_feature_data(feature_name, class_values, class_name)
+                feature = self.__build_class_feature_data(feature_name, class_values, class_name)
                 features.append(feature)
 
         return FeatureSummary.FeatureSummary(feature_name,
@@ -126,7 +125,7 @@ class DatasetManager:
                 for sample in tqdm(all_samples, desc=f"Process {feature_name} feature"):
                     feature_val_dict = sample.get_feature_val_by_feature_name(feature_name)
                     all_feature_values.append(feature_val_dict)
-                feature_summary = DatasetManager.__build_feature_summary(feature_name, all_classes, all_feature_values)
+                feature_summary = self.__build_feature_summary(feature_name, all_classes, all_feature_values)
             feature_summary.visualize(visual_methods)
             feature_summaries_dict[feature_name] = feature_summary
             self.featureSummaries.append(feature_summary)
@@ -135,7 +134,6 @@ class DatasetManager:
     def __fill_feature2compare_info(self, feature_summaries_dict):
         for features2comp_names, features2comp_data in self.features2compare.items():
             try:
-                plots = []
                 feature1_name = features2comp_data["features"][0]
                 feature2_name = features2comp_data["features"][1]
                 feature1 = feature_summaries_dict.get(feature1_name, None)
@@ -164,7 +162,6 @@ class DatasetManager:
         all_samples = self.__fill_samples_info()
 
         all_classes = list(self.classes.keys())
-        all_classes.append("General")
 
         feature_summaries_dict = self.__fill_feature_summaries_info(all_samples, all_classes)
         if self.features2compare is not None:
@@ -176,7 +173,3 @@ class DatasetManager:
 
         pdf_writer = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path)
         pdf_writer.write()
-
-
-
-
