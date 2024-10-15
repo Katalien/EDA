@@ -14,8 +14,10 @@ class DatasetManager:
     """
     Main class for processing dataset and manage all analysis work
     """
-    def __init__(self, config_path: str = "./config.yaml"):
+    def __init__(self, config_path: str = "", json_filepath: str = "", save_filepath: str = ""):
         self.config_path = config_path
+        self.json_filepath = json_filepath
+        self.save_filepath = save_filepath
         self.featureSummaries = []
         self.classes = None
         self.dataset_path = None
@@ -146,19 +148,15 @@ class DatasetManager:
                 visual_methods = features2comp_data["visualization_methods"]
                 feature_summary_comp.set_visual_methods(visual_methods)
                 feature_summary_comp.visualize(visual_methods)
-                # for visual_method in visual_methods:
-                #     visualizer = VisualizersClassNamesDict[visual_method]()
-                #     plots.append(visualizer.visualize(feature_summary_comp))
-                # feature_summary_comp.set_plots(plots)
                 self.featureSummaries.append(feature_summary_comp)
             except ValueError as e:
                 print(f"Error: {e}. Skipping this comparison and continuing.")
                 continue
 
-    def run_from_json(self, json_filepath, save_filepath):
-        json_reader = JsonReader.JsonReader(json_filepath)
+    def run_from_json(self, ):
+        json_reader = JsonReader.JsonReader(self.json_filepath)
         dataset_info, feature_summaries = json_reader.read_json()
-        pdf_writer = PdfWriter(feature_summaries, dataset_info, save_filepath)
+        pdf_writer = PdfWriter(feature_summaries, dataset_info, self.save_filepath)
         pdf_writer.write()
 
     def run(self):
