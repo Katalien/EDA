@@ -1,6 +1,6 @@
-from FeatureAnalysis.ClassFeatureData import ClassFeatureData
+from FeatureSummaryData.ClassFeatureData import ClassFeatureData
 from DatasetProcessor import DatasetInfo
-from FeatureAnalysis import FeatureSummary
+from FeatureSummaryData import FeatureSummary
 from Visualizer.VisualizeSetiings import VisualizeSettings
 import numpy as np
 import cv2

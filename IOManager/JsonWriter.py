@@ -1,6 +1,6 @@
 import json
 import numpy as np
-from FeatureAnalysis import FeatureSummary
+from FeatureSummaryData import FeatureSummary
 from DatasetProcessor import DatasetInfo
 
 class JsonWriter:

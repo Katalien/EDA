@@ -1,9 +1,9 @@
 import numpy as np
 from IOManager import ConfigReader, PdfWriter, JsonWriter, JsonReader
-from FeatureAnalysis.ClassFeatureData import ClassFeatureData
+from FeatureSummaryData.ClassFeatureData import ClassFeatureData
 from utils.FeatureMetadata import VisualizersClassNamesDict, FeatureDescriptions
 from DatasetProcessor import DatasetInfo
-from FeatureAnalysis import FeatureSummary
+from FeatureSummaryData import FeatureSummary
 from .Sample import Sample
 from Features import LocationMapBuilder, ClassesFrequencyBuilder, ColorHistogramBuilder
 from tqdm import tqdm

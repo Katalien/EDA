@@ -1,4 +1,4 @@
-from FeatureAnalysis import FeatureSummary
+from FeatureSummaryData import FeatureSummary
 
 
 class Visualizer:

@@ -1,7 +1,7 @@
 from typing import List
 from Visualizer.VisualizeSetiings import VisualizeSettings
 from utils.FeatureMetadata import VisualizersClassNamesDict
-from FeatureAnalysis import ClassFeatureData
+from FeatureSummaryData import ClassFeatureData
 
 
 class FeatureSummary:

@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
-from FeatureAnalysis import FeatureSummary
-from FeatureAnalysis.ClassFeatureData import ClassFeatureData
+from FeatureSummaryData import FeatureSummary
+from FeatureSummaryData.ClassFeatureData import ClassFeatureData
 from DatasetProcessor import DatasetInfo
 import utils.utils as ut
 

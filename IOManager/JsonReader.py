@@ -1,6 +1,6 @@
 import json
 from DatasetProcessor import DatasetInfo
-from FeatureAnalysis import FeatureSummary
+from FeatureSummaryData import FeatureSummary
 
 class JsonReader:
     def __init__(self, json_filepath: str):

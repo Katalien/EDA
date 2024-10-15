@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from .Visualizer import Visualizer
-from FeatureAnalysis import FeatureSummary
+from FeatureSummaryData import FeatureSummary
 import seaborn as sns
 import pandas as pd
 

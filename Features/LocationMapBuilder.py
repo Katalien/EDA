@@ -1,11 +1,11 @@
 import cv2
 import numpy as np
-from FeatureAnalysis.ClassFeatureData import ClassFeatureData
+from FeatureSummaryData.ClassFeatureData import ClassFeatureData
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from DatasetProcessor import DatasetInfo
 from PIL import Image
-from FeatureAnalysis import FeatureSummary
+from FeatureSummaryData import FeatureSummary
 
 
 class LocationsMapBuilder:

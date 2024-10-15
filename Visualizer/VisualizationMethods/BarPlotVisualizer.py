@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from .Visualizer import Visualizer
-from FeatureAnalysis import FeatureSummary
+from FeatureSummaryData import FeatureSummary
 
 
 class BarPlotVisualizer(Visualizer):
