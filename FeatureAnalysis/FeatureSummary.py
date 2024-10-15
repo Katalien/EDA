@@ -4,13 +4,18 @@ from utils.FeatureMetadata import VisualizersClassNamesDict
 
 
 class FeatureSummary:
-    def __init__(self, feature_name, features, feature_tag=None, visual_settings: VisualizeSettings = None):
+    def __init__(self,
+                 feature_name,
+                 features,
+                 feature_tag=None,
+                 visual_settings: VisualizeSettings = None,
+                 description: str = None):
         self.feature_name: str = feature_name
         self.features_list: List = self._set_features(features)
         self.is_img_feature: bool = self._is_img_feature()
-        self.visual_methods_name: List = None
+        self.visual_methods_name: List | None = None
         self.plots = []
-        self.description = None
+        self.description = description
         self.visual_settings = visual_settings
         self.feature_tag = feature_tag
         if self.feature_tag not in ["General", "Labels", "Attributes", "Masks", "Compare"] and self.feature_tag is not None:

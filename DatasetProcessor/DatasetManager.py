@@ -1,7 +1,7 @@
 import numpy as np
 from ConfigReader import ConfigReader
 from FeatureAnalysis.ClassFeatureData import ClassFeatureData
-from utils.FeatureMetadata import VisualizersClassNamesDict
+from utils.FeatureMetadata import VisualizersClassNamesDict, FeatureDescriptions
 from PdfWriter import PdfWriter
 from DatasetProcessor import DatasetInfo
 from FeatureAnalysis import FeatureSummary
@@ -32,7 +32,7 @@ class DatasetManager:
         self.features2compare = config_processor.get_features_2_compare()
 
     @staticmethod
-    def __build_feature_sum_2_compare(feature_name, feature_summaries):
+    def __build_feature_summary_2_compare(feature_name, feature_summaries):
         features_list = []
         for feature_sum in feature_summaries:
             features_list.extend(feature_sum.get_feature_list())
@@ -82,7 +82,8 @@ class DatasetManager:
 
         return FeatureSummary.FeatureSummary(feature_name,
                                              features,
-                                             feature_tag=DatasetManager.__get_feature_tag(feature_name))
+                                             feature_tag=DatasetManager.__get_feature_tag(feature_name),
+                                             description=FeatureDescriptions[feature_name])
 
     def __process_locations_map(self):
         loc_map_builder = LocationMapBuilder.LocationsMapBuilder(self.dataset_info)
@@ -126,21 +127,23 @@ class DatasetManager:
         return feature_summaries_dict
 
     def __fill_feature2compare_info(self, feature_summaries_dict):
-        if self.features2compare is not None:
-            for features2comp_names, features2comp_data in self.features2compare.items():
-                plots = []
-                feature1_name, feature2_name = features2comp_data["features"][0], features2comp_data["features"][1]
-                feature1, feature2 = feature_summaries_dict.get(feature1_name, None), feature_summaries_dict.get(feature2_name, None)
-                if feature1 is None or feature2 is None:
-                    print("No necessary features to compare")
-                    continue
-                feature_summary_comp = DatasetManager.__build_feature_sum_2_compare(features2comp_names, [feature1, feature2])
-                visual_methods = features2comp_data["visualization_methods"]
-                for visual_method in visual_methods:
-                    visualizer = VisualizersClassNamesDict[visual_method]()
-                    plots.append(visualizer.visualize(feature_summary_comp))
-                feature_summary_comp.set_plots(plots)
-                self.featureSummaries.append(feature_summary_comp)
+        for features2comp_names, features2comp_data in self.features2compare.items():
+            plots = []
+            feature1_name = features2comp_data["features"][0]
+            feature2_name = features2comp_data["features"][1]
+            feature1 = feature_summaries_dict.get(feature1_name, None)
+            feature2 = feature_summaries_dict.get(feature2_name, None)
+            if feature1 is None or feature2 is None:
+                print("No necessary features to compare")
+                continue
+            feature_summary_comp = DatasetManager.__build_feature_summary_2_compare(features2comp_names,
+                                                                                    [feature1, feature2])
+            visual_methods = features2comp_data["visualization_methods"]
+            for visual_method in visual_methods:
+                visualizer = VisualizersClassNamesDict[visual_method]()
+                plots.append(visualizer.visualize(feature_summary_comp))
+            feature_summary_comp.set_plots(plots)
+            self.featureSummaries.append(feature_summary_comp)
 
     def run(self):
         self._read_config()
@@ -150,7 +153,8 @@ class DatasetManager:
         all_classes.append("General")
 
         feature_summaries_dict = self.__fill_feature_summaries_info(all_samples, all_classes)
-        self.__fill_feature2compare_info(feature_summaries_dict)
+        if self.features2compare is not None:
+            self.__fill_feature2compare_info(feature_summaries_dict)
 
         pdf_writer = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path)
         pdf_writer.write()

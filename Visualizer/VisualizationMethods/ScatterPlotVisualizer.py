@@ -15,5 +15,4 @@ class ScatterPlotVisualizer(Visualizer):
         if grid:
             plt.grid(True)
         plt.legend()
-        # plt.show()
         return plt.gcf()

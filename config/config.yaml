@@ -1,6 +1,6 @@
 #dataset_path: "C:/Users/z.kate/source/GitHubRepos/EDA/racovini/rakovini_dataset/seria_4-5_edited/"
-dataset_path: "../cropped_dataset/cropped_dataset/"
-output_path: "../reports/report_new_arch.pdf"
+Dataset Path: "../cropped_dataset/cropped_dataset/"
+Output Path: "../reports/report_new_arch.pdf"
 Classes: {"sco": "border chip","rak": "shells", "top": "topology"}
 Ext:
   image_ext: "tif"
@@ -16,22 +16,22 @@ Features:
     visualization_methods: ["density"]
   Contrast:
     visualization_methods: [ "density" ]
-#
-#  ClassesFrequency:
-#    visualization_methods: [ "bar" ]
-#  InstancesPerImage:
-#    visualization_methods: [ "density" ]
-#  LocationsMap:
-#    visualization_methods: [ ]
-###
-#  ClassesArea:
-#    visualization_methods: [ "boxplot" ]
-#  ClassesBbAspectRatio:
-#    visualization_methods: [ "boxplot" ]
-#  ClassesDiameter:
-#    visualization_methods: [ "boxplot" ]
-#  Class2ImageRatio:
-#    visualization_methods: [ "boxplot" ]
+
+  ClassesFrequency:
+    visualization_methods: [ "bar" ]
+  InstancesPerImage:
+    visualization_methods: [ "density" ]
+  LocationsMap:
+    visualization_methods: [ ]
+##
+  ClassesArea:
+    visualization_methods: [ "boxplot" ]
+  ClassesBbAspectRatio:
+    visualization_methods: [ "boxplot" ]
+  ClassesDiameter:
+    visualization_methods: [ "boxplot" ]
+  Class2ImageRatio:
+    visualization_methods: [ "boxplot" ]
 #
   MaskedContrast:
     visualization_methods: [ "boxplot" ]

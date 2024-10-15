@@ -17,7 +17,7 @@ class LinePlotVisualizer(Visualizer):
         if visual_settings and visual_settings.colors:
             colors = visual_settings.colors
         else:
-            colors = plt.get_cmap('tab10').colors  # Get a colormap with distinct colors
+            colors = plt.get_cmap('tab10').colors
 
         for idx, (ax, feature_data) in enumerate(zip(axes, feature_data_list)):
             x = feature_data.data["x"]

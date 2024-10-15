@@ -35,3 +35,19 @@ GeneralFeatures = ["AspectRatio", "Brightness", "Color", "Contrast"]
 LabeledFeatures = ["ClassesFrequency", "InstancesPerImage", "LocationMap", "ClassesArea",
                    "ClassesBbAspectRatio", "ClassesDiameter", "Class2ImageRatio"]
 MaskedFeatures = ["MaskedContrast", "MaskedBrightness", "MaskedGradient"]
+
+
+FeatureDescriptions = {
+    "Brightness": "Overall brightness for all images in the dataset",
+    "Contrast": "Overall contrast for all images in the dataset",
+    "AspectRatio": "Overall aspect ratio for all images in the dataset. (image height / image width)",
+    "MaskedBrightness": "Masked segments brightness",
+    "MaskedContrast": "Masked segments contrast",
+    "MaskedGradient": "Masked segments gradient",
+    "InstancesPerImage": "Amount of classes instances per image",
+    "ClassesArea": "Area of classes segments, pxls",
+    "ClassesBbAspectRatio": "Aspect ratio of classes bounging boxes",
+    "ClassesDiameter": "Diameter of classes segments, pxls",
+    "Class2ImageRatio": "The ratio of the defect area to the area of the entire image",
+    "Color": "RGB channels' analysis of images in dataset. Values are normalized"
+}
