@@ -51,7 +51,7 @@ class JsonWriter:
             all_feature_summaries_dicts.append(summary_dict)
         data_to_save["Features Info"] = all_feature_summaries_dicts
 
-        with open(self.save_filepath, 'a') as f:
+        with open(self.save_filepath, 'w') as f:
             json.dump(data_to_save, f, indent=4)
 
     @staticmethod

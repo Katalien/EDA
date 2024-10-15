@@ -23,6 +23,7 @@ class DatasetManager:
         self.dataset_info = None
         self.dataset_classes = None
         self.extensions_dict = {}
+        self.save_json: str | None = None
 
     def __read_config(self):
         config_processor = ConfigReader(self.config_path)
@@ -33,6 +34,7 @@ class DatasetManager:
         self.dataset_info = DatasetInfo.DatasetInfo(self.dataset_path, self.classes, extensions_dict)
         self.features = config_processor.get_features()
         self.features2compare = config_processor.get_features_2_compare()
+        self.save_json = config_processor.get_save_json_info()
 
     @staticmethod
     def __build_feature_summary_2_compare(feature_name, feature_summaries):
@@ -142,6 +144,7 @@ class DatasetManager:
                 feature_summary_comp = DatasetManager.__build_feature_summary_2_compare(features2comp_names,
                                                                                         [feature1, feature2])
                 visual_methods = features2comp_data["visualization_methods"]
+                feature_summary_comp.set_visual_methods(visual_methods)
                 for visual_method in visual_methods:
                     visualizer = VisualizersClassNamesDict[visual_method]()
                     plots.append(visualizer.visualize(feature_summary_comp))
@@ -168,10 +171,13 @@ class DatasetManager:
         if self.features2compare is not None:
             self.__fill_feature2compare_info(feature_summaries_dict)
 
+        if self.save_json:
+            json_writer = JsonWriter(self.featureSummaries, self.dataset_info, self.save_json)
+            json_writer.save_feature_summary_to_json()
+
         pdf_writer = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path)
         pdf_writer.write()
-        jsonWriter = JsonWriter(self.featureSummaries, self.dataset_info, "./meta.json")
-        jsonWriter.save_feature_summary_to_json()
+
 
 
 

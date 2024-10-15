@@ -35,11 +35,14 @@ class ConfigReader:
     def get_classes(self):
         return self.config.get("Classes", {})
 
-
     def get_extensions(self):
         extensions = self.config.get("Ext", None)
         if extensions is not None:
             return {"image_ext": extensions["image_ext"], "mask_ext": extensions["mask_ext"]}
         else:
             return {"image_ext": "tiff", "mask_ext": "tiff"}
+
+    def get_save_json_info(self):
+        save_json = self.config.get("Save Json", None)
+        return save_json
 
