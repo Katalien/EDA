@@ -23,7 +23,7 @@ Features:
     visualization_methods: [ "density" ]
   LocationsMap:
     visualization_methods: [ ]
-##
+###
   ClassesArea:
     visualization_methods: [ "boxplot" ]
   ClassesBbAspectRatio:
@@ -32,7 +32,7 @@ Features:
     visualization_methods: [ "boxplot" ]
   Class2ImageRatio:
     visualization_methods: [ "boxplot" ]
-#
+
   MaskedContrast:
     visualization_methods: [ "boxplot" ]
   MaskedBrightness:

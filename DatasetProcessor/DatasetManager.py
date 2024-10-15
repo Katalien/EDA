@@ -10,7 +10,11 @@ from Features import LocationMapBuilder, ClassesFrequencyBuilder, ColorHistogram
 from tqdm import tqdm
 from utils.FeatureMetadata import GeneralFeatures, LabeledFeatures, MaskedFeatures
 
+
 class DatasetManager:
+    """
+    Main class for processing dataset and manage all analysis work
+    """
     def __init__(self, config_path: str = "./config.yaml"):
         self.config_path = config_path
         self.featureSummaries = []
@@ -21,7 +25,7 @@ class DatasetManager:
         self.dataset_classes = None
         self.extensions_dict = {}
 
-    def _read_config(self):
+    def __read_config(self):
         config_processor = ConfigReader(self.config_path)
         self.dataset_path = config_processor.get_dataset_path()
         self.output_path = config_processor.get_output_path()
@@ -101,8 +105,7 @@ class DatasetManager:
         all_samples = []
         sample_path_items = self.dataset_info.get_samples_path_info()
         for sample_path_item in tqdm(sample_path_items, desc="Count features for all samples"):
-            feature_sample = Sample(sample_path_item, self.features.keys())
-            feature_sample.fill_features_info()
+            feature_sample = Sample(sample_path_item, list(self.features.keys()))
             all_samples.append(feature_sample)
         return all_samples
 
@@ -146,7 +149,7 @@ class DatasetManager:
             self.featureSummaries.append(feature_summary_comp)
 
     def run(self):
-        self._read_config()
+        self.__read_config()
         all_samples = self.__fill_samples_info()
 
         all_classes = list(self.classes.keys())

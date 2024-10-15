@@ -3,6 +3,9 @@ from typing import Dict, Any
 
 
 class ConfigReader:
+    """
+    Class for parsing config file
+    """
     def __init__(self, config_path: str):
         self.config_path = config_path
         self.config = self.load_config()
@@ -20,7 +23,7 @@ class ConfigReader:
     def get_output_path(self) -> str:
         return self.config.get('Output Path', "./")
 
-    def get_features(self):
+    def get_features(self) -> dict:
         features = self.config.get("Features", None)
         if features is None:
             raise ValueError("The 'Features' field is required in config file")
@@ -30,10 +33,8 @@ class ConfigReader:
         return self.config.get("CompareFeatures", None)
 
     def get_classes(self):
-        classes = self.config.get("Classes", None)
-        if classes is None:
-            raise ValueError("The 'Classes' field is required in config file")
-        return classes
+        return self.config.get("Classes", {})
+
 
     def get_extensions(self):
         extensions = self.config.get("Ext", None)

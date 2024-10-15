@@ -7,7 +7,40 @@ from tqdm import tqdm
 
 
 class DatasetInfo:
+    """
+    Class for keeping and managing information about images and masks in dataset
+
+    Attributes:
+        dataset_path (str): Path to directory with dataset. Set in the configuration file.
+        dataset_classes (dict): Dictionary with masks of dataset. Set in the configuration file.
+                                    Key: mask tag in filename (ex. _mask),
+                                    Value: name of the class in final report
+        extensions_dict (dict[str, str]): Dictionary with extensions of images and masks. Set in the configuration file.
+        images_path: (list): List with all images paths
+        masks_path: (dict): Dictionary with masks paths.
+                            Key: name (tag) of the class
+                            Value: List of the masks paths with this tag
+        images_count (int): Total amount of images in dataset
+        masks_count (Dict[str, int]): Total amount of masks in dataset.
+                                     Key: name (tag) of the class
+                                     Value: amount of masks with this tag
+        image_sizes (set): Set of all images sizes
+        mask_sizes (set):Set of all masks sizes
+        equal_image_sizes (bool): Show if all images in dataset have the same shape
+        equal_mask_sizes (bool): Show if all masks in dataset have the same shape
+        __samples_path_info_list (list[SamplePathInfo]): List with SamplePathInfo objects
+
+    """
     def __init__(self, dataset_path, classes_dict, extensions):
+        """
+        Initializes the DatasetInfo object.
+
+        Args:
+           dataset_path (str): Path to the directory containing the dataset.
+           classes_dict (dict): Dictionary mapping mask tags to class names for the final report.
+           extensions (dict[str, str]): Dictionary of file extensions for images and masks.
+
+        """
         self.dataset_path = dataset_path
         self.dataset_classes = classes_dict
         self.extensions_dict = extensions
@@ -88,10 +121,9 @@ class DatasetInfo:
         image_filepaths, deepest_directories = self.__get_all_files_and_dirs()
         for filepath in tqdm(image_filepaths, desc="Fill info about dataset"):
             if not self.__is_mask(filepath):
-                sample_info = SamplePathInfo(filepath)
-                self.__fill_image_size(filepath)
                 masks_path_dict = self.__get_masks_by_image_name(filepath)
-                sample_info.set_all_classes_path(masks_path_dict)
+                sample_info = SamplePathInfo(filepath, masks_path_dict)
+                self.__fill_image_size(filepath)
                 self.__samples_path_info_list.append(sample_info)
                 self.images_count += 1
                 self.images_path.append(filepath)

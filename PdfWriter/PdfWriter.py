@@ -15,26 +15,24 @@ class PdfWriter:
         self.styles = getSampleStyleSheet()
         self.elements = []
         self.features_summaries = features_summaries
-        self.feature_data_list = self._set_feature_data_list()
+        self.feature_data_list = self.__set_feature_data_list()
         self.dataset_info = dataset_info
         self.output_filename = output_filename
-        self._init_styles()
+        self.__init_styles()
         self.feature_classes_dict = {feature_class_name: [] for feature_class_name in FeatureClasses}
-        self._fill_feature_classes_dict()
+        self.__fill_feature_classes_dict()
 
-    def _fill_feature_classes_dict(self):
+    def __fill_feature_classes_dict(self):
         for feature_sum in self.features_summaries:
             print(feature_sum.feature_name, feature_sum.feature_tag)
             self.feature_classes_dict[feature_sum.feature_tag].append(feature_sum)
 
 
-    def _init_styles(self):
-        style = getSampleStyleSheet()
+    def __init_styles(self):
         self.enum_styles = ParagraphStyle("name1", fontName='Times-Roman', fontSize=16, leftIndent=inch)
         self.dataset_info_style = ParagraphStyle("name2", fontName='Times-Roman', fontSize=16)
 
-
-    def _set_feature_data_list(self, cur_feature_summaries=None):
+    def __set_feature_data_list(self, cur_feature_summaries=None):
         if cur_feature_summaries is None:
             cur_feature_summaries = self.features_summaries
         data_list = []
@@ -43,28 +41,23 @@ class PdfWriter:
                 data_list.extend(feature_sum.features_list)
         return data_list
 
-
-    def write(self,):
+    def write(self):
         doc = SimpleDocTemplate(self.output_filename, pagesize=letter)
-        self._create_title_block()
-        self._create_dataset_info_block()
-        self._create_features_list()
+        self.__create_title_block()
+        self.__create_dataset_info_block()
+        self.__create_features_list()
         for feature_class in self.feature_classes_dict.keys():
-            self._create_table(feature_class)
-            self._create_plots_block(feature_class)
-
-
-        print(self.output_filename)
+            self.__create_table(feature_class)
+        for feature_class in self.feature_classes_dict.keys():
+            self.__create_plots_block(feature_class)
         doc.build(self.elements)
 
-
-
-    def _create_title_block(self):
+    def __create_title_block(self):
         title = Paragraph("Images report", self.styles['Title'])
         self.elements.append(title)
         self.elements.append(Spacer(1, 12))
 
-    def _create_dataset_info_block(self):
+    def __create_dataset_info_block(self):
         description = Paragraph(f"Dataset info", self.styles['Title'])
         self.elements.append(description)
         self.elements.append(Spacer(1, 12))
@@ -107,7 +100,7 @@ class PdfWriter:
         self.elements.append(Spacer(1, 12))
         self.elements.append(Spacer(1, 12))
 
-    def _create_features_list(self):
+    def __create_features_list(self):
         description = Paragraph(f"Dataset feature table", self.styles['Title'])
         self.elements.append(description)
         self.elements.append(Spacer(1, 12))
@@ -116,12 +109,6 @@ class PdfWriter:
         num_images_text = Paragraph(f"Amount of analyzed features: {num_features}", self.dataset_info_style)
         self.elements.append(num_images_text)
         self.elements.append(Spacer(1, 12))
-
-        #
-        # for feature_class, features in self.feature_classes_dict.items():
-        #     num_images_text = Paragraph(f"Amount of {feature_class} features: {len(features)}", self.dataset_info_style)
-        #     self.elements.append(num_images_text)
-        #     self.elements.append(Spacer(1, 12))
 
 
         for feature_class, features in self.feature_classes_dict.items():
@@ -138,7 +125,7 @@ class PdfWriter:
         self.elements.append(PageBreak())
 
 
-    def _create_table(self, feature_class):
+    def __create_table(self, feature_class):
         long_first_column = False
 
         if feature_class == "Labels":
@@ -163,20 +150,20 @@ class PdfWriter:
                 if feature_class == "General":
                     row = [
                         feature_data.feature_name if feature_class == "General" else f"{feature_data.feature_name} {feature_data.class_name}",
-                        self.format_value(feature_data.min),
-                        self.format_value(feature_data.max),
-                        self.format_value(feature_data.mean),
-                        self.format_value(feature_data.std)
+                        self.__format_value(feature_data.min),
+                        self.__format_value(feature_data.max),
+                        self.__format_value(feature_data.mean),
+                        self.__format_value(feature_data.std)
                     ]
                     self.data.append(row)
 
                 else:
                     feature_name = feature_data.feature_name if feature_class == "General" else f"{feature_data.feature_name} {feature_data.class_name}"
                     values = [
-                        self.format_value(feature_data.min),
-                        self.format_value(feature_data.max),
-                        self.format_value(feature_data.mean),
-                        self.format_value(feature_data.std)
+                        self.__format_value(feature_data.min),
+                        self.__format_value(feature_data.max),
+                        self.__format_value(feature_data.mean),
+                        self.__format_value(feature_data.std)
                     ]
 
                     # Combine feature name and class-specific values into one row
@@ -221,7 +208,7 @@ class PdfWriter:
         self.elements.append(Spacer(1, 12))
         self.elements.append(PageBreak())
 
-    def _fill_plots_section_info(self, feature_class):
+    def __fill_plots_section_info(self, feature_class):
         feature_plots_dict = {}
         self.elements.append(Spacer(1, 12))
         for i, feature_sum in enumerate(self.feature_classes_dict[feature_class]):
@@ -263,7 +250,7 @@ class PdfWriter:
                     del (img_buffer)
         return feature_plots_dict
 
-    def _change_im_size(self, img):
+    def __change_im_size(self, img):
         current_height = img.drawHeight
         current_width = img.drawWidth
 
@@ -285,9 +272,9 @@ class PdfWriter:
         img.drawWidth = new_width
         return img.drawHeight, img.drawWidth
 
-    def _create_plots_block(self, feature_class):
+    def __create_plots_block(self, feature_class):
 
-        feature_plots_dict = self._fill_plots_section_info(feature_class)
+        feature_plots_dict = self.__fill_plots_section_info(feature_class)
 
         description = Paragraph(f"{feature_class} graphics", self.styles['Heading1'])
         self.elements.append(description)
@@ -300,7 +287,7 @@ class PdfWriter:
             else:
                 self.elements.append(desc)
             for img, name in images_names:
-                img.drawHeight, img.drawWidth = self._change_im_size(img)
+                img.drawHeight, img.drawWidth = self.__change_im_size(img)
                 name = Paragraph(name, self.styles['Heading3'])
                 self.elements.append(name)
                 self.elements.append(Spacer(1, 12))
@@ -308,11 +295,7 @@ class PdfWriter:
                 self.elements.append(Spacer(1, 12))
                 self.elements.append(PageBreak())
 
-
-
-
-
-    def format_value(self, value):
+    def __format_value(self, value):
         if value is None:
             return ''
         elif value == 0.0:

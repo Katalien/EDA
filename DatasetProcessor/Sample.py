@@ -6,7 +6,22 @@ from utils import FeatureMetadata
 
 
 class Sample:
+    """
+    Class for keeping information and feature values for one sample in the dataset
+    Attributes:
+        sample_path_info: (SamplePathInfo): SamplePathInfo object with information about sample's image and masks paths
+        mask_classes: (list): List of classes of the dataset
+        feature_values_dict: (dict): Dictionary mapping mask tag and feature value for this Sample object
+        __classes_contours: (dict): Feature mapping mask tag with object's contours on the mask
+    """
     def __init__(self, sample_path_info: SamplePathInfo,  feature_list: List):
+        """
+        Initializes the Sample object.
+
+        Args:
+            sample_path_info (SamplePathInfo): SamplePathInfo object with information about sample's image and masks paths
+            feature_list: List of names of features  that need to be calculated for this Sample object
+        """
         self.sample_path_info: SamplePathInfo = sample_path_info
         self.mask_classes = []
         self.feature_values_dict: Dict = {}
@@ -15,6 +30,7 @@ class Sample:
         for feature in feature_list:
             self.feature_values_dict[feature] = None
         self.__fill_mask_classes()
+        self.__fill_features_info()
 
     def __fill_mask_classes(self):
         self.mask_classes = ["General"]
@@ -38,7 +54,7 @@ class Sample:
     def get_contours_by_class(self, class_name):
         return self.__classes_contours[class_name]
 
-    def fill_features_info(self):
+    def __fill_features_info(self):
         for feature in self.feature_values_dict.keys():
             if feature in FeatureMetadata.FeatureClassDict:
                 feature_class = FeatureMetadata.FeatureClassDict[feature]()

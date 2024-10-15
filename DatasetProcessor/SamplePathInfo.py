@@ -1,10 +1,11 @@
 class SamplePathInfo:
-    def __init__(self, image_path):
-        self.__image_path = image_path
-        self.__classes_path = {}
-
-    def set_all_classes_path(self, class_path_dict):
-        self.__classes_path = class_path_dict
+    """
+    Class with the information about one sample's image and masks path.
+    One image can have different masks with different tags
+    """
+    def __init__(self, image_path: str, classes_paths: dict):
+        self.__image_path: str = image_path
+        self.__classes_path = classes_paths
 
     def set_class_path(self, class_name, mask_path):
         if class_name not in self.__classes_path:
