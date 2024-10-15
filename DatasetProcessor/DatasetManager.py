@@ -145,10 +145,11 @@ class DatasetManager:
                                                                                         [feature1, feature2])
                 visual_methods = features2comp_data["visualization_methods"]
                 feature_summary_comp.set_visual_methods(visual_methods)
-                for visual_method in visual_methods:
-                    visualizer = VisualizersClassNamesDict[visual_method]()
-                    plots.append(visualizer.visualize(feature_summary_comp))
-                feature_summary_comp.set_plots(plots)
+                feature_summary_comp.visualize(visual_methods)
+                # for visual_method in visual_methods:
+                #     visualizer = VisualizersClassNamesDict[visual_method]()
+                #     plots.append(visualizer.visualize(feature_summary_comp))
+                # feature_summary_comp.set_plots(plots)
                 self.featureSummaries.append(feature_summary_comp)
             except ValueError as e:
                 print(f"Error: {e}. Skipping this comparison and continuing.")
