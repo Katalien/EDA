@@ -1,8 +1,7 @@
 import numpy as np
-from ConfigReader import ConfigReader
+from IOManager import ConfigReader, PdfWriter, JsonWriter, JsonReader
 from FeatureAnalysis.ClassFeatureData import ClassFeatureData
 from utils.FeatureMetadata import VisualizersClassNamesDict, FeatureDescriptions
-from PdfWriter import PdfWriter
 from DatasetProcessor import DatasetInfo
 from FeatureAnalysis import FeatureSummary
 from .Sample import Sample
@@ -152,6 +151,11 @@ class DatasetManager:
                 print(f"Error: {e}. Skipping this comparison and continuing.")
                 continue
 
+    def run_from_json(self, json_filepath, save_filepath):
+        json_reader = JsonReader.JsonReader(json_filepath)
+        dataset_info, feature_summaries = json_reader.read_json()
+        pdf_writer = PdfWriter(feature_summaries, dataset_info, save_filepath)
+        pdf_writer.write()
 
     def run(self):
         self.__read_config()
@@ -166,5 +170,8 @@ class DatasetManager:
 
         pdf_writer = PdfWriter(self.featureSummaries, self.dataset_info, self.output_path)
         pdf_writer.write()
+        jsonWriter = JsonWriter(self.featureSummaries, self.dataset_info, "./meta.json")
+        jsonWriter.save_feature_summary_to_json()
+
 
 

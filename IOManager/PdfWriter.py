@@ -26,7 +26,6 @@ class PdfWriter:
         for feature_sum in self.features_summaries:
             self.feature_classes_dict[feature_sum.feature_tag].append(feature_sum)
 
-
     def __init_styles(self):
         self.enum_styles = ParagraphStyle("name1", fontName='Times-Roman', fontSize=16, leftIndent=inch)
         self.dataset_info_style = ParagraphStyle("name2", fontName='Times-Roman', fontSize=16)

@@ -31,7 +31,7 @@ class DatasetInfo:
         __samples_path_info_list (list[SamplePathInfo]): List with SamplePathInfo objects
 
     """
-    def __init__(self, dataset_path, classes_dict, extensions):
+    def __init__(self, dataset_path, classes_dict, extensions, fillInfo=True):
         """
         Initializes the DatasetInfo object.
 
@@ -53,7 +53,28 @@ class DatasetInfo:
         self.equal_image_sizes = False
         self.equal_mask_sizes = False
         self.__samples_path_info_list = []
-        self.__fill_info()
+        if fillInfo:
+            self.__fill_info()
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        """
+        Creates an instance of DatasetInfo from a dictionary.
+
+        Args:
+            data (dict): Dictionary containing the dataset information.
+
+        Returns:
+            DatasetInfo: An instance of the DatasetInfo class.
+        """
+        dataset_path = data.get('dataset_path', '')
+        classes_dict = data.get('dataset_classes', {})
+        instance = cls(dataset_path, classes_dict, {}, fillInfo=False)
+        instance.images_count = data.get('images_count', 0)
+        instance.masks_count = data.get('masks_count', {})
+        instance.equal_image_sizes = data.get('equal_image_sizes', False)
+        instance.equal_mask_sizes = data.get('equal_mask_sizes', False)
+        return instance
 
     def __fill_image_size(self, filepath):
         if filepath.split(".")[-1] == "psd":
