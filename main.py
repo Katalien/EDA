@@ -34,9 +34,6 @@ def main():
 if __name__ == "__main__":
     main()
 
-# manager = DatasetManager.DatasetManager(config_path="./config/config.yaml")
-# manager.run()
-
 
 
 
